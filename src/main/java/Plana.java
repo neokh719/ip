@@ -5,6 +5,13 @@ public class Plana {
                 + "| |_) | |/ _` | '_ \\ / _` |\n"
                 + "|  __/| | (_| | | | | (_| |\n"
                 + "|_|   |_|\\__,_|_| |_|\\__,_|\n";
-        System.out.println(banner);
+        String border_line = "____________________________________________________________";
+        System.out.println(border_line);
+        System.out.print(banner);
+        System.out.println("Hello! I'm Plana.");
+        System.out.println("What can I do for you?");
+        System.out.println(border_line);
+        System.out.println("Bye. Hope to see you again soon!");
+        System.out.println(border_line);
     }
 }
