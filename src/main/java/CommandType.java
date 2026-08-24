@@ -1,0 +1,85 @@
+import java.util.Locale;
+
+/**
+ * Represents a command that Plana can process.
+ */
+public enum CommandType {
+    /** Exits the application. */
+    BYE("bye"),
+
+    /** Displays the help message. */
+    HELP("help"),
+
+    /** Displays all tasks. */
+    LIST("list"),
+
+    /** Deletes a task. */
+    DELETE("delete"),
+
+    /** Marks a task as completed. */
+    MARK("mark"),
+
+    /** Marks a task as not completed. */
+    UNMARK("unmark"),
+
+    /** Adds a deadline task. */
+    DEADLINE("deadline"),
+
+    /** Adds an event task. */
+    EVENT("event"),
+
+    /** Adds a ToDo task. */
+    TODO("todo"),
+
+    /** Represents input that does not match a known command. */
+    UNKNOWN("");
+
+    private final String commandText;
+
+    /**
+     * Creates a command type with its command-line representation.
+     *
+     * @param commandText the command text used for this command
+     */
+    CommandType(String commandText) {
+        this.commandText = commandText;
+    }
+
+    /**
+     * Converts raw user input into a command type while preserving Plana's
+     * existing command matching rules.
+     *
+     * @param input the complete command entered by the user
+     * @return the matching command type, or {@link #UNKNOWN} if none matches
+     */
+    public static CommandType fromInput(String input) {
+        if (input.equals("?")) {
+            return HELP;
+        }
+        if (input.toLowerCase(Locale.ROOT).contains("help")) {
+            return HELP;
+        }
+        if (input.equals(BYE.commandText)) {
+            return BYE;
+        }
+        for (CommandType commandType : values()) {
+            if (commandType == UNKNOWN || commandType == HELP || commandType == BYE) {
+                continue;
+            }
+            if (input.equals(commandType.commandText)
+                    || input.startsWith(commandType.commandText + " ")) {
+                return commandType;
+            }
+        }
+        return UNKNOWN;
+    }
+
+    /**
+     * Returns the command text used in user-facing guidance.
+     *
+     * @return the command text
+     */
+    public String getCommandText() {
+        return commandText;
+    }
+}

@@ -3,7 +3,7 @@
  */
 public class Task {
     protected String description;
-    protected boolean isDone;
+    protected CompletionStatus completionStatus;
 
     /**
      * Creates a task that is initially not done.
@@ -12,7 +12,7 @@ public class Task {
      */
     public Task(String description) {
         this.description = description;
-        this.isDone = false;
+        this.completionStatus = CompletionStatus.NOT_DONE;
     }
 
     /**
@@ -21,21 +21,21 @@ public class Task {
      * @return {@code X} if the task is done, or a space otherwise
      */
     public String getStatusIcon() {
-        return isDone ? "X" : " ";
+        return completionStatus.getStatusIcon();
     }
 
     /**
      * Marks this task as done.
      */
     public void markAsDone() {
-        isDone = true;
+        completionStatus = CompletionStatus.DONE;
     }
 
     /**
      * Marks this task as not done.
      */
     public void markAsNotDone() {
-        isDone = false;
+        completionStatus = CompletionStatus.NOT_DONE;
     }
 
     /**
