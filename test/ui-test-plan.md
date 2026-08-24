@@ -332,7 +332,7 @@ ____________________________________________________________
 
 ## Test Case: mark, unmark, and invalid inputs
 
-- Aim: Verify task status changes and recovery from invalid task numbers, malformed deadline/event commands, empty input, an empty `todo`, and an unknown command.
+- Aim: Verify task status changes and recovery from invalid task numbers, malformed deadline/event commands, empty input, an empty `todo`, and an unknown command, with specific correction guidance.
 
 ### Inputs
 
@@ -408,27 +408,27 @@ No worries! I've marked this task as not done:
 ____________________________________________________________
 mark abc
 ____________________________________________________________
-Oops, please enter a valid task number.
+Oops, 'abc' isn't a valid task number. Use a positive whole number, like mark 1.
 ____________________________________________________________
 mark 2
 ____________________________________________________________
-Oops, that task number doesn't exist.
+Oops, task 2 doesn't exist yet. Type list to check the task numbers you have.
 ____________________________________________________________
 unmark abc
 ____________________________________________________________
-Oops, please enter a valid task number.
+Oops, 'abc' isn't a valid task number. Use a positive whole number, like unmark 1.
 ____________________________________________________________
 unmark 2
 ____________________________________________________________
-Oops, that task number doesn't exist.
+Oops, task 2 doesn't exist yet. Type list to check the task numbers you have.
 ____________________________________________________________
 deadline report
 ____________________________________________________________
-Oops, a deadline needs a description and a due date. Try: deadline <description> /by <date>.
+Oops, I couldn't find /by and a due date is missing. Try: deadline <description> /by <date>.
 ____________________________________________________________
 event meeting /from 2pm
 ____________________________________________________________
-Oops, an event needs a description, a start, and an end. Try: event <description> /from <start> /to <end>.
+Oops, that event is missing its end marker /to. Try: event <description> /from <start> /to <end>.
 ____________________________________________________________
 list
 ____________________________________________________________
@@ -437,15 +437,258 @@ ____________________________________________________________
 ____________________________________________________________
 todo
 ____________________________________________________________
-Oops, a ToDo needs a description.
+Oops, a ToDo description can't be empty. Try: todo <description>.
 ____________________________________________________________
 blah
 ____________________________________________________________
-Oops, I don't know what that means.
+Oops, I don't recognize 'blah'. Type help to see the commands I know.
 ____________________________________________________________
 
 ____________________________________________________________
-Oops, please enter a command.
+Oops, I didn't catch a command. Type help to see what I can do.
+____________________________________________________________
+bye
+____________________________________________________________
+Bye-bye! See you next time, okay?
+____________________________________________________________
+```
+
+## Test Case: specific deadline and event errors
+
+- Aim: Verify that missing deadline and event components receive specific correction guidance, and that valid commands still add tasks after rejected inputs.
+
+### Inputs
+
+```text
+deadline
+deadline report
+deadline /by Friday
+deadline report /by
+deadline report /by Friday
+event
+event team sync /to 3pm
+event team sync /from 2pm
+event /from 2pm /to 3pm
+event team sync /from /to 3pm
+event team sync /from 2pm /to
+event team sync /from 2pm /to 3pm
+list
+bye
+```
+
+### Expected Output
+
+```text
+____________________________________________________________
+ ____  _                  
+|  _ \| | __ _ _ __   __ _ 
+| |_) | |/ _` | '_ \ / _` |
+|  __/| | (_| | | | | (_| |
+|_|   |_|\__,_|_| |_|\__,_|
+⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠿⡛⡫⢋⠍⠍⢅⢍⢑⠩⡉⢍⠫⢛⠻⡻⡿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
+⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠿⡻⢿⠑⢌⢌⣔⣴⣵⢾⣾⣾⣾⣾⣾⡾⠶⡳⠵⢬⣢⢊⠌⠝⡛⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
+⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠫⠡⡑⡰⠴⢿⣿⣿⠟⡑⣌⣂⢊⢻⣿⣿⠏⠪⣨⣦⣥⡑⡸⣿⣷⣧⣊⠔⡨⢛⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
+⣿⣿⣿⣿⣿⣿⣿⡟⡣⠊⣌⢎⠎⠪⡘⣾⣿⠣⢨⣺⣿⣿⡢⠡⣿⡇⢅⢽⣿⣿⣿⣗⠌⣺⣿⣿⡇⢕⢐⠡⡘⠿⣿⣿⣿⣿⣿⣿⣿⣿
+⣿⣿⣿⣿⣿⡿⠋⢔⣰⣽⣿⡧⡊⢌⣺⣿⡇⢅⣽⣿⣿⣿⠪⢨⣿⡪⢐⣽⣿⣿⣿⠣⢊⢼⣿⡿⡟⠆⡢⢑⣴⡡⠂⠝⢿⣿⣿⣿⣿⣿
+⣿⣿⣿⣿⠏⡢⣱⣵⣿⣿⣿⠣⡊⢴⣿⣿⢇⢂⢿⣿⢟⠏⣊⣾⣿⣧⡅⢝⠩⢋⢂⢕⣼⣿⣿⣧⠪⡐⢌⢘⠍⡢⢑⠡⡑⢜⣿⣿⣿⣿
+⣿⣿⣿⠣⢑⣴⣿⣿⣿⣿⡏⡊⡲⣿⣿⣿⣷⣐⢌⢂⡢⣱⣾⣿⣿⣿⣿⣷⣷⣶⣷⣿⣿⣿⣿⣷⣧⣶⣗⢐⠅⠢⣱⣮⡆⢅⠚⣿⣿⣿
+⣿⣿⢃⠪⣸⣿⣿⣿⣿⣿⡐⢌⢼⣿⣿⣿⡿⠿⢟⢓⣛⣙⣭⡮⠾⡚⣛⣍⣝⣬⣵⣭⣮⡭⣏⣻⣟⣛⠿⢦⣾⣼⣾⣿⣿⡦⡑⡘⣿⣿
+⣿⢇⢑⢸⣿⣿⣿⣿⣿⡿⢿⠻⡛⡙⣅⣥⣪⣮⣾⡿⠻⣙⣕⣼⣾⣾⣿⣿⣿⣿⣿⡿⡫⣸⣿⣿⣿⣿⣿⣾⣬⣙⢟⢿⣿⣿⡆⠪⡸⣿
+⡿⢐⠡⣺⣿⣿⡟⢭⡑⣌⣦⣵⣾⣿⢿⡻⣛⣫⣵⣼⢞⣻⣿⣿⣿⣿⣿⣿⣿⢿⠫⢨⢰⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣧⣙⠿⣯⠊⠌⣿
+⡏⡢⢑⣿⣿⣿⣿⣿⢙⣙⣍⣵⣥⣾⣶⣿⣿⡿⡛⣼⣾⣿⣿⣿⣿⡿⡿⢋⠣⠡⣊⣴⣿⣿⣿⡿⢿⣿⣿⣿⣿⣿⣿⣿⣿⣮⣪⠣⡑⡸
+⡇⡊⢼⣿⣿⣿⣿⣿⣤⢍⢛⠻⡛⢟⠻⣫⡧⡱⣞⠻⢛⢛⠝⡩⢃⠣⡨⣂⣵⣷⣿⣿⣿⣿⣿⡿⣸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡌⢔⢘
+⡌⡂⡊⡃⣻⣿⣿⣿⣿⣇⠢⡑⡐⡡⠿⡛⣴⣿⣿⣿⣿⠢⢗⢂⣓⣃⠪⣿⣿⣿⣿⠏⣽⣿⣿⠣⣾⣿⣿⣿⣿⣿⢹⣿⣿⣿⣿⡯⡐⠌
+⣇⢊⠔⡁⢎⢛⢙⢽⣿⣿⣿⣯⣦⡦⡑⣴⣿⣿⣿⣿⢣⢳⣱⣿⣿⣿⡎⣽⣿⣿⣿⢨⣿⡿⢣⢡⠩⡙⡻⣿⣿⣿⠸⣿⣿⣿⣿⡗⡨⢨
+⣿⡐⠬⡎⢔⢐⠡⣙⣿⣿⡏⡙⡣⠑⢬⣾⣿⣿⣿⡿⣨⢾⠻⢛⢛⠻⢿⡆⢿⣿⡯⢪⡟⢅⣿⣷⠡⣻⣦⣝⣿⣟⢬⣿⣿⣿⣿⢇⠺⣿
+⣿⡆⠅⢍⠢⡘⢾⣿⣿⣿⣮⡐⠔⡡⣳⣿⡿⣻⣿⠂⢕⣠⣵⣶⣦⣅⢕⣿⣧⠹⡯⣂⣾⠟⢟⠻⡳⢨⢻⣿⣿⡇⣺⣿⣿⣿⡿⡂⢝⣿
+⣿⣮⠊⠔⡁⣢⣿⣿⣿⣿⣿⣬⠎⢄⢿⣿⡗⣺⡇⣵⠿⡿⣻⢿⣿⣿⣿⣿⣿⣿⣬⣼⣧⣼⣴⣥⣌⢂⢊⢝⢿⠌⣾⣿⣿⣿⡓⢌⣺⣿
+⣿⣿⡎⠌⠜⣾⣿⣿⣿⣿⣿⠇⠕⡁⣿⣿⡧⢺⡇⣺⣼⣇⣟⣼⣿⡿⣿⣿⣿⣿⣿⣿⣿⣿⢫⡿⢿⣷⣕⢐⠔⣹⣿⣿⣿⡿⡈⢦⣿⣿
+⣿⣿⣿⣎⠌⢜⢻⣿⣿⣿⠣⡑⡡⠢⢹⣿⢑⣥⡢⣹⣿⣿⣿⣿⣗⠅⣂⣪⣬⣙⡝⡻⢿⣯⣢⣟⣼⡢⣿⡇⡢⣿⣿⣿⠫⡑⢼⣿⣿⣿
+⣿⣿⣿⣿⣮⢐⠡⠻⣿⣿⣷⡟⡢⣱⣇⠣⡸⣿⣿⣿⣿⣿⣿⣿⣇⣺⣿⣿⣿⣿⣿⣷⡩⣿⣿⣿⣿⣿⢏⢢⡿⣏⡿⠡⡑⣼⣿⣿⣿⣿
+⣿⣿⣿⣿⣿⣷⡅⠕⡩⠻⡏⡢⡢⣿⣿⡇⣚⣿⣿⣿⣿⣿⣿⣿⡧⣺⣿⣿⣿⣿⣿⣿⢪⣿⣿⣿⡿⢫⡼⡛⡱⢑⢐⣱⣾⣿⣿⣿⣿⣿
+⣿⣿⣿⣿⣿⣿⣿⣷⣔⠡⢒⠫⢸⣿⣿⢇⡢⡙⢿⣿⣿⣿⣿⣿⣯⢜⢿⣿⣿⣿⣿⠏⣼⣿⣯⣣⣪⣱⢔⠌⡂⣕⣾⣿⣿⣿⣿⣿⣿⣿
+⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣥⡊⠔⡩⢙⢂⢿⠠⠡⡙⡻⣿⣿⣿⣿⣷⣍⠻⡻⡻⣱⣽⣿⣿⠿⡫⢃⢅⢢⣪⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿
+⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣬⣂⢅⠢⣡⢑⢐⠔⡨⢋⠿⠿⠿⠿⠿⡻⡚⢏⠫⡑⡡⣊⣤⣷⣽⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
+⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣦⣥⣢⣡⣂⣅⣅⣣⣑⣔⣬⣶⣿⣾⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
+Hi hi! I'm Plana.
+What shall we get done today?
+____________________________________________________________
+deadline
+____________________________________________________________
+Oops, a deadline needs a description and a due date. Try: deadline <description> /by <date>.
+____________________________________________________________
+deadline report
+____________________________________________________________
+Oops, I couldn't find /by and a due date is missing. Try: deadline <description> /by <date>.
+____________________________________________________________
+deadline /by Friday
+____________________________________________________________
+Oops, that deadline is missing its description. Try: deadline <description> /by <date>.
+____________________________________________________________
+deadline report /by
+____________________________________________________________
+Oops, that deadline is missing its due date. Try: deadline <description> /by <date>.
+____________________________________________________________
+deadline report /by Friday
+____________________________________________________________
+Yay, I've added this task:
+  [D][ ] report (by: Friday)
+Now you have 1 task in your list!
+____________________________________________________________
+event
+____________________________________________________________
+Oops, an event needs a description, a start, and an end. Try: event <description> /from <start> /to <end>.
+____________________________________________________________
+event team sync /to 3pm
+____________________________________________________________
+Oops, that event is missing its start marker /from. Try: event <description> /from <start> /to <end>.
+____________________________________________________________
+event team sync /from 2pm
+____________________________________________________________
+Oops, that event is missing its end marker /to. Try: event <description> /from <start> /to <end>.
+____________________________________________________________
+event /from 2pm /to 3pm
+____________________________________________________________
+Oops, that event is missing its description. Try: event <description> /from <start> /to <end>.
+____________________________________________________________
+event team sync /from /to 3pm
+____________________________________________________________
+Oops, that event is missing its start time. Try: event <description> /from <start> /to <end>.
+____________________________________________________________
+event team sync /from 2pm /to
+____________________________________________________________
+Oops, that event is missing its end time. Try: event <description> /from <start> /to <end>.
+____________________________________________________________
+event team sync /from 2pm /to 3pm
+____________________________________________________________
+Yay, I've added this task:
+  [E][ ] team sync (from: 2pm to: 3pm)
+Now you have 2 tasks in your list!
+____________________________________________________________
+list
+____________________________________________________________
+ Here are your tasks:
+ 1.[D][ ] report (by: Friday)
+ 2.[E][ ] team sync (from: 2pm to: 3pm)
+____________________________________________________________
+bye
+____________________________________________________________
+Bye-bye! See you next time, okay?
+____________________________________________________________
+```
+
+## Test Case: task number errors preserve state
+
+- Aim: Verify that missing, non-numeric, zero, and out-of-range task numbers explain how to recover without changing task state, while valid mark and unmark commands still work afterward.
+
+### Inputs
+
+```text
+todo buy milk
+mark
+mark abc
+mark 0
+mark 2
+mark 1
+unmark
+unmark xyz
+unmark -1
+list
+unmark 1
+list
+bye
+```
+
+### Expected Output
+
+```text
+____________________________________________________________
+ ____  _                  
+|  _ \| | __ _ _ __   __ _ 
+| |_) | |/ _` | '_ \ / _` |
+|  __/| | (_| | | | | (_| |
+|_|   |_|\__,_|_| |_|\__,_|
+⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠿⡛⡫⢋⠍⠍⢅⢍⢑⠩⡉⢍⠫⢛⠻⡻⡿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
+⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠿⡻⢿⠑⢌⢌⣔⣴⣵⢾⣾⣾⣾⣾⣾⡾⠶⡳⠵⢬⣢⢊⠌⠝⡛⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
+⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠫⠡⡑⡰⠴⢿⣿⣿⠟⡑⣌⣂⢊⢻⣿⣿⠏⠪⣨⣦⣥⡑⡸⣿⣷⣧⣊⠔⡨⢛⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
+⣿⣿⣿⣿⣿⣿⣿⡟⡣⠊⣌⢎⠎⠪⡘⣾⣿⠣⢨⣺⣿⣿⡢⠡⣿⡇⢅⢽⣿⣿⣿⣗⠌⣺⣿⣿⡇⢕⢐⠡⡘⠿⣿⣿⣿⣿⣿⣿⣿⣿
+⣿⣿⣿⣿⣿⡿⠋⢔⣰⣽⣿⡧⡊⢌⣺⣿⡇⢅⣽⣿⣿⣿⠪⢨⣿⡪⢐⣽⣿⣿⣿⠣⢊⢼⣿⡿⡟⠆⡢⢑⣴⡡⠂⠝⢿⣿⣿⣿⣿⣿
+⣿⣿⣿⣿⠏⡢⣱⣵⣿⣿⣿⠣⡊⢴⣿⣿⢇⢂⢿⣿⢟⠏⣊⣾⣿⣧⡅⢝⠩⢋⢂⢕⣼⣿⣿⣧⠪⡐⢌⢘⠍⡢⢑⠡⡑⢜⣿⣿⣿⣿
+⣿⣿⣿⠣⢑⣴⣿⣿⣿⣿⡏⡊⡲⣿⣿⣿⣷⣐⢌⢂⡢⣱⣾⣿⣿⣿⣿⣷⣷⣶⣷⣿⣿⣿⣿⣷⣧⣶⣗⢐⠅⠢⣱⣮⡆⢅⠚⣿⣿⣿
+⣿⣿⢃⠪⣸⣿⣿⣿⣿⣿⡐⢌⢼⣿⣿⣿⡿⠿⢟⢓⣛⣙⣭⡮⠾⡚⣛⣍⣝⣬⣵⣭⣮⡭⣏⣻⣟⣛⠿⢦⣾⣼⣾⣿⣿⡦⡑⡘⣿⣿
+⣿⢇⢑⢸⣿⣿⣿⣿⣿⡿⢿⠻⡛⡙⣅⣥⣪⣮⣾⡿⠻⣙⣕⣼⣾⣾⣿⣿⣿⣿⣿⡿⡫⣸⣿⣿⣿⣿⣿⣾⣬⣙⢟⢿⣿⣿⡆⠪⡸⣿
+⡿⢐⠡⣺⣿⣿⡟⢭⡑⣌⣦⣵⣾⣿⢿⡻⣛⣫⣵⣼⢞⣻⣿⣿⣿⣿⣿⣿⣿⢿⠫⢨⢰⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣧⣙⠿⣯⠊⠌⣿
+⡏⡢⢑⣿⣿⣿⣿⣿⢙⣙⣍⣵⣥⣾⣶⣿⣿⡿⡛⣼⣾⣿⣿⣿⣿⡿⡿⢋⠣⠡⣊⣴⣿⣿⣿⡿⢿⣿⣿⣿⣿⣿⣿⣿⣿⣮⣪⠣⡑⡸
+⡇⡊⢼⣿⣿⣿⣿⣿⣤⢍⢛⠻⡛⢟⠻⣫⡧⡱⣞⠻⢛⢛⠝⡩⢃⠣⡨⣂⣵⣷⣿⣿⣿⣿⣿⡿⣸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡌⢔⢘
+⡌⡂⡊⡃⣻⣿⣿⣿⣿⣇⠢⡑⡐⡡⠿⡛⣴⣿⣿⣿⣿⠢⢗⢂⣓⣃⠪⣿⣿⣿⣿⠏⣽⣿⣿⠣⣾⣿⣿⣿⣿⣿⢹⣿⣿⣿⣿⡯⡐⠌
+⣇⢊⠔⡁⢎⢛⢙⢽⣿⣿⣿⣯⣦⡦⡑⣴⣿⣿⣿⣿⢣⢳⣱⣿⣿⣿⡎⣽⣿⣿⣿⢨⣿⡿⢣⢡⠩⡙⡻⣿⣿⣿⠸⣿⣿⣿⣿⡗⡨⢨
+⣿⡐⠬⡎⢔⢐⠡⣙⣿⣿⡏⡙⡣⠑⢬⣾⣿⣿⣿⡿⣨⢾⠻⢛⢛⠻⢿⡆⢿⣿⡯⢪⡟⢅⣿⣷⠡⣻⣦⣝⣿⣟⢬⣿⣿⣿⣿⢇⠺⣿
+⣿⡆⠅⢍⠢⡘⢾⣿⣿⣿⣮⡐⠔⡡⣳⣿⡿⣻⣿⠂⢕⣠⣵⣶⣦⣅⢕⣿⣧⠹⡯⣂⣾⠟⢟⠻⡳⢨⢻⣿⣿⡇⣺⣿⣿⣿⡿⡂⢝⣿
+⣿⣮⠊⠔⡁⣢⣿⣿⣿⣿⣿⣬⠎⢄⢿⣿⡗⣺⡇⣵⠿⡿⣻⢿⣿⣿⣿⣿⣿⣿⣬⣼⣧⣼⣴⣥⣌⢂⢊⢝⢿⠌⣾⣿⣿⣿⡓⢌⣺⣿
+⣿⣿⡎⠌⠜⣾⣿⣿⣿⣿⣿⠇⠕⡁⣿⣿⡧⢺⡇⣺⣼⣇⣟⣼⣿⡿⣿⣿⣿⣿⣿⣿⣿⣿⢫⡿⢿⣷⣕⢐⠔⣹⣿⣿⣿⡿⡈⢦⣿⣿
+⣿⣿⣿⣎⠌⢜⢻⣿⣿⣿⠣⡑⡡⠢⢹⣿⢑⣥⡢⣹⣿⣿⣿⣿⣗⠅⣂⣪⣬⣙⡝⡻⢿⣯⣢⣟⣼⡢⣿⡇⡢⣿⣿⣿⠫⡑⢼⣿⣿⣿
+⣿⣿⣿⣿⣮⢐⠡⠻⣿⣿⣷⡟⡢⣱⣇⠣⡸⣿⣿⣿⣿⣿⣿⣿⣇⣺⣿⣿⣿⣿⣿⣷⡩⣿⣿⣿⣿⣿⢏⢢⡿⣏⡿⠡⡑⣼⣿⣿⣿⣿
+⣿⣿⣿⣿⣿⣷⡅⠕⡩⠻⡏⡢⡢⣿⣿⡇⣚⣿⣿⣿⣿⣿⣿⣿⡧⣺⣿⣿⣿⣿⣿⣿⢪⣿⣿⣿⡿⢫⡼⡛⡱⢑⢐⣱⣾⣿⣿⣿⣿⣿
+⣿⣿⣿⣿⣿⣿⣿⣷⣔⠡⢒⠫⢸⣿⣿⢇⡢⡙⢿⣿⣿⣿⣿⣿⣯⢜⢿⣿⣿⣿⣿⠏⣼⣿⣯⣣⣪⣱⢔⠌⡂⣕⣾⣿⣿⣿⣿⣿⣿⣿
+⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣥⡊⠔⡩⢙⢂⢿⠠⠡⡙⡻⣿⣿⣿⣿⣷⣍⠻⡻⡻⣱⣽⣿⣿⠿⡫⢃⢅⢢⣪⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿
+⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣬⣂⢅⠢⣡⢑⢐⠔⡨⢋⠿⠿⠿⠿⠿⡻⡚⢏⠫⡑⡡⣊⣤⣷⣽⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
+⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣦⣥⣢⣡⣂⣅⣅⣣⣑⣔⣬⣶⣿⣾⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
+Hi hi! I'm Plana.
+What shall we get done today?
+____________________________________________________________
+todo buy milk
+____________________________________________________________
+Yay, I've added this task:
+  [T][ ] buy milk
+Now you have 1 task in your list!
+____________________________________________________________
+mark
+____________________________________________________________
+Oops, mark needs a task number. Try: mark <number>.
+____________________________________________________________
+mark abc
+____________________________________________________________
+Oops, 'abc' isn't a valid task number. Use a positive whole number, like mark 1.
+____________________________________________________________
+mark 0
+____________________________________________________________
+Oops, task numbers start at 1. Try mark 1 or another number from list.
+____________________________________________________________
+mark 2
+____________________________________________________________
+Oops, task 2 doesn't exist yet. Type list to check the task numbers you have.
+____________________________________________________________
+mark 1
+____________________________________________________________
+Yay! I've marked this task as done:
+  [T][X] buy milk
+____________________________________________________________
+unmark
+____________________________________________________________
+Oops, unmark needs a task number. Try: unmark <number>.
+____________________________________________________________
+unmark xyz
+____________________________________________________________
+Oops, 'xyz' isn't a valid task number. Use a positive whole number, like unmark 1.
+____________________________________________________________
+unmark -1
+____________________________________________________________
+Oops, task numbers start at 1. Try unmark 1 or another number from list.
+____________________________________________________________
+list
+____________________________________________________________
+ Here are your tasks:
+ 1.[T][X] buy milk
+____________________________________________________________
+unmark 1
+____________________________________________________________
+No worries! I've marked this task as not done:
+  [T][ ] buy milk
+____________________________________________________________
+list
+____________________________________________________________
+ Here are your tasks:
+ 1.[T][ ] buy milk
 ____________________________________________________________
 bye
 ____________________________________________________________

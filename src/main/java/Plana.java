@@ -6,37 +6,67 @@ import java.util.Scanner;
  */
 public class Plana {
     private static final int MAX_TASKS = 100;
-    private static final String TODO_DESCRIPTION_ERROR = "Oops, a ToDo needs a description.";
-    private static final String UNKNOWN_COMMAND_ERROR = "Oops, I don't know what that means.";
-    private static final String EMPTY_COMMAND_ERROR = "Oops, please enter a command.";
-    private static final String INVALID_TASK_NUMBER_ERROR = "Oops, please enter a valid task number.";
-    private static final String MISSING_TASK_ERROR = "Oops, that task number doesn't exist.";
-    private static final String TASK_LIST_FULL_ERROR = "Oops, your task list is full for now.";
-    private static final String DEADLINE_FORMAT_ERROR = "Oops, a deadline needs a description and a due date."
-            + " Try: deadline <description> /by <date>.";
-    private static final String EVENT_FORMAT_ERROR = "Oops, an event needs a description, a start, and an end."
-            + " Try: event <description> /from <start> /to <end>.";
+    private static final String TODO_DESCRIPTION_ERROR = "Oops, a ToDo description can't be empty."
+            + " Try: todo <description>.";
+    private static final String EMPTY_COMMAND_ERROR = "Oops, I didn't catch a command."
+            + " Type help to see what I can do.";
+    private static final String TASK_LIST_FULL_ERROR = "Oops, your task list is full at 100 tasks."
+            + " You can still use list, mark, and unmark.";
+    private static final String DEADLINE_USAGE = "Try: deadline <description> /by <date>.";
+    private static final String EVENT_USAGE = "Try: event <description> /from <start> /to <end>.";
 
     /**
      * Converts a user-entered task number into a zero-based array index.
      *
+     * @param action the command being performed, such as mark or unmark
      * @param taskNumber the task number entered by the user
      * @param taskCount the number of tasks currently stored
      * @return the zero-based index of the selected task
      * @throws PlanaException if the task number is not a valid existing task
      */
-    private static int getTaskIndex(String taskNumber, int taskCount) throws PlanaException {
+    private static int getTaskIndex(String action, String taskNumber, int taskCount) throws PlanaException {
+        if (taskNumber.isBlank()) {
+            throw new PlanaException("Oops, " + action + " needs a task number."
+                    + " Try: " + action + " <number>.");
+        }
+
         final int taskIndex;
         try {
             taskIndex = Integer.parseInt(taskNumber) - 1;
         } catch (NumberFormatException exception) {
-            throw new PlanaException(INVALID_TASK_NUMBER_ERROR);
+            throw new PlanaException("Oops, '" + taskNumber + "' isn't a valid task number."
+                    + " Use a positive whole number, like " + action + " 1.");
         }
 
-        if (taskIndex < 0 || taskIndex >= taskCount) {
-            throw new PlanaException(MISSING_TASK_ERROR);
+        if (taskIndex < 0) {
+            throw new PlanaException("Oops, task numbers start at 1."
+                    + " Try " + action + " 1 or another number from list.");
+        }
+        if (taskIndex >= taskCount) {
+            throw new PlanaException("Oops, task " + (taskIndex + 1) + " doesn't exist yet."
+                    + " Type list to check the task numbers you have.");
         }
         return taskIndex;
+    }
+
+    /**
+     * Creates an error for a deadline whose syntax is missing one specific part.
+     *
+     * @param problem the part of the deadline that needs correcting
+     * @return a user-friendly deadline error
+     */
+    private static PlanaException deadlineError(String problem) {
+        return new PlanaException("Oops, " + problem + " " + DEADLINE_USAGE);
+    }
+
+    /**
+     * Creates an error for an event whose syntax is missing one specific part.
+     *
+     * @param problem the part of the event that needs correcting
+     * @return a user-friendly event error
+     */
+    private static PlanaException eventError(String problem) {
+        return new PlanaException("Oops, " + problem + " " + EVENT_USAGE);
     }
 
     /**
@@ -133,73 +163,94 @@ public class Plana {
                         System.out.println(border_line);
                     } else if (command.equals("mark") || command.startsWith("mark ")) {
                         String taskNumber = command.substring("mark".length()).trim();
-                        int taskIndex = getTaskIndex(taskNumber, taskCount);
+                        int taskIndex = getTaskIndex("mark", taskNumber, taskCount);
                         tasks[taskIndex].markAsDone();
                         System.out.println("Yay! I've marked this task as done:");
                         System.out.println("  " + tasks[taskIndex]);
                         System.out.println(border_line);
                     } else if (command.equals("unmark") || command.startsWith("unmark ")) {
                         String taskNumber = command.substring("unmark".length()).trim();
-                        int taskIndex = getTaskIndex(taskNumber, taskCount);
+                        int taskIndex = getTaskIndex("unmark", taskNumber, taskCount);
                         tasks[taskIndex].markAsNotDone();
                         System.out.println("No worries! I've marked this task as not done:");
                         System.out.println("  " + tasks[taskIndex]);
                         System.out.println(border_line);
-                } else if (command.equals("deadline") || command.startsWith("deadline ")) {
-                    String arguments = command.substring("deadline".length()).trim();
-                    int bySeparatorIndex = arguments.indexOf(" /by ");
-                    if (bySeparatorIndex <= 0 || bySeparatorIndex + " /by ".length() >= arguments.length()) {
-                        throw new PlanaException(DEADLINE_FORMAT_ERROR);
-                    }
-                    String description = arguments.substring(0, bySeparatorIndex).trim();
-                    String dueDate = arguments.substring(bySeparatorIndex + " /by ".length()).trim();
-                    if (description.isBlank() || dueDate.isBlank()) {
-                        throw new PlanaException(DEADLINE_FORMAT_ERROR);
-                    }
-                    ensureTaskCapacity(taskCount);
-                    tasks[taskCount] = new Deadline(description, dueDate);
-                    taskCount++;
-                    System.out.println("Yay, I've added this task:");
-                    System.out.println("  " + tasks[taskCount - 1]);
-                    System.out.println("Now you have " + taskCount + (taskCount == 1 ? " task" : " tasks") + " in your list!");
-                    System.out.println(border_line);
-                } else if (command.equals("event") || command.startsWith("event ")) {
-                    String arguments = command.substring("event".length()).trim();
-                    int fromSeparatorIndex = arguments.indexOf(" /from ");
-                    int toSeparatorIndex = arguments.indexOf(" /to ", fromSeparatorIndex + " /from ".length());
-                    if (fromSeparatorIndex <= 0 || toSeparatorIndex <= fromSeparatorIndex + " /from ".length()
-                            || toSeparatorIndex + " /to ".length() >= arguments.length()) {
-                        throw new PlanaException(EVENT_FORMAT_ERROR);
-                    }
-                    String description = arguments.substring(0, fromSeparatorIndex).trim();
-                    String from = arguments.substring(fromSeparatorIndex + " /from ".length(), toSeparatorIndex).trim();
-                    String to = arguments.substring(toSeparatorIndex + " /to ".length()).trim();
-                    if (description.isBlank() || from.isBlank() || to.isBlank()) {
-                        throw new PlanaException(EVENT_FORMAT_ERROR);
-                    }
-                    ensureTaskCapacity(taskCount);
-                    tasks[taskCount] = new Event(description, from, to);
-                    taskCount++;
-                    System.out.println("Yay, I've added this task:");
-                    System.out.println("  " + tasks[taskCount - 1]);
-                    System.out.println("Now you have " + taskCount + (taskCount == 1 ? " task" : " tasks") + " in your list!");
-                    System.out.println(border_line);
-                } else if (command.equals("todo") || command.startsWith("todo ")) {
-                    String description = command.substring("todo".length()).trim();
-                    if (description.isBlank()) {
-                        throw new PlanaException(TODO_DESCRIPTION_ERROR);
-                    }
-                    ensureTaskCapacity(taskCount);
-                    tasks[taskCount] = new ToDo(description);
-                    taskCount++;
-                    System.out.println("Yay, I've added this task:");
-                    System.out.println("  " + tasks[taskCount - 1]);
-                    System.out.println("Now you have " + taskCount + (taskCount == 1 ? " task" : " tasks") + " in your list!");
-                    System.out.println(border_line);
-                } else if (command.isBlank()) {
-                    throw new PlanaException(EMPTY_COMMAND_ERROR);
-                } else {
-                    throw new PlanaException(UNKNOWN_COMMAND_ERROR);
+                    } else if (command.equals("deadline") || command.startsWith("deadline ")) {
+                        String arguments = command.substring("deadline".length()).trim();
+                        if (arguments.isBlank()) {
+                            throw deadlineError("a deadline needs a description and a due date.");
+                        }
+                        int bySeparatorIndex = arguments.indexOf("/by");
+                        if (bySeparatorIndex < 0) {
+                            throw deadlineError("I couldn't find /by and a due date is missing.");
+                        }
+                        String description = arguments.substring(0, bySeparatorIndex).trim();
+                        String dueDate = arguments.substring(bySeparatorIndex + "/by".length()).trim();
+                        if (description.isBlank()) {
+                            throw deadlineError("that deadline is missing its description.");
+                        }
+                        if (dueDate.isBlank()) {
+                            throw deadlineError("that deadline is missing its due date.");
+                        }
+                        ensureTaskCapacity(taskCount);
+                        tasks[taskCount] = new Deadline(description, dueDate);
+                        taskCount++;
+                        System.out.println("Yay, I've added this task:");
+                        System.out.println("  " + tasks[taskCount - 1]);
+                        System.out.println("Now you have " + taskCount + (taskCount == 1 ? " task" : " tasks") + " in your list!");
+                        System.out.println(border_line);
+                    } else if (command.equals("event") || command.startsWith("event ")) {
+                        String arguments = command.substring("event".length()).trim();
+                        if (arguments.isBlank()) {
+                            throw eventError("an event needs a description, a start, and an end.");
+                        }
+                        int fromSeparatorIndex = arguments.indexOf("/from");
+                        int toSeparatorIndex = arguments.indexOf("/to");
+                        if (fromSeparatorIndex < 0) {
+                            throw eventError("that event is missing its start marker /from.");
+                        }
+                        if (toSeparatorIndex < 0) {
+                            throw eventError("that event is missing its end marker /to.");
+                        }
+                        if (toSeparatorIndex < fromSeparatorIndex) {
+                            throw eventError("use /from before /to in an event.");
+                        }
+                        String description = arguments.substring(0, fromSeparatorIndex).trim();
+                        String from = arguments.substring(fromSeparatorIndex + "/from".length(), toSeparatorIndex).trim();
+                        String to = arguments.substring(toSeparatorIndex + "/to".length()).trim();
+                        if (description.isBlank()) {
+                            throw eventError("that event is missing its description.");
+                        }
+                        if (from.isBlank()) {
+                            throw eventError("that event is missing its start time.");
+                        }
+                        if (to.isBlank()) {
+                            throw eventError("that event is missing its end time.");
+                        }
+                        ensureTaskCapacity(taskCount);
+                        tasks[taskCount] = new Event(description, from, to);
+                        taskCount++;
+                        System.out.println("Yay, I've added this task:");
+                        System.out.println("  " + tasks[taskCount - 1]);
+                        System.out.println("Now you have " + taskCount + (taskCount == 1 ? " task" : " tasks") + " in your list!");
+                        System.out.println(border_line);
+                    } else if (command.equals("todo") || command.startsWith("todo ")) {
+                        String description = command.substring("todo".length()).trim();
+                        if (description.isBlank()) {
+                            throw new PlanaException(TODO_DESCRIPTION_ERROR);
+                        }
+                        ensureTaskCapacity(taskCount);
+                        tasks[taskCount] = new ToDo(description);
+                        taskCount++;
+                        System.out.println("Yay, I've added this task:");
+                        System.out.println("  " + tasks[taskCount - 1]);
+                        System.out.println("Now you have " + taskCount + (taskCount == 1 ? " task" : " tasks") + " in your list!");
+                        System.out.println(border_line);
+                    } else if (command.isBlank()) {
+                        throw new PlanaException(EMPTY_COMMAND_ERROR);
+                    } else {
+                        throw new PlanaException("Oops, I don't recognize '" + command + "'."
+                                + " Type help to see the commands I know.");
                     }
                 } catch (PlanaException exception) {
                     System.out.println(exception.getMessage());
