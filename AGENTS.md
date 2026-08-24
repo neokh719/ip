@@ -24,6 +24,19 @@ Unless the user says otherwise, assume that you are assisting a student working 
 
 # Project-specific requirements
 
+## Post-code-update UI validation:
+
+After every update to source code or other user-visible application behavior:
+
+1. Review `test/ui-test-plan.md` and update it when the change adds, removes, or changes a user-visible command, input, or expected console output. Keep each affected test case's aim, inputs, and expected output accurate.
+2. Invoke the project-specific `test-ui` skill after the code update by running its test session from the repository root:
+
+   ```powershell
+   pwsh -NoProfile -File .codex/skills/test-ui/scripts/run_ui_tests.ps1
+   ```
+
+   Preserve the console input/output record in the report. If a test fails, stop immediately, report the actual and expected outputs, and do not continue to later test cases.
+
 ## Java version:
 
 Ensure that Java 25 is used when running the application or build tasks. On macOS, use `sdk use java 25.0.3.fx-zulu` to switch to Java 25 if needed.
