@@ -52,6 +52,21 @@ public class Plana {
                         System.out.println("Sorry, please provide a valid task number.");
                     }
                     System.out.println(border_line);
+                } else if (command.startsWith("unmark ")) {
+                    String taskNumber = command.substring("unmark ".length()).trim();
+                    try {
+                        int taskIndex = Integer.parseInt(taskNumber) - 1;
+                        if (taskIndex >= 0 && taskIndex < taskCount) {
+                            completed[taskIndex] = false;
+                            System.out.println("OK, I've marked this task as not done yet:");
+                            System.out.println("  [ ] " + tasks[taskIndex]);
+                        } else {
+                            System.out.println("Sorry, that task number does not exist.");
+                        }
+                    } catch (NumberFormatException exception) {
+                        System.out.println("Sorry, please provide a valid task number.");
+                    }
+                    System.out.println(border_line);
                 } else if (!command.isBlank()) {
                     if (taskCount < MAX_TASKS) {
                         tasks[taskCount] = command;
