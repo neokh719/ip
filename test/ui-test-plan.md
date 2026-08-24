@@ -290,7 +290,7 @@ ____________________________________________________________
 
 ## Test Case: mark, unmark, and invalid inputs
 
-- Aim: Verify task status changes and recovery from invalid task numbers, an empty `todo`, and an unknown command.
+- Aim: Verify task status changes and recovery from invalid task numbers, malformed deadline/event commands, empty input, an empty `todo`, and an unknown command.
 
 ### Inputs
 
@@ -300,9 +300,14 @@ mark 1
 unmark 1
 mark abc
 mark 2
+unmark abc
+unmark 2
+deadline report
+event meeting /from 2pm
 list
 todo
 blah
+
 bye
 ```
 
@@ -367,6 +372,22 @@ mark 2
 ____________________________________________________________
 Oops, that task number doesn't exist.
 ____________________________________________________________
+unmark abc
+____________________________________________________________
+Oops, please enter a valid task number.
+____________________________________________________________
+unmark 2
+____________________________________________________________
+Oops, that task number doesn't exist.
+____________________________________________________________
+deadline report
+____________________________________________________________
+Oops, a deadline needs a description and a due date. Try: deadline <description> /by <date>.
+____________________________________________________________
+event meeting /from 2pm
+____________________________________________________________
+Oops, an event needs a description, a start, and an end. Try: event <description> /from <start> /to <end>.
+____________________________________________________________
 list
 ____________________________________________________________
  Here are your tasks:
@@ -379,6 +400,10 @@ ____________________________________________________________
 blah
 ____________________________________________________________
 Oops, I don't know what that means.
+____________________________________________________________
+
+____________________________________________________________
+Oops, please enter a command.
 ____________________________________________________________
 bye
 ____________________________________________________________
