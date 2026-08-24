@@ -1,12 +1,7 @@
 /**
  * Represents a ToDo task without an attached date or time.
- *
- * <p>This class uses composition instead of inheritance: the existing
- * {@link Task} stores the completion state, while this class adds the ToDo
- * type marker used when displaying the task.</p>
  */
-public class ToDo {
-    private final Task task;
+public class ToDo extends Task {
 
     /**
      * Creates an incomplete ToDo with the given description.
@@ -14,21 +9,7 @@ public class ToDo {
      * @param description the task description
      */
     public ToDo(String description) {
-        task = new Task(description);
-    }
-
-    /**
-     * Marks this ToDo as done.
-     */
-    public void markAsDone() {
-        task.markAsDone();
-    }
-
-    /**
-     * Marks this ToDo as not done.
-     */
-    public void markAsNotDone() {
-        task.markAsNotDone();
+        super(description);
     }
 
     /**
@@ -38,6 +19,6 @@ public class ToDo {
      */
     @Override
     public String toString() {
-        return "[T]" + task;
+        return "[T]" + super.toString();
     }
 }

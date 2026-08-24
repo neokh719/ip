@@ -1,12 +1,7 @@
 /**
  * Represents a task that must be completed by a specified date or time.
- *
- * <p>This class uses composition instead of inheritance: the existing
- * {@link Task} stores the completion state, while this class stores the
- * deadline-specific due-date text and type marker.</p>
  */
-public class Deadline {
-    private final Task task;
+public class Deadline extends Task {
     private final String dueDate;
 
     /**
@@ -16,22 +11,8 @@ public class Deadline {
      * @param dueDate the due date or time, kept as entered by the user
      */
     public Deadline(String description, String dueDate) {
-        task = new Task(description);
+        super(description);
         this.dueDate = dueDate;
-    }
-
-    /**
-     * Marks this Deadline as done.
-     */
-    public void markAsDone() {
-        task.markAsDone();
-    }
-
-    /**
-     * Marks this Deadline as not done.
-     */
-    public void markAsNotDone() {
-        task.markAsNotDone();
     }
 
     /**
@@ -41,6 +22,6 @@ public class Deadline {
      */
     @Override
     public String toString() {
-        return "[D]" + task + " (by: " + dueDate + ")";
+        return "[D]" + super.toString() + " (by: " + dueDate + ")";
     }
 }

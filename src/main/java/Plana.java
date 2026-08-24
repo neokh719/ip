@@ -3,32 +3,6 @@ import java.util.Scanner;
 public class Plana {
     private static final int MAX_TASKS = 100;
 
-    /**
-     * Marks a stored task as done, dispatching to its concrete task type.
-     *
-     * @param task the stored ToDo or Deadline
-     */
-    private static void markTaskAsDone(Object task) {
-        if (task instanceof ToDo) {
-            ((ToDo) task).markAsDone();
-        } else if (task instanceof Deadline) {
-            ((Deadline) task).markAsDone();
-        }
-    }
-
-    /**
-     * Marks a stored task as not done, dispatching to its concrete task type.
-     *
-     * @param task the stored ToDo or Deadline
-     */
-    private static void markTaskAsNotDone(Object task) {
-        if (task instanceof ToDo) {
-            ((ToDo) task).markAsNotDone();
-        } else if (task instanceof Deadline) {
-            ((Deadline) task).markAsNotDone();
-        }
-    }
-
     public static void main(String[] args) {
         String banner = " ____  _                  \n"
                 + "|  _ \\| | __ _ _ __   __ _ \n"
@@ -71,7 +45,7 @@ public class Plana {
         System.out.println(border_line);
 
         try (Scanner scanner = new Scanner(System.in)) {
-            Object[] tasks = new Object[MAX_TASKS];
+            Task[] tasks = new Task[MAX_TASKS];
             int taskCount = 0;
 
             while (scanner.hasNextLine()) {
@@ -94,7 +68,7 @@ public class Plana {
                     try {
                         int taskIndex = Integer.parseInt(taskNumber) - 1;
                         if (taskIndex >= 0 && taskIndex < taskCount) {
-                            markTaskAsDone(tasks[taskIndex]);
+                            tasks[taskIndex].markAsDone();
                             System.out.println("Nice! I've marked this task as done:");
                             System.out.println("  " + tasks[taskIndex]);
                         } else {
@@ -109,7 +83,7 @@ public class Plana {
                     try {
                         int taskIndex = Integer.parseInt(taskNumber) - 1;
                         if (taskIndex >= 0 && taskIndex < taskCount) {
-                            markTaskAsNotDone(tasks[taskIndex]);
+                            tasks[taskIndex].markAsNotDone();
                             System.out.println("OK, I've marked this task as not done yet:");
                             System.out.println("  " + tasks[taskIndex]);
                         } else {
@@ -131,6 +105,31 @@ public class Plana {
                             System.out.println("Sorry, a Deadline must have a description and a due date in the format: deadline <description> /by <date>.");
                         } else {
                             tasks[taskCount] = new Deadline(description, dueDate);
+                            taskCount++;
+                            System.out.println("Got it. I've added this task:");
+                            System.out.println("  " + tasks[taskCount - 1]);
+                            System.out.println("Now you have " + taskCount + " tasks in the list.");
+                        }
+                    } else {
+                        System.out.println("Sorry, your task list is full.");
+                    }
+                    System.out.println(border_line);
+                } else if (command.equals("event") || command.startsWith("event ")) {
+                    String arguments = command.substring("event".length()).trim();
+                    int fromSeparatorIndex = arguments.indexOf(" /from ");
+                    int toSeparatorIndex = arguments.indexOf(" /to ", fromSeparatorIndex + " /from ".length());
+                    String errorMessage = "Sorry, an Event must have a description, a start, and an end in the format: event <description> /from <start> /to <end>.";
+                    if (fromSeparatorIndex <= 0 || toSeparatorIndex <= fromSeparatorIndex + " /from ".length()
+                            || toSeparatorIndex + " /to ".length() >= arguments.length()) {
+                        System.out.println(errorMessage);
+                    } else if (taskCount < MAX_TASKS) {
+                        String description = arguments.substring(0, fromSeparatorIndex).trim();
+                        String from = arguments.substring(fromSeparatorIndex + " /from ".length(), toSeparatorIndex).trim();
+                        String to = arguments.substring(toSeparatorIndex + " /to ".length()).trim();
+                        if (description.isBlank() || from.isBlank() || to.isBlank()) {
+                            System.out.println(errorMessage);
+                        } else {
+                            tasks[taskCount] = new Event(description, from, to);
                             taskCount++;
                             System.out.println("Got it. I've added this task:");
                             System.out.println("  " + tasks[taskCount - 1]);
