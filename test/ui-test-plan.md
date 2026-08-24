@@ -6,13 +6,16 @@ Run the project-specific `test-ui` skill from the repository root. It compiles t
 
 Each inputs block is one ordered command list sent to one Plana session. The expected-output block includes the startup banner and the final newline. Only line-ending differences between operating systems are ignored; text, spacing, and ordering are significant.
 
-## Test Case: exit immediately
+## Test Case: help and exit
 
-- Aim: Verify that Plana starts with the welcome screen and exits on the `bye` command.
+- Aim: Verify that `help`, `?`, and text containing `help` display Plana's feature list before `bye` exits.
 
 ### Inputs
 
 ```text
+help
+?
+please help me
 bye
 ```
 
@@ -52,6 +55,45 @@ ____________________________________________________________
 ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣦⣥⣢⣡⣂⣅⣅⣣⣑⣔⣬⣶⣿⣾⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
 Hi hi! I'm Plana.
 What shall we get done today?
+____________________________________________________________
+help
+____________________________________________________________
+Don't worry! I am always here to help :>
+Here's what I can do:
+  todo <description>                          add a task
+  deadline <description> /by <date>           add a deadline
+  event <description> /from <start> /to <end> add an event
+  list                                        show all tasks
+  mark <number>                               mark a task as done
+  unmark <number>                             mark a task as not done
+  help or ?                                   show this help
+  bye                                         say goodbye
+____________________________________________________________
+?
+____________________________________________________________
+Don't worry! I am always here to help :>
+Here's what I can do:
+  todo <description>                          add a task
+  deadline <description> /by <date>           add a deadline
+  event <description> /from <start> /to <end> add an event
+  list                                        show all tasks
+  mark <number>                               mark a task as done
+  unmark <number>                             mark a task as not done
+  help or ?                                   show this help
+  bye                                         say goodbye
+____________________________________________________________
+please help me
+____________________________________________________________
+Don't worry! I am always here to help :>
+Here's what I can do:
+  todo <description>                          add a task
+  deadline <description> /by <date>           add a deadline
+  event <description> /from <start> /to <end> add an event
+  list                                        show all tasks
+  mark <number>                               mark a task as done
+  unmark <number>                             mark a task as not done
+  help or ?                                   show this help
+  bye                                         say goodbye
 ____________________________________________________________
 bye
 ____________________________________________________________

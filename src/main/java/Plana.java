@@ -1,3 +1,4 @@
+import java.util.Locale;
 import java.util.Scanner;
 
 /**
@@ -48,6 +49,22 @@ public class Plana {
         if (taskCount >= MAX_TASKS) {
             throw new PlanaException(TASK_LIST_FULL_ERROR);
         }
+    }
+
+    /**
+     * Prints the commands and features that Plana supports.
+     */
+    private static void printHelp() {
+        System.out.println("Don't worry! I am always here to help :>");
+        System.out.println("Here's what I can do:");
+        System.out.println("  todo <description>                          add a task");
+        System.out.println("  deadline <description> /by <date>           add a deadline");
+        System.out.println("  event <description> /from <start> /to <end> add an event");
+        System.out.println("  list                                        show all tasks");
+        System.out.println("  mark <number>                               mark a task as done");
+        System.out.println("  unmark <number>                             mark a task as not done");
+        System.out.println("  help or ?                                   show this help");
+        System.out.println("  bye                                         say goodbye");
     }
 
     public static void main(String[] args) {
@@ -105,6 +122,9 @@ public class Plana {
                         System.out.println("Bye-bye! See you next time, okay?");
                         System.out.println(border_line);
                         break;
+                    } else if (command.equals("?") || command.toLowerCase(Locale.ROOT).contains("help")) {
+                        printHelp();
+                        System.out.println(border_line);
                     } else if (command.equals("list")) {
                         System.out.println(" Here are your tasks:");
                         for (int i = 0; i < taskCount; i++) {
