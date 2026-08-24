@@ -64,6 +64,7 @@ Here's what I can do:
   deadline <description> /by <date>           add a deadline
   event <description> /from <start> /to <end> add an event
   list                                        show all tasks
+  delete <number>                             delete a task
   mark <number>                               mark a task as done
   unmark <number>                             mark a task as not done
   help or ?                                   show this help
@@ -77,6 +78,7 @@ Here's what I can do:
   deadline <description> /by <date>           add a deadline
   event <description> /from <start> /to <end> add an event
   list                                        show all tasks
+  delete <number>                             delete a task
   mark <number>                               mark a task as done
   unmark <number>                             mark a task as not done
   help or ?                                   show this help
@@ -90,6 +92,7 @@ Here's what I can do:
   deadline <description> /by <date>           add a deadline
   event <description> /from <start> /to <end> add an event
   list                                        show all tasks
+  delete <number>                             delete a task
   mark <number>                               mark a task as done
   unmark <number>                             mark a task as not done
   help or ?                                   show this help
@@ -258,13 +261,15 @@ ____________________________________________________________
 ```
 ## Test Case: add and list tasks
 
-- Aim: Verify that commands are added as tasks and displayed in insertion order by `list`.
+- Aim: Verify that commands are added as tasks, displayed in insertion order, and deleted tasks are removed while remaining tasks are renumbered.
 
 ### Inputs
 
 ```text
 todo buy groceries
 todo read lecture notes
+list
+delete 1
 list
 bye
 ```
@@ -323,6 +328,17 @@ ____________________________________________________________
  Here are your tasks:
  1.[T][ ] buy groceries
  2.[T][ ] read lecture notes
+____________________________________________________________
+delete 1
+____________________________________________________________
+Noted. I've removed this task:
+  [T][ ] buy groceries
+Now you have 1 task in the list.
+____________________________________________________________
+list
+____________________________________________________________
+ Here are your tasks:
+ 1.[T][ ] read lecture notes
 ____________________________________________________________
 bye
 ____________________________________________________________

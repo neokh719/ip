@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Scanner;
 
@@ -5,18 +6,15 @@ import java.util.Scanner;
  * Runs Plana's command-line task manager and responds in Plana's friendly voice.
  */
 public class Plana {
-    private static final int MAX_TASKS = 100;
     private static final String TODO_DESCRIPTION_ERROR = "Oops, a ToDo description can't be empty."
             + " Try: todo <description>.";
     private static final String EMPTY_COMMAND_ERROR = "Oops, I didn't catch a command."
             + " Type help to see what I can do.";
-    private static final String TASK_LIST_FULL_ERROR = "Oops, your task list is full at 100 tasks."
-            + " You can still use list, mark, and unmark.";
     private static final String DEADLINE_USAGE = "Try: deadline <description> /by <date>.";
     private static final String EVENT_USAGE = "Try: event <description> /from <start> /to <end>.";
 
     /**
-     * Converts a user-entered task number into a zero-based array index.
+     * Converts a user-entered task number into a zero-based list index.
      *
      * @param action the command being performed, such as mark or unmark
      * @param taskNumber the task number entered by the user
@@ -70,18 +68,6 @@ public class Plana {
     }
 
     /**
-     * Ensures that another task can be stored in the task array.
-     *
-     * @param taskCount the number of tasks currently stored
-     * @throws PlanaException if the task list has reached its capacity
-     */
-    private static void ensureTaskCapacity(int taskCount) throws PlanaException {
-        if (taskCount >= MAX_TASKS) {
-            throw new PlanaException(TASK_LIST_FULL_ERROR);
-        }
-    }
-
-    /**
      * Prints the commands and features that Plana supports.
      */
     private static void printHelp() {
@@ -91,6 +77,7 @@ public class Plana {
         System.out.println("  deadline <description> /by <date>           add a deadline");
         System.out.println("  event <description> /from <start> /to <end> add an event");
         System.out.println("  list                                        show all tasks");
+        System.out.println("  delete <number>                             delete a task");
         System.out.println("  mark <number>                               mark a task as done");
         System.out.println("  unmark <number>                             mark a task as not done");
         System.out.println("  help or ?                                   show this help");
@@ -139,8 +126,7 @@ public class Plana {
         System.out.println(border_line);
 
         try (Scanner scanner = new Scanner(System.in)) {
-            Task[] tasks = new Task[MAX_TASKS];
-            int taskCount = 0;
+            ArrayList<Task> tasks = new ArrayList<>();
 
             while (scanner.hasNextLine()) {
                 String command = scanner.nextLine();
@@ -157,23 +143,32 @@ public class Plana {
                         System.out.println(border_line);
                     } else if (command.equals("list")) {
                         System.out.println(" Here are your tasks:");
-                        for (int i = 0; i < taskCount; i++) {
-                            System.out.println(" " + (i + 1) + "." + tasks[i]);
+                        for (int i = 0; i < tasks.size(); i++) {
+                            System.out.println(" " + (i + 1) + "." + tasks.get(i));
                         }
+                        System.out.println(border_line);
+                    } else if (command.equals("delete") || command.startsWith("delete ")) {
+                        String taskNumber = command.substring("delete".length()).trim();
+                        int taskIndex = getTaskIndex("delete", taskNumber, tasks.size());
+                        Task deletedTask = tasks.remove(taskIndex);
+                        System.out.println("Noted. I've removed this task:");
+                        System.out.println("  " + deletedTask);
+                        int taskCount = tasks.size();
+                        System.out.println("Now you have " + taskCount + (taskCount == 1 ? " task" : " tasks") + " in the list.");
                         System.out.println(border_line);
                     } else if (command.equals("mark") || command.startsWith("mark ")) {
                         String taskNumber = command.substring("mark".length()).trim();
-                        int taskIndex = getTaskIndex("mark", taskNumber, taskCount);
-                        tasks[taskIndex].markAsDone();
+                        int taskIndex = getTaskIndex("mark", taskNumber, tasks.size());
+                        tasks.get(taskIndex).markAsDone();
                         System.out.println("Yay! I've marked this task as done:");
-                        System.out.println("  " + tasks[taskIndex]);
+                        System.out.println("  " + tasks.get(taskIndex));
                         System.out.println(border_line);
                     } else if (command.equals("unmark") || command.startsWith("unmark ")) {
                         String taskNumber = command.substring("unmark".length()).trim();
-                        int taskIndex = getTaskIndex("unmark", taskNumber, taskCount);
-                        tasks[taskIndex].markAsNotDone();
+                        int taskIndex = getTaskIndex("unmark", taskNumber, tasks.size());
+                        tasks.get(taskIndex).markAsNotDone();
                         System.out.println("No worries! I've marked this task as not done:");
-                        System.out.println("  " + tasks[taskIndex]);
+                        System.out.println("  " + tasks.get(taskIndex));
                         System.out.println(border_line);
                     } else if (command.equals("deadline") || command.startsWith("deadline ")) {
                         String arguments = command.substring("deadline".length()).trim();
@@ -192,11 +187,10 @@ public class Plana {
                         if (dueDate.isBlank()) {
                             throw deadlineError("that deadline is missing its due date.");
                         }
-                        ensureTaskCapacity(taskCount);
-                        tasks[taskCount] = new Deadline(description, dueDate);
-                        taskCount++;
+                        tasks.add(new Deadline(description, dueDate));
+                        int taskCount = tasks.size();
                         System.out.println("Yay, I've added this task:");
-                        System.out.println("  " + tasks[taskCount - 1]);
+                        System.out.println("  " + tasks.get(taskCount - 1));
                         System.out.println("Now you have " + taskCount + (taskCount == 1 ? " task" : " tasks") + " in your list!");
                         System.out.println(border_line);
                     } else if (command.equals("event") || command.startsWith("event ")) {
@@ -227,11 +221,10 @@ public class Plana {
                         if (to.isBlank()) {
                             throw eventError("that event is missing its end time.");
                         }
-                        ensureTaskCapacity(taskCount);
-                        tasks[taskCount] = new Event(description, from, to);
-                        taskCount++;
+                        tasks.add(new Event(description, from, to));
+                        int taskCount = tasks.size();
                         System.out.println("Yay, I've added this task:");
-                        System.out.println("  " + tasks[taskCount - 1]);
+                        System.out.println("  " + tasks.get(taskCount - 1));
                         System.out.println("Now you have " + taskCount + (taskCount == 1 ? " task" : " tasks") + " in your list!");
                         System.out.println(border_line);
                     } else if (command.equals("todo") || command.startsWith("todo ")) {
@@ -239,11 +232,10 @@ public class Plana {
                         if (description.isBlank()) {
                             throw new PlanaException(TODO_DESCRIPTION_ERROR);
                         }
-                        ensureTaskCapacity(taskCount);
-                        tasks[taskCount] = new ToDo(description);
-                        taskCount++;
+                        tasks.add(new ToDo(description));
+                        int taskCount = tasks.size();
                         System.out.println("Yay, I've added this task:");
-                        System.out.println("  " + tasks[taskCount - 1]);
+                        System.out.println("  " + tasks.get(taskCount - 1));
                         System.out.println("Now you have " + taskCount + (taskCount == 1 ? " task" : " tasks") + " in your list!");
                         System.out.println(border_line);
                     } else if (command.isBlank()) {
