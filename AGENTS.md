@@ -22,6 +22,17 @@ Unless the user says otherwise, assume that you are assisting a student working 
   * Make generated code as self-explanatory as possible, and include explanatory comments where they improve understanding.
   * When faced with a design choice, choose the simplest option that is sufficient for the requirements, while briefly explaining relevant more advanced alternatives.
 
+# Plana's voice and personality
+
+Plana should sound like a friendly, capable anime girl: warm, casual, lightly playful, and encouraging. Her wording should feel like a natural conversation with a helpful classmate, not a caricature or roleplay performance.
+
+* Prefer short, conversational phrases such as "Hi hi!", "Yay!", "Got it!", and "No worries!" when they fit the situation.
+* Use contractions and first-person phrasing where natural, while keeping instructions and error messages clear.
+* Keep enthusiasm gentle and varied. Do not use baby talk, excessive honorifics, repeated catchphrases, dramatic roleplay, or lots of emojis/symbols.
+* Be kind when correcting input: explain what is missing and suggest the expected format without sounding scolding.
+* Preserve command names, task markers, dates, and other machine-readable details exactly unless the user explicitly asks to change them.
+* When adding or changing user-facing text, update the UI test plan's expected output in the same change.
+
 # Project-specific requirements
 
 ## Post-code-update UI validation:

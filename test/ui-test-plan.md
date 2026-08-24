@@ -50,12 +50,12 @@ ____________________________________________________________
 ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣥⡊⠔⡩⢙⢂⢿⠠⠡⡙⡻⣿⣿⣿⣿⣷⣍⠻⡻⡻⣱⣽⣿⣿⠿⡫⢃⢅⢢⣪⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿
 ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣬⣂⢅⠢⣡⢑⢐⠔⡨⢋⠿⠿⠿⠿⠿⡻⡚⢏⠫⡑⡡⣊⣤⣷⣽⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
 ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣦⣥⣢⣡⣂⣅⣅⣣⣑⣔⣬⣶⣿⣾⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
-Hello! I'm Plana.
-What can I do for you?
+Hi hi! I'm Plana.
+What shall we get done today?
 ____________________________________________________________
 bye
 ____________________________________________________________
-Bye. Hope to see you again soon!
+Bye-bye! See you next time, okay?
 ____________________________________________________________
 ```
 
@@ -108,33 +108,33 @@ ____________________________________________________________
 ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣥⡊⠔⡩⢙⢂⢿⠠⠡⡙⡻⣿⣿⣿⣿⣷⣍⠻⡻⡻⣱⣽⣿⣿⠿⡫⢃⢅⢢⣪⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿
 ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣬⣂⢅⠢⣡⢑⢐⠔⡨⢋⠿⠿⠿⠿⠿⡻⡚⢏⠫⡑⡡⣊⣤⣷⣽⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
 ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣦⣥⣢⣡⣂⣅⣅⣣⣑⣔⣬⣶⣿⣾⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
-Hello! I'm Plana.
-What can I do for you?
+Hi hi! I'm Plana.
+What shall we get done today?
 ____________________________________________________________
 deadline submit report /by Sunday
 ____________________________________________________________
-Got it. I've added this task:
+Yay, I've added this task:
   [D][ ] submit report (by: Sunday)
-Now you have 1 tasks in the list.
+Now you have 1 task in your list!
 ____________________________________________________________
 list
 ____________________________________________________________
- Here are the tasks in your list:
+ Here are your tasks:
  1.[D][ ] submit report (by: Sunday)
 ____________________________________________________________
 mark 1
 ____________________________________________________________
-Nice! I've marked this task as done:
+Yay! I've marked this task as done:
   [D][X] submit report (by: Sunday)
 ____________________________________________________________
 unmark 1
 ____________________________________________________________
-OK, I've marked this task as not done yet:
+No worries! I've marked this task as not done:
   [D][ ] submit report (by: Sunday)
 ____________________________________________________________
 bye
 ____________________________________________________________
-Bye. Hope to see you again soon!
+Bye-bye! See you next time, okay?
 ____________________________________________________________
 ```
 ## Test Case: add and display an Event
@@ -185,33 +185,33 @@ ____________________________________________________________
 ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣥⡊⠔⡩⢙⢂⢿⠠⠡⡙⡻⣿⣿⣿⣿⣷⣍⠻⡻⡻⣱⣽⣿⣿⠿⡫⢃⢅⢢⣪⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿
 ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣬⣂⢅⠢⣡⢑⢐⠔⡨⢋⠿⠿⠿⠿⠿⡻⡚⢏⠫⡑⡡⣊⣤⣷⣽⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
 ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣦⣥⣢⣡⣂⣅⣅⣣⣑⣔⣬⣶⣿⣾⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
-Hello! I'm Plana.
-What can I do for you?
+Hi hi! I'm Plana.
+What shall we get done today?
 ____________________________________________________________
 event project meeting /from Mon 2pm /to 4pm
 ____________________________________________________________
-Got it. I've added this task:
+Yay, I've added this task:
   [E][ ] project meeting (from: Mon 2pm to: 4pm)
-Now you have 1 tasks in the list.
+Now you have 1 task in your list!
 ____________________________________________________________
 list
 ____________________________________________________________
- Here are the tasks in your list:
+ Here are your tasks:
  1.[E][ ] project meeting (from: Mon 2pm to: 4pm)
 ____________________________________________________________
 mark 1
 ____________________________________________________________
-Nice! I've marked this task as done:
+Yay! I've marked this task as done:
   [E][X] project meeting (from: Mon 2pm to: 4pm)
 ____________________________________________________________
 unmark 1
 ____________________________________________________________
-OK, I've marked this task as not done yet:
+No worries! I've marked this task as not done:
   [E][ ] project meeting (from: Mon 2pm to: 4pm)
 ____________________________________________________________
 bye
 ____________________________________________________________
-Bye. Hope to see you again soon!
+Bye-bye! See you next time, okay?
 ____________________________________________________________
 ```
 ## Test Case: add and list tasks
@@ -261,26 +261,26 @@ ____________________________________________________________
 ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣥⡊⠔⡩⢙⢂⢿⠠⠡⡙⡻⣿⣿⣿⣿⣷⣍⠻⡻⡻⣱⣽⣿⣿⠿⡫⢃⢅⢢⣪⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿
 ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣬⣂⢅⠢⣡⢑⢐⠔⡨⢋⠿⠿⠿⠿⠿⡻⡚⢏⠫⡑⡡⣊⣤⣷⣽⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
 ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣦⣥⣢⣡⣂⣅⣅⣣⣑⣔⣬⣶⣿⣾⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
-Hello! I'm Plana.
-What can I do for you?
+Hi hi! I'm Plana.
+What shall we get done today?
 ____________________________________________________________
 buy groceries
 ____________________________________________________________
-added: buy groceries
+Got it! Added to your list: buy groceries
 ____________________________________________________________
 read lecture notes
 ____________________________________________________________
-added: read lecture notes
+Got it! Added to your list: read lecture notes
 ____________________________________________________________
 list
 ____________________________________________________________
- Here are the tasks in your list:
+ Here are your tasks:
  1.[T][ ] buy groceries
  2.[T][ ] read lecture notes
 ____________________________________________________________
 bye
 ____________________________________________________________
-Bye. Hope to see you again soon!
+Bye-bye! See you next time, okay?
 ____________________________________________________________
 ```
 
@@ -334,39 +334,39 @@ ____________________________________________________________
 ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣥⡊⠔⡩⢙⢂⢿⠠⠡⡙⡻⣿⣿⣿⣿⣷⣍⠻⡻⡻⣱⣽⣿⣿⠿⡫⢃⢅⢢⣪⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿
 ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣬⣂⢅⠢⣡⢑⢐⠔⡨⢋⠿⠿⠿⠿⠿⡻⡚⢏⠫⡑⡡⣊⣤⣷⣽⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
 ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣦⣥⣢⣡⣂⣅⣅⣣⣑⣔⣬⣶⣿⣾⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
-Hello! I'm Plana.
-What can I do for you?
+Hi hi! I'm Plana.
+What shall we get done today?
 ____________________________________________________________
 submit report
 ____________________________________________________________
-added: submit report
+Got it! Added to your list: submit report
 ____________________________________________________________
 mark 1
 ____________________________________________________________
-Nice! I've marked this task as done:
+Yay! I've marked this task as done:
   [T][X] submit report
 ____________________________________________________________
 unmark 1
 ____________________________________________________________
-OK, I've marked this task as not done yet:
+No worries! I've marked this task as not done:
   [T][ ] submit report
 ____________________________________________________________
 mark abc
 ____________________________________________________________
-Sorry, please provide a valid task number.
+Oops, please enter a valid task number.
 ____________________________________________________________
 mark 2
 ____________________________________________________________
-Sorry, that task number does not exist.
+Oops, that task number doesn't exist.
 ____________________________________________________________
 list
 ____________________________________________________________
- Here are the tasks in your list:
+ Here are your tasks:
  1.[T][ ] submit report
 ____________________________________________________________
 bye
 ____________________________________________________________
-Bye. Hope to see you again soon!
+Bye-bye! See you next time, okay?
 ____________________________________________________________
 ```
 
@@ -416,22 +416,22 @@ ____________________________________________________________
 ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣥⡊⠔⡩⢙⢂⢿⠠⠡⡙⡻⣿⣿⣿⣿⣷⣍⠻⡻⡻⣱⣽⣿⣿⠿⡫⢃⢅⢢⣪⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿
 ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣬⣂⢅⠢⣡⢑⢐⠔⡨⢋⠿⠿⠿⠿⠿⡻⡚⢏⠫⡑⡡⣊⣤⣷⣽⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
 ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣦⣥⣢⣡⣂⣅⣅⣣⣑⣔⣬⣶⣿⣾⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
-Hello! I'm Plana.
-What can I do for you?
+Hi hi! I'm Plana.
+What shall we get done today?
 ____________________________________________________________
 todo borrow book
 ____________________________________________________________
-Got it. I've added this task:
+Yay, I've added this task:
   [T][ ] borrow book
-Now you have 1 tasks in the list.
+Now you have 1 task in your list!
 ____________________________________________________________
 list
 ____________________________________________________________
- Here are the tasks in your list:
+ Here are your tasks:
  1.[T][ ] borrow book
 ____________________________________________________________
 bye
 ____________________________________________________________
-Bye. Hope to see you again soon!
+Bye-bye! See you next time, okay?
 ____________________________________________________________
 ```
