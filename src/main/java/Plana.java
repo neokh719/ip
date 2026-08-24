@@ -56,17 +56,18 @@ public class Plana {
                 System.out.println(command);
                 System.out.println(border_line);
 
-                if (command.equals("bye")) {
-                    System.out.println("Bye-bye! See you next time, okay?");
-                    System.out.println(border_line);
-                    break;
-                } else if (command.equals("list")) {
-                    System.out.println(" Here are your tasks:");
-                    for (int i = 0; i < taskCount; i++) {
-                        System.out.println(" " + (i + 1) + "." + tasks[i]);
-                    }
-                    System.out.println(border_line);
-                } else if (command.startsWith("mark ")) {
+                try {
+                    if (command.equals("bye")) {
+                        System.out.println("Bye-bye! See you next time, okay?");
+                        System.out.println(border_line);
+                        break;
+                    } else if (command.equals("list")) {
+                        System.out.println(" Here are your tasks:");
+                        for (int i = 0; i < taskCount; i++) {
+                            System.out.println(" " + (i + 1) + "." + tasks[i]);
+                        }
+                        System.out.println(border_line);
+                    } else if (command.startsWith("mark ")) {
                     String taskNumber = command.substring("mark ".length()).trim();
                     try {
                         int taskIndex = Integer.parseInt(taskNumber) - 1;
@@ -142,10 +143,10 @@ public class Plana {
                         System.out.println("Oops, your task list is full for now.");
                     }
                     System.out.println(border_line);
-                } else if (command.equals("todo") || command.startsWith("todo ")) {
-                    String description = command.substring("todo".length()).trim();
-                    if (description.isBlank()) {
-                        System.out.println("Oops, a ToDo needs a description.");
+                    } else if (command.equals("todo") || command.startsWith("todo ")) {
+                        String description = command.substring("todo".length()).trim();
+                        if (description.isBlank()) {
+                            throw new PlanaException("Oops, a ToDo needs a description.");
                     } else if (taskCount < MAX_TASKS) {
                         tasks[taskCount] = new ToDo(description);
                         taskCount++;
@@ -156,14 +157,11 @@ public class Plana {
                         System.out.println("Oops, your task list is full for now.");
                     }
                     System.out.println(border_line);
-                } else if (!command.isBlank()) {
-                    if (taskCount < MAX_TASKS) {
-                        tasks[taskCount] = new ToDo(command);
-                        taskCount++;
-                        System.out.println("Got it! Added to your list: " + command);
-                    } else {
-                        System.out.println("Oops, your task list is full for now.");
+                    } else if (!command.isBlank()) {
+                        throw new PlanaException("Oops, I don't know what that means.");
                     }
+                } catch (PlanaException exception) {
+                    System.out.println(exception.getMessage());
                     System.out.println(border_line);
                 }
             }

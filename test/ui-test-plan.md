@@ -221,8 +221,8 @@ ____________________________________________________________
 ### Inputs
 
 ```text
-buy groceries
-read lecture notes
+todo buy groceries
+todo read lecture notes
 list
 bye
 ```
@@ -264,13 +264,17 @@ ____________________________________________________________
 Hi hi! I'm Plana.
 What shall we get done today?
 ____________________________________________________________
-buy groceries
+todo buy groceries
 ____________________________________________________________
-Got it! Added to your list: buy groceries
+Yay, I've added this task:
+  [T][ ] buy groceries
+Now you have 1 task in your list!
 ____________________________________________________________
-read lecture notes
+todo read lecture notes
 ____________________________________________________________
-Got it! Added to your list: read lecture notes
+Yay, I've added this task:
+  [T][ ] read lecture notes
+Now you have 2 tasks in your list!
 ____________________________________________________________
 list
 ____________________________________________________________
@@ -284,19 +288,21 @@ Bye-bye! See you next time, okay?
 ____________________________________________________________
 ```
 
-## Test Case: mark, unmark, and invalid task numbers
+## Test Case: mark, unmark, and invalid inputs
 
-- Aim: Verify task status changes and validation of invalid task numbers.
+- Aim: Verify task status changes and recovery from invalid task numbers, an empty `todo`, and an unknown command.
 
 ### Inputs
 
 ```text
-submit report
+todo submit report
 mark 1
 unmark 1
 mark abc
 mark 2
 list
+todo
+blah
 bye
 ```
 
@@ -337,9 +343,11 @@ ____________________________________________________________
 Hi hi! I'm Plana.
 What shall we get done today?
 ____________________________________________________________
-submit report
+todo submit report
 ____________________________________________________________
-Got it! Added to your list: submit report
+Yay, I've added this task:
+  [T][ ] submit report
+Now you have 1 task in your list!
 ____________________________________________________________
 mark 1
 ____________________________________________________________
@@ -363,6 +371,14 @@ list
 ____________________________________________________________
  Here are your tasks:
  1.[T][ ] submit report
+____________________________________________________________
+todo
+____________________________________________________________
+Oops, a ToDo needs a description.
+____________________________________________________________
+blah
+____________________________________________________________
+Oops, I don't know what that means.
 ____________________________________________________________
 bye
 ____________________________________________________________
