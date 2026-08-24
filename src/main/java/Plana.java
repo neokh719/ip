@@ -3,6 +3,32 @@ import java.util.Scanner;
 public class Plana {
     private static final int MAX_TASKS = 100;
 
+    /**
+     * Marks a stored task as done, dispatching to its concrete task type.
+     *
+     * @param task the stored ToDo or Deadline
+     */
+    private static void markTaskAsDone(Object task) {
+        if (task instanceof ToDo) {
+            ((ToDo) task).markAsDone();
+        } else if (task instanceof Deadline) {
+            ((Deadline) task).markAsDone();
+        }
+    }
+
+    /**
+     * Marks a stored task as not done, dispatching to its concrete task type.
+     *
+     * @param task the stored ToDo or Deadline
+     */
+    private static void markTaskAsNotDone(Object task) {
+        if (task instanceof ToDo) {
+            ((ToDo) task).markAsNotDone();
+        } else if (task instanceof Deadline) {
+            ((Deadline) task).markAsNotDone();
+        }
+    }
+
     public static void main(String[] args) {
         String banner = " ____  _                  \n"
                 + "|  _ \\| | __ _ _ __   __ _ \n"
@@ -45,7 +71,7 @@ public class Plana {
         System.out.println(border_line);
 
         try (Scanner scanner = new Scanner(System.in)) {
-            ToDo[] tasks = new ToDo[MAX_TASKS];
+            Object[] tasks = new Object[MAX_TASKS];
             int taskCount = 0;
 
             while (scanner.hasNextLine()) {
@@ -68,7 +94,7 @@ public class Plana {
                     try {
                         int taskIndex = Integer.parseInt(taskNumber) - 1;
                         if (taskIndex >= 0 && taskIndex < taskCount) {
-                            tasks[taskIndex].markAsDone();
+                            markTaskAsDone(tasks[taskIndex]);
                             System.out.println("Nice! I've marked this task as done:");
                             System.out.println("  " + tasks[taskIndex]);
                         } else {
@@ -83,7 +109,7 @@ public class Plana {
                     try {
                         int taskIndex = Integer.parseInt(taskNumber) - 1;
                         if (taskIndex >= 0 && taskIndex < taskCount) {
-                            tasks[taskIndex].markAsNotDone();
+                            markTaskAsNotDone(tasks[taskIndex]);
                             System.out.println("OK, I've marked this task as not done yet:");
                             System.out.println("  " + tasks[taskIndex]);
                         } else {
@@ -91,6 +117,27 @@ public class Plana {
                         }
                     } catch (NumberFormatException exception) {
                         System.out.println("Sorry, please provide a valid task number.");
+                    }
+                    System.out.println(border_line);
+                } else if (command.equals("deadline") || command.startsWith("deadline ")) {
+                    String arguments = command.substring("deadline".length()).trim();
+                    int bySeparatorIndex = arguments.indexOf(" /by ");
+                    if (bySeparatorIndex <= 0 || bySeparatorIndex + " /by ".length() >= arguments.length()) {
+                        System.out.println("Sorry, a Deadline must have a description and a due date in the format: deadline <description> /by <date>.");
+                    } else if (taskCount < MAX_TASKS) {
+                        String description = arguments.substring(0, bySeparatorIndex).trim();
+                        String dueDate = arguments.substring(bySeparatorIndex + " /by ".length()).trim();
+                        if (description.isBlank() || dueDate.isBlank()) {
+                            System.out.println("Sorry, a Deadline must have a description and a due date in the format: deadline <description> /by <date>.");
+                        } else {
+                            tasks[taskCount] = new Deadline(description, dueDate);
+                            taskCount++;
+                            System.out.println("Got it. I've added this task:");
+                            System.out.println("  " + tasks[taskCount - 1]);
+                            System.out.println("Now you have " + taskCount + " tasks in the list.");
+                        }
+                    } else {
+                        System.out.println("Sorry, your task list is full.");
                     }
                     System.out.println(border_line);
                 } else if (command.equals("todo") || command.startsWith("todo ")) {
