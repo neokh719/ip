@@ -25,8 +25,8 @@ public class Event extends Task {
      */
     @Override
     public String toStorageString() {
-        String status = completionStatus == CompletionStatus.DONE ? "1" : "0";
-        return "E | " + status + " | " + description + " | " + from + " | " + to;
+        return "E | " + getStorageStatus() + " | " + Storage.escapeField(description)
+                + " | " + Storage.escapeField(from) + " | " + Storage.escapeField(to);
     }
 
     /**

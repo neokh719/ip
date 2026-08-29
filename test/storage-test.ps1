@@ -40,7 +40,15 @@ bye
         throw "Saved file contents were incorrect.`nExpected:`n$expected`nActual:`n$actual"
     }
 
-    Add-Content -LiteralPath $dataFile -Value "corrupted record"
+    $corruptedRecords = @(
+        "corrupted record",
+        "T | 2 | invalid status",
+        "D | 0 | missing date |",
+        "E | 0 | missing end | 2pm |",
+        "T | 0 | escaped \| pipe and \\ slash"
+    )
+    $corruptedText = [string]::Join([Environment]::NewLine, $corruptedRecords) + [Environment]::NewLine
+    [IO.File]::AppendAllText($dataFile, $corruptedText, [Text.UTF8Encoding]::new($false))
     $secondInput = @"
 list
 bye
@@ -50,7 +58,8 @@ bye
         throw "Plana exited with code $LASTEXITCODE while loading."
     }
     if (-not $secondOutput.Contains("1.[T][X] buy milk") -or
-        -not $secondOutput.Contains("2.[E][ ] team meeting (from: 2pm to: 3pm)")) {
+        -not $secondOutput.Contains("2.[E][ ] team meeting (from: 2pm to: 3pm)") -or
+        -not $secondOutput.Contains("3.[T][ ] escaped | pipe and \ slash")) {
         throw "Loaded task contents were incorrect."
     }
 

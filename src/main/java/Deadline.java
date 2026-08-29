@@ -22,8 +22,8 @@ public class Deadline extends Task {
      */
     @Override
     public String toStorageString() {
-        String status = completionStatus == CompletionStatus.DONE ? "1" : "0";
-        return "D | " + status + " | " + description + " | " + dueDate;
+        return "D | " + getStorageStatus() + " | " + Storage.escapeField(description)
+                + " | " + Storage.escapeField(dueDate);
     }
 
     /**

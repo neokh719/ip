@@ -44,8 +44,16 @@ public class Task {
      * @return the task type, completion status, and description
      */
     public String toStorageString() {
-        String status = completionStatus == CompletionStatus.DONE ? "1" : "0";
-        return "T | " + status + " | " + description;
+        return "T | " + getStorageStatus() + " | " + Storage.escapeField(description);
+    }
+
+    /**
+     * Returns this task's completion status in the storage format.
+     *
+     * @return {@code 1} for done, or {@code 0} otherwise
+     */
+    protected String getStorageStatus() {
+        return completionStatus == CompletionStatus.DONE ? "1" : "0";
     }
 
     /**
