@@ -6,7 +6,7 @@ Run the project-specific `test-ui` skill from the repository root. It compiles t
 
 Each inputs block is one ordered command list sent to one Plana session. The expected-output block includes the startup banner and the final newline. Only line-ending differences between operating systems are ignored; text, spacing, and ordering are significant.
 
-Disk saving is covered separately by `test/storage-test.ps1`, which checks the saved file after a task mutation session.
+Disk saving and startup loading are covered separately by `test/storage-test.ps1`, which checks the saved file after a task mutation session and verifies that a later session restores the tasks.
 
 ## Test Case: help and exit
 

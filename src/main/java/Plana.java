@@ -125,7 +125,7 @@ public class Plana {
         System.out.println(border_line);
 
         try (Scanner scanner = new Scanner(System.in)) {
-            ArrayList<Task> tasks = new ArrayList<>();
+            ArrayList<Task> tasks = Storage.loadTasks();
 
             commandLoop:
             while (scanner.hasNextLine()) {

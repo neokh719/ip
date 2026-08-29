@@ -115,6 +115,7 @@ try {
                 -RedirectStandardOutput $outputFile `
                 -RedirectStandardError $errorFile `
                 -NoNewWindow `
+                -WorkingDirectory $caseDirectory `
                 -PassThru
 
             if (-not $process.WaitForExit($TimeoutSeconds * 1000)) {

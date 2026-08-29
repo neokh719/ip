@@ -40,7 +40,21 @@ bye
         throw "Saved file contents were incorrect.`nExpected:`n$expected`nActual:`n$actual"
     }
 
-    Write-Output "Storage test passed."
+    Add-Content -LiteralPath $dataFile -Value "corrupted record"
+    $secondInput = @"
+list
+bye
+"@
+    $secondOutput = (($secondInput | & java -cp $classesDirectory Plana) -join "`n")
+    if ($LASTEXITCODE -ne 0) {
+        throw "Plana exited with code $LASTEXITCODE while loading."
+    }
+    if (-not $secondOutput.Contains("1.[T][X] buy milk") -or
+        -not $secondOutput.Contains("2.[E][ ] team meeting (from: 2pm to: 3pm)")) {
+        throw "Loaded task contents were incorrect."
+    }
+
+    Write-Output "Storage save/load test passed."
 }
 finally {
     Pop-Location
