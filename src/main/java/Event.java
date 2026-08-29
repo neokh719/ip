@@ -1,18 +1,24 @@
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Locale;
+
 /**
- * Represents a task that starts and ends at specified date or time text.
+ * Represents a task that starts and ends on specified dates.
  */
 public class Event extends Task {
-    private final String from;
-    private final String to;
+    private static final DateTimeFormatter DISPLAY_FORMAT =
+            DateTimeFormatter.ofPattern("MMM dd yyyy", Locale.ENGLISH);
+    private final LocalDate from;
+    private final LocalDate to;
 
     /**
      * Creates an incomplete Event.
      *
      * @param description the task description
-     * @param from the start date or time, kept as entered by the user
-     * @param to the end date or time, kept as entered by the user
+     * @param from the start date
+     * @param to the end date
      */
-    public Event(String description, String from, String to) {
+    public Event(String description, LocalDate from, LocalDate to) {
         super(description);
         this.from = from;
         this.to = to;
@@ -26,7 +32,7 @@ public class Event extends Task {
     @Override
     public String toStorageString() {
         return "E | " + getStorageStatus() + " | " + Storage.escapeField(description)
-                + " | " + Storage.escapeField(from) + " | " + Storage.escapeField(to);
+                + " | " + Storage.escapeField(from.toString()) + " | " + Storage.escapeField(to.toString());
     }
 
     /**
@@ -36,6 +42,7 @@ public class Event extends Task {
      */
     @Override
     public String toString() {
-        return "[E]" + super.toString() + " (from: " + from + " to: " + to + ")";
+        return "[E]" + super.toString() + " (from: " + from.format(DISPLAY_FORMAT)
+                + " to: " + to.format(DISPLAY_FORMAT) + ")";
     }
 }

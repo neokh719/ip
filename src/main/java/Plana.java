@@ -1,3 +1,5 @@
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -11,6 +13,7 @@ public class Plana {
             + " Type help to see what I can do.";
     private static final String DEADLINE_USAGE = "Try: deadline <description> /by <date>.";
     private static final String EVENT_USAGE = "Try: event <description> /from <start> /to <end>.";
+    private static final String DATE_FORMAT_HINT = "Use the date format yyyy-MM-dd, like 2019-10-15.";
 
     /**
      * Converts a user-entered task number into a zero-based list index.
@@ -64,6 +67,26 @@ public class Plana {
      */
     private static PlanaException eventError(String problem) {
         return new PlanaException("Oops, " + problem + " " + EVENT_USAGE);
+    }
+
+    /**
+     * Parses a date entered in ISO-8601 format and converts parsing failures into
+     * a friendly command error.
+     *
+     * @param dateText the date entered by the user
+     * @param taskType the task type used in the error message
+     * @return the parsed date
+     * @throws PlanaException if the date is not in {@code yyyy-MM-dd} format
+     */
+    private static LocalDate parseDate(String dateText, String taskType) throws PlanaException {
+        try {
+            return LocalDate.parse(dateText);
+        } catch (DateTimeParseException exception) {
+            if (taskType.equals("deadline")) {
+                throw deadlineError("that deadline date isn't valid. " + DATE_FORMAT_HINT);
+            }
+            throw eventError("that event date isn't valid. " + DATE_FORMAT_HINT);
+        }
     }
 
     /**
@@ -198,7 +221,7 @@ public class Plana {
                         if (dueDate.isBlank()) {
                             throw deadlineError("that deadline is missing its due date.");
                         }
-                        tasks.add(new Deadline(description, dueDate));
+                        tasks.add(new Deadline(description, parseDate(dueDate, "deadline")));
                         Storage.saveTasks(tasks);
                         int taskCount = tasks.size();
                         System.out.println("Yay, I've added this task:");
@@ -234,7 +257,7 @@ public class Plana {
                         if (to.isBlank()) {
                             throw eventError("that event is missing its end time.");
                         }
-                        tasks.add(new Event(description, from, to));
+                        tasks.add(new Event(description, parseDate(from, "event"), parseDate(to, "event")));
                         Storage.saveTasks(tasks);
                         int taskCount = tasks.size();
                         System.out.println("Yay, I've added this task:");

@@ -1,16 +1,22 @@
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Locale;
+
 /**
- * Represents a task that must be completed by a specified date or time.
+ * Represents a task that must be completed by a specified date.
  */
 public class Deadline extends Task {
-    private final String dueDate;
+    private static final DateTimeFormatter DISPLAY_FORMAT =
+            DateTimeFormatter.ofPattern("MMM dd yyyy", Locale.ENGLISH);
+    private final LocalDate dueDate;
 
     /**
      * Creates an incomplete Deadline.
      *
      * @param description the task description
-     * @param dueDate the due date or time, kept as entered by the user
+     * @param dueDate the due date
      */
-    public Deadline(String description, String dueDate) {
+    public Deadline(String description, LocalDate dueDate) {
         super(description);
         this.dueDate = dueDate;
     }
@@ -23,7 +29,7 @@ public class Deadline extends Task {
     @Override
     public String toStorageString() {
         return "D | " + getStorageStatus() + " | " + Storage.escapeField(description)
-                + " | " + Storage.escapeField(dueDate);
+                + " | " + Storage.escapeField(dueDate.toString());
     }
 
     /**
@@ -33,6 +39,6 @@ public class Deadline extends Task {
      */
     @Override
     public String toString() {
-        return "[D]" + super.toString() + " (by: " + dueDate + ")";
+        return "[D]" + super.toString() + " (by: " + dueDate.format(DISPLAY_FORMAT) + ")";
     }
 }
