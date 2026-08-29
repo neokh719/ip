@@ -1,3 +1,12 @@
+package plana;
+
+import plana.command.Command;
+import plana.exception.PlanaException;
+import plana.parser.Parser;
+import plana.storage.Storage;
+import plana.task.TaskList;
+import plana.ui.Ui;
+
 /**
  * Runs Plana's command-line task manager and responds in Plana's friendly voice.
  */

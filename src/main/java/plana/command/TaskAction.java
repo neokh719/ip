@@ -1,3 +1,5 @@
+package plana.command;
+
 /**
  * Represents an action that selects and changes a task.
  */

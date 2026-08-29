@@ -1,3 +1,7 @@
+package plana.task;
+
+import plana.storage.Storage;
+
 /**
  * Represents a task in Plana's task list.
  */
