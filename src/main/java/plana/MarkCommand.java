@@ -1,20 +1,22 @@
+package plana;
+
 /**
- * Marks a selected task as not done and persists the updated task list.
+ * Marks a selected task as done and persists the updated task list.
  */
-public class UnmarkCommand extends Command {
+public class MarkCommand extends Command {
     private final String taskNumber;
 
     /**
-     * Creates an unmark command for a user-facing task number.
+     * Creates a mark command for a user-facing task number.
      *
      * @param taskNumber the one-based task number entered by the user
      */
-    public UnmarkCommand(String taskNumber) {
+    public MarkCommand(String taskNumber) {
         this.taskNumber = taskNumber;
     }
 
     /**
-     * Marks the selected task as not done, saves the list, and displays the result.
+     * Marks the selected task, saves the list, and displays the result.
      *
      * @param tasks the task list to update
      * @param ui the user interface used for the response
@@ -23,8 +25,8 @@ public class UnmarkCommand extends Command {
      */
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) throws PlanaException {
-        Task unmarkedTask = tasks.unmark(taskNumber);
+        Task markedTask = tasks.mark(taskNumber);
         storage.saveTasks(tasks);
-        ui.showTaskMarkedNotDone(unmarkedTask);
+        ui.showTaskMarkedDone(markedTask);
     }
 }

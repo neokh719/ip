@@ -2,7 +2,7 @@
 
 ## Running the plan
 
-Run the project-specific `test-ui` skill from the repository root. It compiles the current Java sources with Java 25, runs each case below in order, compares the complete stdout transcript, prints the console input and output, and stops immediately on the first failure.
+Run the project-specific `test-ui` skill from the repository root with `-MainClass plana.Plana`. It compiles the current Java sources with Java 25, runs each case below in order, compares the complete stdout transcript, prints the console input and output, and stops immediately on the first failure.
 
 Each inputs block is one ordered command list sent to one Plana session. The expected-output block includes the startup banner and the final newline. Only line-ending differences between operating systems are ignored; text, spacing, and ordering are significant.
 

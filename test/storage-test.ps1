@@ -23,7 +23,7 @@ mark 1
 delete 2
 bye
 "@
-    $output = $input | & java -cp $classesDirectory Plana
+    $output = $input | & java -cp $classesDirectory plana.Plana
     if ($LASTEXITCODE -ne 0) {
         throw "Plana exited with code $LASTEXITCODE."
     }
@@ -53,7 +53,7 @@ bye
 list
 bye
 "@
-    $secondOutput = (($secondInput | & java -cp $classesDirectory Plana) -join "`n")
+    $secondOutput = (($secondInput | & java -cp $classesDirectory plana.Plana) -join "`n")
     if ($LASTEXITCODE -ne 0) {
         throw "Plana exited with code $LASTEXITCODE while loading."
     }

@@ -1,3 +1,5 @@
+package plana;
+
 /**
  * Exits Plana after displaying its goodbye message.
  */

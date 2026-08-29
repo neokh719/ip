@@ -1,3 +1,5 @@
+package plana;
+
 /**
  * Runs Plana's command-line task manager and responds in Plana's friendly voice.
  */

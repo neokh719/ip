@@ -1,3 +1,5 @@
+package plana;
+
 /**
  * Displays Plana's list of available commands.
  */

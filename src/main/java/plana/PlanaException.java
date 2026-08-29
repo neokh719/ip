@@ -1,3 +1,5 @@
+package plana;
+
 /**
  * Represents an input error that Plana can explain to the user and recover from.
  */

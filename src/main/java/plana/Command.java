@@ -1,3 +1,5 @@
+package plana;
+
 /**
  * Represents one executable command entered by the user.
  *
