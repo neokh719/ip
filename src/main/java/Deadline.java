@@ -16,6 +16,17 @@ public class Deadline extends Task {
     }
 
     /**
+     * Returns the Deadline in the format used by the storage file.
+     *
+     * @return the Deadline type, completion status, description, and due date
+     */
+    @Override
+    public String toStorageString() {
+        String status = completionStatus == CompletionStatus.DONE ? "1" : "0";
+        return "D | " + status + " | " + description + " | " + dueDate;
+    }
+
+    /**
      * Returns the Deadline in the format used when displaying the task list.
      *
      * @return the Deadline type, completion status, description, and due date

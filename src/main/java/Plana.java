@@ -156,6 +156,7 @@ public class Plana {
                         String taskNumber = command.substring(CommandType.DELETE.getCommandText().length()).trim();
                         int taskIndex = getTaskIndex(TaskAction.DELETE, taskNumber, tasks.size());
                         Task deletedTask = tasks.remove(taskIndex);
+                        Storage.saveTasks(tasks);
                         System.out.println("Noted. I've removed this task:");
                         System.out.println("  " + deletedTask);
                         int taskCount = tasks.size();
@@ -166,6 +167,7 @@ public class Plana {
                         String taskNumber = command.substring(CommandType.MARK.getCommandText().length()).trim();
                         int taskIndex = getTaskIndex(TaskAction.MARK, taskNumber, tasks.size());
                         tasks.get(taskIndex).markAsDone();
+                        Storage.saveTasks(tasks);
                         System.out.println("Yay! I've marked this task as done:");
                         System.out.println("  " + tasks.get(taskIndex));
                         System.out.println(border_line);
@@ -174,6 +176,7 @@ public class Plana {
                         String taskNumber = command.substring(CommandType.UNMARK.getCommandText().length()).trim();
                         int taskIndex = getTaskIndex(TaskAction.UNMARK, taskNumber, tasks.size());
                         tasks.get(taskIndex).markAsNotDone();
+                        Storage.saveTasks(tasks);
                         System.out.println("No worries! I've marked this task as not done:");
                         System.out.println("  " + tasks.get(taskIndex));
                         System.out.println(border_line);
@@ -196,6 +199,7 @@ public class Plana {
                             throw deadlineError("that deadline is missing its due date.");
                         }
                         tasks.add(new Deadline(description, dueDate));
+                        Storage.saveTasks(tasks);
                         int taskCount = tasks.size();
                         System.out.println("Yay, I've added this task:");
                         System.out.println("  " + tasks.get(taskCount - 1));
@@ -231,6 +235,7 @@ public class Plana {
                             throw eventError("that event is missing its end time.");
                         }
                         tasks.add(new Event(description, from, to));
+                        Storage.saveTasks(tasks);
                         int taskCount = tasks.size();
                         System.out.println("Yay, I've added this task:");
                         System.out.println("  " + tasks.get(taskCount - 1));
@@ -243,6 +248,7 @@ public class Plana {
                             throw new PlanaException(TODO_DESCRIPTION_ERROR);
                         }
                         tasks.add(new ToDo(description));
+                        Storage.saveTasks(tasks);
                         int taskCount = tasks.size();
                         System.out.println("Yay, I've added this task:");
                         System.out.println("  " + tasks.get(taskCount - 1));

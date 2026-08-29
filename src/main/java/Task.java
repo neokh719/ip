@@ -39,6 +39,16 @@ public class Task {
     }
 
     /**
+     * Returns the task in the format used by the storage file.
+     *
+     * @return the task type, completion status, and description
+     */
+    public String toStorageString() {
+        String status = completionStatus == CompletionStatus.DONE ? "1" : "0";
+        return "T | " + status + " | " + description;
+    }
+
+    /**
      * Returns the task in the format used when displaying the task list.
      *
      * @return the task status and description
