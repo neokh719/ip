@@ -1,20 +1,14 @@
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import java.util.Locale;
 
 /**
  * Runs Plana's command-line task manager and responds in Plana's friendly voice.
  */
 public class Plana {
-    private static final String TODO_DESCRIPTION_ERROR = "Oops, a ToDo description can't be empty."
-            + " Try: todo <description>.";
     private static final String EMPTY_COMMAND_ERROR = "Oops, I didn't catch a command."
             + " Type help to see what I can do.";
-    private static final String DEADLINE_USAGE = "Try: deadline <description> /by <date>.";
-    private static final String EVENT_USAGE = "Try: event <description> /from <start> /to <end>.";
     private static final String ON_USAGE = "Try: on <date>.";
-    private static final String DATE_FORMAT_HINT = "Use the date format yyyy-MM-dd, like 2019-10-15.";
     private static final DateTimeFormatter DISPLAY_DATE_FORMAT =
             DateTimeFormatter.ofPattern("MMM dd yyyy", Locale.ENGLISH);
 
@@ -50,49 +44,6 @@ public class Plana {
                     + " Type list to check the task numbers you have.");
         }
         return taskIndex;
-    }
-
-    /**
-     * Creates an error for a deadline whose syntax is missing one specific part.
-     *
-     * @param problem the part of the deadline that needs correcting
-     * @return a user-friendly deadline error
-     */
-    private static PlanaException deadlineError(String problem) {
-        return new PlanaException("Oops, " + problem + " " + DEADLINE_USAGE);
-    }
-
-    /**
-     * Creates an error for an event whose syntax is missing one specific part.
-     *
-     * @param problem the part of the event that needs correcting
-     * @return a user-friendly event error
-     */
-    private static PlanaException eventError(String problem) {
-        return new PlanaException("Oops, " + problem + " " + EVENT_USAGE);
-    }
-
-    /**
-     * Parses a date entered in ISO-8601 format and converts parsing failures into
-     * a friendly command error.
-     *
-     * @param dateText the date entered by the user
-     * @param taskType the task type used in the error message
-     * @return the parsed date
-     * @throws PlanaException if the date is not in {@code yyyy-MM-dd} format
-     */
-    private static LocalDate parseDate(String dateText, String taskType) throws PlanaException {
-        try {
-            return LocalDate.parse(dateText);
-        } catch (DateTimeParseException exception) {
-            if (taskType.equals("deadline")) {
-                throw deadlineError("that deadline date isn't valid. " + DATE_FORMAT_HINT);
-            }
-            if (taskType.equals("event")) {
-                throw eventError("that event date isn't valid. " + DATE_FORMAT_HINT);
-            }
-            throw new PlanaException("Oops, that query date isn't valid. " + DATE_FORMAT_HINT + " " + ON_USAGE);
-        }
     }
 
     public static void main(String[] args) {
@@ -159,7 +110,7 @@ public class Plana {
                         if (dateText.isBlank()) {
                             throw new PlanaException("Oops, on needs a date. " + ON_USAGE);
                         }
-                        LocalDate date = parseDate(dateText, "on");
+                        LocalDate date = parser.parseDate(dateText, "on");
                         String displayDate = date.format(DISPLAY_DATE_FORMAT);
                         boolean hasMatchingTask = false;
                         ui.showTasksOnDateHeader(displayDate);
@@ -199,66 +150,23 @@ public class Plana {
                         ui.showTaskMarkedNotDone(tasks.get(taskIndex));
                     }
                     case DEADLINE -> {
-                        String arguments = parsedCommand.arguments();
-                        if (arguments.isBlank()) {
-                            throw deadlineError("a deadline needs a description and a due date.");
-                        }
-                        int bySeparatorIndex = arguments.indexOf("/by");
-                        if (bySeparatorIndex < 0) {
-                            throw deadlineError("I couldn't find /by and a due date is missing.");
-                        }
-                        String description = arguments.substring(0, bySeparatorIndex).trim();
-                        String dueDate = arguments.substring(bySeparatorIndex + "/by".length()).trim();
-                        if (description.isBlank()) {
-                            throw deadlineError("that deadline is missing its description.");
-                        }
-                        if (dueDate.isBlank()) {
-                            throw deadlineError("that deadline is missing its due date.");
-                        }
-                        tasks.add(new Deadline(description, parseDate(dueDate, "deadline")));
+                        Parser.TaskArguments taskArguments = parser.parseTaskArguments(parsedCommand);
+                        tasks.add(new Deadline(taskArguments.description(), taskArguments.firstDate()));
                         Storage.saveTasks(tasks);
                         int taskCount = tasks.size();
                         ui.showTaskAdded(tasks.get(taskCount - 1), taskCount);
                     }
                     case EVENT -> {
-                        String arguments = parsedCommand.arguments();
-                        if (arguments.isBlank()) {
-                            throw eventError("an event needs a description, a start, and an end.");
-                        }
-                        int fromSeparatorIndex = arguments.indexOf("/from");
-                        int toSeparatorIndex = arguments.indexOf("/to");
-                        if (fromSeparatorIndex < 0) {
-                            throw eventError("that event is missing its start marker /from.");
-                        }
-                        if (toSeparatorIndex < 0) {
-                            throw eventError("that event is missing its end marker /to.");
-                        }
-                        if (toSeparatorIndex < fromSeparatorIndex) {
-                            throw eventError("use /from before /to in an event.");
-                        }
-                        String description = arguments.substring(0, fromSeparatorIndex).trim();
-                        String from = arguments.substring(fromSeparatorIndex + "/from".length(), toSeparatorIndex).trim();
-                        String to = arguments.substring(toSeparatorIndex + "/to".length()).trim();
-                        if (description.isBlank()) {
-                            throw eventError("that event is missing its description.");
-                        }
-                        if (from.isBlank()) {
-                            throw eventError("that event is missing its start time.");
-                        }
-                        if (to.isBlank()) {
-                            throw eventError("that event is missing its end time.");
-                        }
-                        tasks.add(new Event(description, parseDate(from, "event"), parseDate(to, "event")));
+                        Parser.TaskArguments taskArguments = parser.parseTaskArguments(parsedCommand);
+                        tasks.add(new Event(taskArguments.description(), taskArguments.firstDate(),
+                                taskArguments.secondDate()));
                         Storage.saveTasks(tasks);
                         int taskCount = tasks.size();
                         ui.showTaskAdded(tasks.get(taskCount - 1), taskCount);
                     }
                     case TODO -> {
-                        String description = parsedCommand.arguments();
-                        if (description.isBlank()) {
-                            throw new PlanaException(TODO_DESCRIPTION_ERROR);
-                        }
-                        tasks.add(new ToDo(description));
+                        Parser.TaskArguments taskArguments = parser.parseTaskArguments(parsedCommand);
+                        tasks.add(new ToDo(taskArguments.description()));
                         Storage.saveTasks(tasks);
                         int taskCount = tasks.size();
                         ui.showTaskAdded(tasks.get(taskCount - 1), taskCount);
