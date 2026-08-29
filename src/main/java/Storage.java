@@ -21,7 +21,7 @@ public class Storage {
      *
      * @param tasks the tasks that should be saved
      */
-    public static void saveTasks(List<Task> tasks) {
+    public static void saveTasks(TaskList tasks) {
         Path temporaryFile = null;
         try {
             Path parentDirectory = DATA_FILE.getParent();
@@ -58,7 +58,7 @@ public class Storage {
      * @param tasks the tasks to serialize
      * @return the complete file contents
      */
-    private static String serializeTasks(List<Task> tasks) {
+    private static String serializeTasks(TaskList tasks) {
         if (tasks == null || tasks.isEmpty()) {
             return "";
         }
@@ -87,8 +87,8 @@ public class Storage {
      *
      * @return the tasks loaded from disk
      */
-    public static ArrayList<Task> loadTasks() {
-        ArrayList<Task> tasks = new ArrayList<>();
+    public static TaskList loadTasks() {
+        TaskList tasks = new TaskList();
         try {
             if (Files.notExists(DATA_FILE)) {
                 return tasks;

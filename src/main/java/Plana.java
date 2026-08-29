@@ -1,7 +1,6 @@
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Scanner;
 
@@ -157,7 +156,7 @@ public class Plana {
         System.out.println(border_line);
 
         try (Scanner scanner = new Scanner(System.in)) {
-            ArrayList<Task> tasks = Storage.loadTasks();
+            TaskList tasks = Storage.loadTasks();
 
             commandLoop:
             while (scanner.hasNextLine()) {
