@@ -48,6 +48,7 @@ public class Plana {
         Ui ui = new Ui();
         ui.showWelcome(banner, banner_art);
         Parser parser = new Parser();
+        Storage storage = new Storage();
 
         try (ui) {
             TaskList tasks = Storage.loadTasks();
@@ -60,8 +61,11 @@ public class Plana {
                     Parser.ParsedCommand parsedCommand = parser.parse(command);
                     CommandType commandType = parsedCommand.type();
                     if (commandType == CommandType.BYE) {
-                        ui.showGoodbye();
-                        break commandLoop;
+                        Command exitCommand = new ExitCommand();
+                        exitCommand.execute(tasks, ui, storage);
+                        if (exitCommand.isExit()) {
+                            break commandLoop;
+                        }
                     }
                     switch (commandType) {
                     case HELP -> {
