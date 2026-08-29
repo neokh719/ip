@@ -6,6 +6,8 @@ import java.time.format.DateTimeParseException;
  * Plana's command loop.
  */
 public class Parser {
+    private static final String EMPTY_COMMAND_ERROR = "Oops, I didn't catch a command."
+            + " Type help to see what I can do.";
     private static final String TODO_DESCRIPTION_ERROR = "Oops, a ToDo description can't be empty."
             + " Try: todo <description>.";
     private static final String DEADLINE_USAGE = "Try: deadline <description> /by <date>.";
@@ -22,6 +24,31 @@ public class Parser {
         CommandType type = CommandType.fromInput(input);
         String arguments = extractArguments(input, type);
         return new ParsedCommand(type, arguments);
+    }
+
+    /**
+     * Parses one input line into an executable command.
+     *
+     * <p>This is the boundary between command syntax and command behavior:
+     * {@link Plana} only needs to execute the returned command.</p>
+     *
+     * @param input the complete command entered by the user
+     * @return the command represented by the input
+     * @throws PlanaException if the command contains invalid structured data
+     */
+    public Command parseCommand(String input) throws PlanaException {
+        ParsedCommand parsedCommand = parse(input);
+        return switch (parsedCommand.type()) {
+        case BYE -> new ExitCommand();
+        case HELP -> new HelpCommand();
+        case LIST -> new ListCommand();
+        case ON -> parseOnCommand(parsedCommand.arguments());
+        case DELETE -> new DeleteCommand(parsedCommand.arguments());
+        case MARK -> new MarkCommand(parsedCommand.arguments());
+        case UNMARK -> new UnmarkCommand(parsedCommand.arguments());
+        case DEADLINE, EVENT, TODO -> parseAddCommand(parsedCommand);
+        case UNKNOWN -> parseInvalidCommand(input);
+        };
     }
 
     /**
@@ -61,6 +88,32 @@ public class Parser {
             throw new PlanaException("Oops, that query date isn't valid. " + DATE_FORMAT_HINT
                     + " Try: on <date>.");
         }
+    }
+
+    private Command parseOnCommand(String dateText) throws PlanaException {
+        if (dateText.isBlank()) {
+            throw new PlanaException("Oops, on needs a date. Try: on <date>.");
+        }
+        return new OnCommand(parseDate(dateText, "on"));
+    }
+
+    private Command parseAddCommand(ParsedCommand command) throws PlanaException {
+        TaskArguments taskArguments = parseTaskArguments(command);
+        return switch (command.type()) {
+        case TODO -> new AddCommand(new ToDo(taskArguments.description()));
+        case DEADLINE -> new AddCommand(new Deadline(taskArguments.description(), taskArguments.firstDate()));
+        case EVENT -> new AddCommand(new Event(taskArguments.description(), taskArguments.firstDate(),
+                taskArguments.secondDate()));
+        default -> throw new IllegalArgumentException("Task arguments requested for a non-task command");
+        };
+    }
+
+    private Command parseInvalidCommand(String input) {
+        if (input.isBlank()) {
+            return new InvalidCommand(EMPTY_COMMAND_ERROR);
+        }
+        return new InvalidCommand("Oops, I don't recognize '" + input + "'."
+                + " Type help to see the commands I know.");
     }
 
     private TaskArguments parseTodo(String arguments) throws PlanaException {

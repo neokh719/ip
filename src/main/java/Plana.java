@@ -1,13 +1,7 @@
-import java.time.LocalDate;
-
 /**
  * Runs Plana's command-line task manager and responds in Plana's friendly voice.
  */
 public class Plana {
-    private static final String EMPTY_COMMAND_ERROR = "Oops, I didn't catch a command."
-            + " Type help to see what I can do.";
-    private static final String ON_USAGE = "Try: on <date>.";
-
     public static void main(String[] args) {
         String banner = " ____  _                  \n"
                 + "|  _ \\| | __ _ _ __   __ _ \n"
@@ -49,61 +43,14 @@ public class Plana {
         try (ui) {
             TaskList tasks = Storage.loadTasks();
 
-            commandLoop:
             while (ui.hasNextCommand()) {
                 String command = ui.readCommand();
 
                 try {
-                    Parser.ParsedCommand parsedCommand = parser.parse(command);
-                    CommandType commandType = parsedCommand.type();
-                    if (commandType == CommandType.BYE) {
-                        Command exitCommand = new ExitCommand();
-                        exitCommand.execute(tasks, ui, storage);
-                        if (exitCommand.isExit()) {
-                            break commandLoop;
-                        }
-                    }
-                    switch (commandType) {
-                    case HELP -> new HelpCommand().execute(tasks, ui, storage);
-                    case LIST -> new ListCommand().execute(tasks, ui, storage);
-                    case ON -> {
-                        String dateText = parsedCommand.arguments();
-                        if (dateText.isBlank()) {
-                            throw new PlanaException("Oops, on needs a date. " + ON_USAGE);
-                        }
-                        LocalDate date = parser.parseDate(dateText, "on");
-                        new OnCommand(date).execute(tasks, ui, storage);
-                    }
-                    case DELETE -> {
-                        new DeleteCommand(parsedCommand.arguments()).execute(tasks, ui, storage);
-                    }
-                    case MARK -> {
-                        new MarkCommand(parsedCommand.arguments()).execute(tasks, ui, storage);
-                    }
-                    case UNMARK -> {
-                        new UnmarkCommand(parsedCommand.arguments()).execute(tasks, ui, storage);
-                    }
-                    case DEADLINE -> {
-                        Parser.TaskArguments taskArguments = parser.parseTaskArguments(parsedCommand);
-                        new AddCommand(new Deadline(taskArguments.description(), taskArguments.firstDate()))
-                                .execute(tasks, ui, storage);
-                    }
-                    case EVENT -> {
-                        Parser.TaskArguments taskArguments = parser.parseTaskArguments(parsedCommand);
-                        new AddCommand(new Event(taskArguments.description(), taskArguments.firstDate(),
-                                taskArguments.secondDate())).execute(tasks, ui, storage);
-                    }
-                    case TODO -> {
-                        Parser.TaskArguments taskArguments = parser.parseTaskArguments(parsedCommand);
-                        new AddCommand(new ToDo(taskArguments.description())).execute(tasks, ui, storage);
-                    }
-                    case UNKNOWN -> {
-                        if (command.isBlank()) {
-                            throw new PlanaException(EMPTY_COMMAND_ERROR);
-                        }
-                        throw new PlanaException("Oops, I don't recognize '" + command + "'."
-                                + " Type help to see the commands I know.");
-                    }
+                    Command parsedCommand = parser.parseCommand(command);
+                    parsedCommand.execute(tasks, ui, storage);
+                    if (parsedCommand.isExit()) {
+                        break;
                     }
                 } catch (PlanaException exception) {
                     ui.showError(exception.getMessage());
