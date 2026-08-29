@@ -130,6 +130,7 @@ public class Plana {
                 """;
         Ui ui = new Ui();
         ui.showWelcome(banner, banner_art);
+        Parser parser = new Parser();
 
         try (ui) {
             TaskList tasks = Storage.loadTasks();
@@ -139,7 +140,8 @@ public class Plana {
                 String command = ui.readCommand();
 
                 try {
-                    CommandType commandType = CommandType.fromInput(command);
+                    Parser.ParsedCommand parsedCommand = parser.parse(command);
+                    CommandType commandType = parsedCommand.type();
                     if (commandType == CommandType.BYE) {
                         ui.showGoodbye();
                         break commandLoop;
@@ -153,7 +155,7 @@ public class Plana {
                         ui.showTaskList(tasks);
                     }
                     case ON -> {
-                        String dateText = command.substring(CommandType.ON.getCommandText().length()).trim();
+                        String dateText = parsedCommand.arguments();
                         if (dateText.isBlank()) {
                             throw new PlanaException("Oops, on needs a date. " + ON_USAGE);
                         }
@@ -176,28 +178,28 @@ public class Plana {
                         ui.showLine();
                     }
                     case DELETE -> {
-                        String taskNumber = command.substring(CommandType.DELETE.getCommandText().length()).trim();
+                        String taskNumber = parsedCommand.arguments();
                         int taskIndex = getTaskIndex(TaskAction.DELETE, taskNumber, tasks.size());
                         Task deletedTask = tasks.remove(taskIndex);
                         Storage.saveTasks(tasks);
                         ui.showTaskDeleted(deletedTask, tasks.size());
                     }
                     case MARK -> {
-                        String taskNumber = command.substring(CommandType.MARK.getCommandText().length()).trim();
+                        String taskNumber = parsedCommand.arguments();
                         int taskIndex = getTaskIndex(TaskAction.MARK, taskNumber, tasks.size());
                         tasks.get(taskIndex).markAsDone();
                         Storage.saveTasks(tasks);
                         ui.showTaskMarkedDone(tasks.get(taskIndex));
                     }
                     case UNMARK -> {
-                        String taskNumber = command.substring(CommandType.UNMARK.getCommandText().length()).trim();
+                        String taskNumber = parsedCommand.arguments();
                         int taskIndex = getTaskIndex(TaskAction.UNMARK, taskNumber, tasks.size());
                         tasks.get(taskIndex).markAsNotDone();
                         Storage.saveTasks(tasks);
                         ui.showTaskMarkedNotDone(tasks.get(taskIndex));
                     }
                     case DEADLINE -> {
-                        String arguments = command.substring(CommandType.DEADLINE.getCommandText().length()).trim();
+                        String arguments = parsedCommand.arguments();
                         if (arguments.isBlank()) {
                             throw deadlineError("a deadline needs a description and a due date.");
                         }
@@ -219,7 +221,7 @@ public class Plana {
                         ui.showTaskAdded(tasks.get(taskCount - 1), taskCount);
                     }
                     case EVENT -> {
-                        String arguments = command.substring(CommandType.EVENT.getCommandText().length()).trim();
+                        String arguments = parsedCommand.arguments();
                         if (arguments.isBlank()) {
                             throw eventError("an event needs a description, a start, and an end.");
                         }
@@ -252,7 +254,7 @@ public class Plana {
                         ui.showTaskAdded(tasks.get(taskCount - 1), taskCount);
                     }
                     case TODO -> {
-                        String description = command.substring(CommandType.TODO.getCommandText().length()).trim();
+                        String description = parsedCommand.arguments();
                         if (description.isBlank()) {
                             throw new PlanaException(TODO_DESCRIPTION_ERROR);
                         }
