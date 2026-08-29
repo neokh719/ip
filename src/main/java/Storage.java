@@ -14,17 +14,37 @@ import java.util.List;
  * Saves and loads Plana's task list using a file relative to the project root.
  */
 public class Storage {
-    private static final Path DATA_FILE = Path.of("data", "plana.txt");
+    private final Path dataFile;
+
+    /**
+     * Creates storage using Plana's default data file.
+     */
+    public Storage() {
+        this(Path.of("data", "plana.txt"));
+    }
+
+    /**
+     * Creates storage using the supplied data-file path.
+     *
+     * @param filePath the file used to load and save tasks
+     */
+    public Storage(String filePath) {
+        this(Path.of(filePath));
+    }
+
+    private Storage(Path filePath) {
+        this.dataFile = filePath;
+    }
 
     /**
      * Writes the current task list to disk, creating the data directory when necessary.
      *
      * @param tasks the tasks that should be saved
      */
-    public static void saveTasks(List<Task> tasks) {
+    public void saveTasks(TaskList tasks) {
         Path temporaryFile = null;
         try {
-            Path parentDirectory = DATA_FILE.getParent();
+            Path parentDirectory = dataFile.getParent();
             if (parentDirectory != null) {
                 Files.createDirectories(parentDirectory);
             }
@@ -34,10 +54,10 @@ public class Storage {
             temporaryFile = Files.createTempFile(temporaryDirectory, "plana-", ".tmp");
             Files.writeString(temporaryFile, fileContents, StandardCharsets.UTF_8);
             try {
-                Files.move(temporaryFile, DATA_FILE, StandardCopyOption.ATOMIC_MOVE,
+                Files.move(temporaryFile, dataFile, StandardCopyOption.ATOMIC_MOVE,
                         StandardCopyOption.REPLACE_EXISTING);
             } catch (AtomicMoveNotSupportedException exception) {
-                Files.move(temporaryFile, DATA_FILE, StandardCopyOption.REPLACE_EXISTING);
+                Files.move(temporaryFile, dataFile, StandardCopyOption.REPLACE_EXISTING);
             }
         } catch (IOException | SecurityException exception) {
             reportStorageError("save", exception);
@@ -58,7 +78,7 @@ public class Storage {
      * @param tasks the tasks to serialize
      * @return the complete file contents
      */
-    private static String serializeTasks(List<Task> tasks) {
+    private String serializeTasks(TaskList tasks) {
         if (tasks == null || tasks.isEmpty()) {
             return "";
         }
@@ -87,18 +107,18 @@ public class Storage {
      *
      * @return the tasks loaded from disk
      */
-    public static ArrayList<Task> loadTasks() {
-        ArrayList<Task> tasks = new ArrayList<>();
+    public TaskList loadTasks() {
+        TaskList tasks = new TaskList();
         try {
-            if (Files.notExists(DATA_FILE)) {
+            if (Files.notExists(dataFile)) {
                 return tasks;
             }
-            if (!Files.isRegularFile(DATA_FILE)) {
+            if (!Files.isRegularFile(dataFile)) {
                 reportStorageError("load", new IOException("save path is not a regular file"));
                 return tasks;
             }
 
-            try (BufferedReader reader = Files.newBufferedReader(DATA_FILE, StandardCharsets.UTF_8)) {
+            try (BufferedReader reader = Files.newBufferedReader(dataFile, StandardCharsets.UTF_8)) {
                 String line;
                 while ((line = reader.readLine()) != null) {
                     Task task = parseTask(line);
@@ -136,7 +156,7 @@ public class Storage {
      * @param operation the operation that failed
      * @param exception the failure that occurred
      */
-    private static void reportStorageError(String operation, Exception exception) {
+    private void reportStorageError(String operation, Exception exception) {
         String message = exception.getMessage();
         if (message == null || message.isBlank()) {
             message = exception.getClass().getSimpleName();
@@ -150,7 +170,7 @@ public class Storage {
      * @param line a record from the save file
      * @return the parsed task, or {@code null} when the record is malformed
      */
-    private static Task parseTask(String line) {
+    private Task parseTask(String line) {
         if (line == null || line.isBlank()) {
             return null;
         }
@@ -213,7 +233,7 @@ public class Storage {
      * @param line a raw storage record
      * @return the raw fields, or {@code null} when an escape is incomplete
      */
-    private static List<String> splitRecord(String line) {
+    private List<String> splitRecord(String line) {
         ArrayList<String> parts = new ArrayList<>();
         StringBuilder currentPart = new StringBuilder();
         boolean escaped = false;
@@ -253,7 +273,7 @@ public class Storage {
      * @param value the escaped field
      * @return the original field, or {@code null} for an invalid escape sequence
      */
-    private static String unescapeField(String value) {
+    private String unescapeField(String value) {
         StringBuilder unescaped = new StringBuilder();
         for (int i = 0; i < value.length(); i++) {
             char character = value.charAt(i);
