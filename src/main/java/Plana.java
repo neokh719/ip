@@ -2,7 +2,6 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Locale;
-import java.util.Scanner;
 
 /**
  * Runs Plana's command-line task manager and responds in Plana's friendly voice.
@@ -96,24 +95,6 @@ public class Plana {
         }
     }
 
-    /**
-     * Prints the commands and features that Plana supports.
-     */
-    private static void printHelp() {
-        System.out.println("Don't worry! I am always here to help :>");
-        System.out.println("Here's what I can do:");
-        System.out.println("  todo <description>                          add a task");
-        System.out.println("  deadline <description> /by <date>           add a deadline");
-        System.out.println("  event <description> /from <start> /to <end> add an event");
-        System.out.println("  on <date>                                    show deadlines/events on a date");
-        System.out.println("  list                                        show all tasks");
-        System.out.println("  delete <number>                             delete a task");
-        System.out.println("  mark <number>                               mark a task as done");
-        System.out.println("  unmark <number>                             mark a task as not done");
-        System.out.println("  help or ?                                   show this help");
-        System.out.println("  bye                                         say goodbye");
-    }
-
     public static void main(String[] args) {
         String banner = " ____  _                  \n"
                 + "|  _ \\| | __ _ _ __   __ _ \n"
@@ -147,41 +128,33 @@ public class Plana {
                 ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣬⣂⢅⠢⣡⢑⢐⠔⡨⢋⠿⠿⠿⠿⠿⡻⡚⢏⠫⡑⡡⣊⣤⣷⣽⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
                 ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣦⣥⣢⣡⣂⣅⣅⣣⣑⣔⣬⣶⣿⣾⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
                 """;
-        String border_line = "____________________________________________________________";
-        System.out.println(border_line);
-        System.out.print(banner);
-        System.out.print(banner_art);
-        System.out.println("Hi hi! I'm Plana.");
-        System.out.println("What shall we get done today?");
-        System.out.println(border_line);
+        Ui ui = new Ui();
+        ui.showWelcome(banner, banner_art);
 
-        try (Scanner scanner = new Scanner(System.in)) {
+        try (ui) {
             TaskList tasks = Storage.loadTasks();
 
             commandLoop:
-            while (scanner.hasNextLine()) {
-                String command = scanner.nextLine();
-                System.out.println(command);
-                System.out.println(border_line);
+            while (ui.hasNextCommand()) {
+                String command = ui.readCommand();
 
                 try {
                     CommandType commandType = CommandType.fromInput(command);
                     if (commandType == CommandType.BYE) {
-                        System.out.println("Bye-bye! See you next time, okay?");
-                        System.out.println(border_line);
+                        ui.showGoodbye();
                         break commandLoop;
                     }
                     switch (commandType) {
                     case HELP -> {
-                        printHelp();
-                        System.out.println(border_line);
+                        ui.showHelp();
+                        ui.showLine();
                     }
                     case LIST -> {
                         System.out.println(" Here are your tasks:");
                         for (int i = 0; i < tasks.size(); i++) {
                             System.out.println(" " + (i + 1) + "." + tasks.get(i));
                         }
-                        System.out.println(border_line);
+                        ui.showLine();
                     }
                     case ON -> {
                         String dateText = command.substring(CommandType.ON.getCommandText().length()).trim();
@@ -204,7 +177,7 @@ public class Plana {
                         if (!hasMatchingTask) {
                             System.out.println(" No deadlines or events found on " + displayDate + ".");
                         }
-                        System.out.println(border_line);
+                        ui.showLine();
                     }
                     case DELETE -> {
                         String taskNumber = command.substring(CommandType.DELETE.getCommandText().length()).trim();
@@ -215,7 +188,7 @@ public class Plana {
                         System.out.println("  " + deletedTask);
                         int taskCount = tasks.size();
                         System.out.println("Now you have " + taskCount + (taskCount == 1 ? " task" : " tasks") + " in the list.");
-                        System.out.println(border_line);
+                        ui.showLine();
                     }
                     case MARK -> {
                         String taskNumber = command.substring(CommandType.MARK.getCommandText().length()).trim();
@@ -224,7 +197,7 @@ public class Plana {
                         Storage.saveTasks(tasks);
                         System.out.println("Yay! I've marked this task as done:");
                         System.out.println("  " + tasks.get(taskIndex));
-                        System.out.println(border_line);
+                        ui.showLine();
                     }
                     case UNMARK -> {
                         String taskNumber = command.substring(CommandType.UNMARK.getCommandText().length()).trim();
@@ -233,7 +206,7 @@ public class Plana {
                         Storage.saveTasks(tasks);
                         System.out.println("No worries! I've marked this task as not done:");
                         System.out.println("  " + tasks.get(taskIndex));
-                        System.out.println(border_line);
+                        ui.showLine();
                     }
                     case DEADLINE -> {
                         String arguments = command.substring(CommandType.DEADLINE.getCommandText().length()).trim();
@@ -258,7 +231,7 @@ public class Plana {
                         System.out.println("Yay, I've added this task:");
                         System.out.println("  " + tasks.get(taskCount - 1));
                         System.out.println("Now you have " + taskCount + (taskCount == 1 ? " task" : " tasks") + " in your list!");
-                        System.out.println(border_line);
+                        ui.showLine();
                     }
                     case EVENT -> {
                         String arguments = command.substring(CommandType.EVENT.getCommandText().length()).trim();
@@ -294,7 +267,7 @@ public class Plana {
                         System.out.println("Yay, I've added this task:");
                         System.out.println("  " + tasks.get(taskCount - 1));
                         System.out.println("Now you have " + taskCount + (taskCount == 1 ? " task" : " tasks") + " in your list!");
-                        System.out.println(border_line);
+                        ui.showLine();
                     }
                     case TODO -> {
                         String description = command.substring(CommandType.TODO.getCommandText().length()).trim();
@@ -307,7 +280,7 @@ public class Plana {
                         System.out.println("Yay, I've added this task:");
                         System.out.println("  " + tasks.get(taskCount - 1));
                         System.out.println("Now you have " + taskCount + (taskCount == 1 ? " task" : " tasks") + " in your list!");
-                        System.out.println(border_line);
+                        ui.showLine();
                     }
                     case UNKNOWN -> {
                         if (command.isBlank()) {
@@ -318,8 +291,7 @@ public class Plana {
                     }
                     }
                 } catch (PlanaException exception) {
-                    System.out.println(exception.getMessage());
-                    System.out.println(border_line);
+                    ui.showError(exception.getMessage());
                 }
             }
         }
