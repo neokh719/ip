@@ -81,10 +81,7 @@ public class Plana {
                         new MarkCommand(parsedCommand.arguments()).execute(tasks, ui, storage);
                     }
                     case UNMARK -> {
-                        String taskNumber = parsedCommand.arguments();
-                        Task unmarkedTask = tasks.unmark(taskNumber);
-                        Storage.saveTasks(tasks);
-                        ui.showTaskMarkedNotDone(unmarkedTask);
+                        new UnmarkCommand(parsedCommand.arguments()).execute(tasks, ui, storage);
                     }
                     case DEADLINE -> {
                         Parser.TaskArguments taskArguments = parser.parseTaskArguments(parsedCommand);
