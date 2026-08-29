@@ -19,6 +19,17 @@ public class Event extends Task {
     }
 
     /**
+     * Returns the Event in the format used by the storage file.
+     *
+     * @return the Event type, completion status, description, start, and end
+     */
+    @Override
+    public String toStorageString() {
+        return "E | " + getStorageStatus() + " | " + Storage.escapeField(description)
+                + " | " + Storage.escapeField(from) + " | " + Storage.escapeField(to);
+    }
+
+    /**
      * Returns the Event in the format used when displaying the task list.
      *
      * @return the Event type, completion status, description, start, and end

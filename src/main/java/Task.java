@@ -39,6 +39,24 @@ public class Task {
     }
 
     /**
+     * Returns the task in the format used by the storage file.
+     *
+     * @return the task type, completion status, and description
+     */
+    public String toStorageString() {
+        return "T | " + getStorageStatus() + " | " + Storage.escapeField(description);
+    }
+
+    /**
+     * Returns this task's completion status in the storage format.
+     *
+     * @return {@code 1} for done, or {@code 0} otherwise
+     */
+    protected String getStorageStatus() {
+        return completionStatus == CompletionStatus.DONE ? "1" : "0";
+    }
+
+    /**
      * Returns the task in the format used when displaying the task list.
      *
      * @return the task status and description
