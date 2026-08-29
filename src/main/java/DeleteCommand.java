@@ -24,7 +24,7 @@ public class DeleteCommand extends Command {
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) throws PlanaException {
         Task deletedTask = tasks.delete(taskNumber);
-        Storage.saveTasks(tasks);
+        storage.saveTasks(tasks);
         ui.showTaskDeleted(deletedTask, tasks.size());
     }
 }

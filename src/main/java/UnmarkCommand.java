@@ -24,7 +24,7 @@ public class UnmarkCommand extends Command {
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) throws PlanaException {
         Task unmarkedTask = tasks.unmark(taskNumber);
-        Storage.saveTasks(tasks);
+        storage.saveTasks(tasks);
         ui.showTaskMarkedNotDone(unmarkedTask);
     }
 }

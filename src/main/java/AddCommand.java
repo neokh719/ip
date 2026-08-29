@@ -23,7 +23,7 @@ public class AddCommand extends Command {
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) {
         tasks.add(task);
-        Storage.saveTasks(tasks);
+        storage.saveTasks(tasks);
         ui.showTaskAdded(task, tasks.size());
     }
 }

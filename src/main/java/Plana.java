@@ -41,7 +41,7 @@ public class Plana {
         Storage storage = new Storage();
 
         try (ui) {
-            TaskList tasks = Storage.loadTasks();
+            TaskList tasks = storage.loadTasks();
 
             while (ui.hasNextCommand()) {
                 String command = ui.readCommand();

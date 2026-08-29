@@ -24,7 +24,7 @@ public class MarkCommand extends Command {
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) throws PlanaException {
         Task markedTask = tasks.mark(taskNumber);
-        Storage.saveTasks(tasks);
+        storage.saveTasks(tasks);
         ui.showTaskMarkedDone(markedTask);
     }
 }
