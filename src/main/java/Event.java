@@ -45,4 +45,15 @@ public class Event extends Task {
         return "[E]" + super.toString() + " (from: " + from.format(DISPLAY_FORMAT)
                 + " to: " + to.format(DISPLAY_FORMAT) + ")";
     }
+
+    /**
+     * Checks whether this event is happening on the supplied date, including
+     * either endpoint of the event's date range.
+     *
+     * @param date the date to check
+     * @return {@code true} if the event includes the date
+     */
+    public boolean occursOn(LocalDate date) {
+        return !date.isBefore(from) && !date.isAfter(to);
+    }
 }

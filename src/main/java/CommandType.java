@@ -13,6 +13,9 @@ public enum CommandType {
     /** Displays all tasks. */
     LIST("list"),
 
+    /** Displays deadlines and events occurring on a date. */
+    ON("on"),
+
     /** Deletes a task. */
     DELETE("delete"),
 

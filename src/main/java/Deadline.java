@@ -41,4 +41,14 @@ public class Deadline extends Task {
     public String toString() {
         return "[D]" + super.toString() + " (by: " + dueDate.format(DISPLAY_FORMAT) + ")";
     }
+
+    /**
+     * Checks whether this deadline is due on the supplied date.
+     *
+     * @param date the date to check
+     * @return {@code true} if this deadline is due on the date
+     */
+    public boolean isOn(LocalDate date) {
+        return dueDate.equals(date);
+    }
 }

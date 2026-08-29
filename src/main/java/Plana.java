@@ -1,6 +1,8 @@
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.Scanner;
 
 /**
@@ -13,7 +15,10 @@ public class Plana {
             + " Type help to see what I can do.";
     private static final String DEADLINE_USAGE = "Try: deadline <description> /by <date>.";
     private static final String EVENT_USAGE = "Try: event <description> /from <start> /to <end>.";
+    private static final String ON_USAGE = "Try: on <date>.";
     private static final String DATE_FORMAT_HINT = "Use the date format yyyy-MM-dd, like 2019-10-15.";
+    private static final DateTimeFormatter DISPLAY_DATE_FORMAT =
+            DateTimeFormatter.ofPattern("MMM dd yyyy", Locale.ENGLISH);
 
     /**
      * Converts a user-entered task number into a zero-based list index.
@@ -85,7 +90,10 @@ public class Plana {
             if (taskType.equals("deadline")) {
                 throw deadlineError("that deadline date isn't valid. " + DATE_FORMAT_HINT);
             }
-            throw eventError("that event date isn't valid. " + DATE_FORMAT_HINT);
+            if (taskType.equals("event")) {
+                throw eventError("that event date isn't valid. " + DATE_FORMAT_HINT);
+            }
+            throw new PlanaException("Oops, that query date isn't valid. " + DATE_FORMAT_HINT + " " + ON_USAGE);
         }
     }
 
@@ -98,6 +106,7 @@ public class Plana {
         System.out.println("  todo <description>                          add a task");
         System.out.println("  deadline <description> /by <date>           add a deadline");
         System.out.println("  event <description> /from <start> /to <end> add an event");
+        System.out.println("  on <date>                                    show deadlines/events on a date");
         System.out.println("  list                                        show all tasks");
         System.out.println("  delete <number>                             delete a task");
         System.out.println("  mark <number>                               mark a task as done");
@@ -172,6 +181,29 @@ public class Plana {
                         System.out.println(" Here are your tasks:");
                         for (int i = 0; i < tasks.size(); i++) {
                             System.out.println(" " + (i + 1) + "." + tasks.get(i));
+                        }
+                        System.out.println(border_line);
+                    }
+                    case ON -> {
+                        String dateText = command.substring(CommandType.ON.getCommandText().length()).trim();
+                        if (dateText.isBlank()) {
+                            throw new PlanaException("Oops, on needs a date. " + ON_USAGE);
+                        }
+                        LocalDate date = parseDate(dateText, "on");
+                        String displayDate = date.format(DISPLAY_DATE_FORMAT);
+                        boolean hasMatchingTask = false;
+                        System.out.println(" Here are the deadlines and events on " + displayDate + ":");
+                        for (int i = 0; i < tasks.size(); i++) {
+                            Task task = tasks.get(i);
+                            boolean matches = (task instanceof Deadline deadline && deadline.isOn(date))
+                                    || (task instanceof Event event && event.occursOn(date));
+                            if (matches) {
+                                System.out.println(" " + (i + 1) + "." + task);
+                                hasMatchingTask = true;
+                            }
+                        }
+                        if (!hasMatchingTask) {
+                            System.out.println(" No deadlines or events found on " + displayDate + ".");
                         }
                         System.out.println(border_line);
                     }

@@ -65,6 +65,7 @@ Here's what I can do:
   todo <description>                          add a task
   deadline <description> /by <date>           add a deadline
   event <description> /from <start> /to <end> add an event
+  on <date>                                    show deadlines/events on a date
   list                                        show all tasks
   delete <number>                             delete a task
   mark <number>                               mark a task as done
@@ -79,6 +80,7 @@ Here's what I can do:
   todo <description>                          add a task
   deadline <description> /by <date>           add a deadline
   event <description> /from <start> /to <end> add an event
+  on <date>                                    show deadlines/events on a date
   list                                        show all tasks
   delete <number>                             delete a task
   mark <number>                               mark a task as done
@@ -93,6 +95,7 @@ Here's what I can do:
   todo <description>                          add a task
   deadline <description> /by <date>           add a deadline
   event <description> /from <start> /to <end> add an event
+  on <date>                                    show deadlines/events on a date
   list                                        show all tasks
   delete <number>                             delete a task
   mark <number>                               mark a task as done
@@ -107,15 +110,17 @@ ____________________________________________________________
 ```
 
 
-## Test Case: add and display a Deadline
+## Test Case: add and query a Deadline
 
-- Aim: Verify that the `deadline` command stores a due date as a date and displays it in a readable format.
+- Aim: Verify that deadlines are stored as dates, displayed in a readable format, and found by the `on` command.
 
 ### Inputs
 
 ```text
 deadline submit report /by 2019-10-15
 list
+on 2019-10-15
+on 2019-10-16
 mark 1
 unmark 1
 bye
@@ -169,6 +174,16 @@ ____________________________________________________________
  Here are your tasks:
  1.[D][ ] submit report (by: Oct 15 2019)
 ____________________________________________________________
+on 2019-10-15
+____________________________________________________________
+ Here are the deadlines and events on Oct 15 2019:
+ 1.[D][ ] submit report (by: Oct 15 2019)
+____________________________________________________________
+on 2019-10-16
+____________________________________________________________
+ Here are the deadlines and events on Oct 16 2019:
+ No deadlines or events found on Oct 16 2019.
+____________________________________________________________
 mark 1
 ____________________________________________________________
 Yay! I've marked this task as done:
@@ -184,15 +199,16 @@ ____________________________________________________________
 Bye-bye! See you next time, okay?
 ____________________________________________________________
 ```
-## Test Case: add and display an Event
+## Test Case: add and query an Event
 
-- Aim: Verify that the `event` command stores start and end dates and displays them in a readable format.
+- Aim: Verify that events are stored as dates, displayed in a readable format, and found by the `on` command.
 
 ### Inputs
 
 ```text
 event project meeting /from 2019-10-15 /to 2019-10-16
 list
+on 2019-10-16
 mark 1
 unmark 1
 bye
@@ -244,6 +260,11 @@ ____________________________________________________________
 list
 ____________________________________________________________
  Here are your tasks:
+ 1.[E][ ] project meeting (from: Oct 15 2019 to: Oct 16 2019)
+____________________________________________________________
+on 2019-10-16
+____________________________________________________________
+ Here are the deadlines and events on Oct 16 2019:
  1.[E][ ] project meeting (from: Oct 15 2019 to: Oct 16 2019)
 ____________________________________________________________
 mark 1
