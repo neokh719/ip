@@ -68,13 +68,8 @@ public class Plana {
                         }
                     }
                     switch (commandType) {
-                    case HELP -> {
-                        ui.showHelp();
-                        ui.showLine();
-                    }
-                    case LIST -> {
-                        ui.showTaskList(tasks);
-                    }
+                    case HELP -> new HelpCommand().execute(tasks, ui, storage);
+                    case LIST -> new ListCommand().execute(tasks, ui, storage);
                     case ON -> {
                         String dateText = parsedCommand.arguments();
                         if (dateText.isBlank()) {
