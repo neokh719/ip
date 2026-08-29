@@ -150,11 +150,7 @@ public class Plana {
                         ui.showLine();
                     }
                     case LIST -> {
-                        System.out.println(" Here are your tasks:");
-                        for (int i = 0; i < tasks.size(); i++) {
-                            System.out.println(" " + (i + 1) + "." + tasks.get(i));
-                        }
-                        ui.showLine();
+                        ui.showTaskList(tasks);
                     }
                     case ON -> {
                         String dateText = command.substring(CommandType.ON.getCommandText().length()).trim();
@@ -164,18 +160,18 @@ public class Plana {
                         LocalDate date = parseDate(dateText, "on");
                         String displayDate = date.format(DISPLAY_DATE_FORMAT);
                         boolean hasMatchingTask = false;
-                        System.out.println(" Here are the deadlines and events on " + displayDate + ":");
+                        ui.showTasksOnDateHeader(displayDate);
                         for (int i = 0; i < tasks.size(); i++) {
                             Task task = tasks.get(i);
                             boolean matches = (task instanceof Deadline deadline && deadline.isOn(date))
                                     || (task instanceof Event event && event.occursOn(date));
                             if (matches) {
-                                System.out.println(" " + (i + 1) + "." + task);
+                                ui.showTask(i, task);
                                 hasMatchingTask = true;
                             }
                         }
                         if (!hasMatchingTask) {
-                            System.out.println(" No deadlines or events found on " + displayDate + ".");
+                            ui.showNoTasksOnDate(displayDate);
                         }
                         ui.showLine();
                     }
@@ -184,29 +180,21 @@ public class Plana {
                         int taskIndex = getTaskIndex(TaskAction.DELETE, taskNumber, tasks.size());
                         Task deletedTask = tasks.remove(taskIndex);
                         Storage.saveTasks(tasks);
-                        System.out.println("Noted. I've removed this task:");
-                        System.out.println("  " + deletedTask);
-                        int taskCount = tasks.size();
-                        System.out.println("Now you have " + taskCount + (taskCount == 1 ? " task" : " tasks") + " in the list.");
-                        ui.showLine();
+                        ui.showTaskDeleted(deletedTask, tasks.size());
                     }
                     case MARK -> {
                         String taskNumber = command.substring(CommandType.MARK.getCommandText().length()).trim();
                         int taskIndex = getTaskIndex(TaskAction.MARK, taskNumber, tasks.size());
                         tasks.get(taskIndex).markAsDone();
                         Storage.saveTasks(tasks);
-                        System.out.println("Yay! I've marked this task as done:");
-                        System.out.println("  " + tasks.get(taskIndex));
-                        ui.showLine();
+                        ui.showTaskMarkedDone(tasks.get(taskIndex));
                     }
                     case UNMARK -> {
                         String taskNumber = command.substring(CommandType.UNMARK.getCommandText().length()).trim();
                         int taskIndex = getTaskIndex(TaskAction.UNMARK, taskNumber, tasks.size());
                         tasks.get(taskIndex).markAsNotDone();
                         Storage.saveTasks(tasks);
-                        System.out.println("No worries! I've marked this task as not done:");
-                        System.out.println("  " + tasks.get(taskIndex));
-                        ui.showLine();
+                        ui.showTaskMarkedNotDone(tasks.get(taskIndex));
                     }
                     case DEADLINE -> {
                         String arguments = command.substring(CommandType.DEADLINE.getCommandText().length()).trim();
@@ -228,10 +216,7 @@ public class Plana {
                         tasks.add(new Deadline(description, parseDate(dueDate, "deadline")));
                         Storage.saveTasks(tasks);
                         int taskCount = tasks.size();
-                        System.out.println("Yay, I've added this task:");
-                        System.out.println("  " + tasks.get(taskCount - 1));
-                        System.out.println("Now you have " + taskCount + (taskCount == 1 ? " task" : " tasks") + " in your list!");
-                        ui.showLine();
+                        ui.showTaskAdded(tasks.get(taskCount - 1), taskCount);
                     }
                     case EVENT -> {
                         String arguments = command.substring(CommandType.EVENT.getCommandText().length()).trim();
@@ -264,10 +249,7 @@ public class Plana {
                         tasks.add(new Event(description, parseDate(from, "event"), parseDate(to, "event")));
                         Storage.saveTasks(tasks);
                         int taskCount = tasks.size();
-                        System.out.println("Yay, I've added this task:");
-                        System.out.println("  " + tasks.get(taskCount - 1));
-                        System.out.println("Now you have " + taskCount + (taskCount == 1 ? " task" : " tasks") + " in your list!");
-                        ui.showLine();
+                        ui.showTaskAdded(tasks.get(taskCount - 1), taskCount);
                     }
                     case TODO -> {
                         String description = command.substring(CommandType.TODO.getCommandText().length()).trim();
@@ -277,10 +259,7 @@ public class Plana {
                         tasks.add(new ToDo(description));
                         Storage.saveTasks(tasks);
                         int taskCount = tasks.size();
-                        System.out.println("Yay, I've added this task:");
-                        System.out.println("  " + tasks.get(taskCount - 1));
-                        System.out.println("Now you have " + taskCount + (taskCount == 1 ? " task" : " tasks") + " in your list!");
-                        ui.showLine();
+                        ui.showTaskAdded(tasks.get(taskCount - 1), taskCount);
                     }
                     case UNKNOWN -> {
                         if (command.isBlank()) {
