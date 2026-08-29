@@ -12,40 +12,6 @@ public class Plana {
     private static final DateTimeFormatter DISPLAY_DATE_FORMAT =
             DateTimeFormatter.ofPattern("MMM dd yyyy", Locale.ENGLISH);
 
-    /**
-     * Converts a user-entered task number into a zero-based list index.
-     *
-     * @param action the command being performed, such as mark or unmark
-     * @param taskNumber the task number entered by the user
-     * @param taskCount the number of tasks currently stored
-     * @return the zero-based index of the selected task
-     * @throws PlanaException if the task number is not a valid existing task
-     */
-    private static int getTaskIndex(TaskAction action, String taskNumber, int taskCount) throws PlanaException {
-        if (taskNumber.isBlank()) {
-            throw new PlanaException("Oops, " + action.getCommandText() + " needs a task number."
-                    + " Try: " + action.getCommandText() + " <number>.");
-        }
-
-        final int taskIndex;
-        try {
-            taskIndex = Integer.parseInt(taskNumber) - 1;
-        } catch (NumberFormatException exception) {
-            throw new PlanaException("Oops, '" + taskNumber + "' isn't a valid task number."
-                    + " Use a positive whole number, like " + action.getCommandText() + " 1.");
-        }
-
-        if (taskIndex < 0) {
-            throw new PlanaException("Oops, task numbers start at 1."
-                    + " Try " + action.getCommandText() + " 1 or another number from list.");
-        }
-        if (taskIndex >= taskCount) {
-            throw new PlanaException("Oops, task " + (taskIndex + 1) + " doesn't exist yet."
-                    + " Type list to check the task numbers you have.");
-        }
-        return taskIndex;
-    }
-
     public static void main(String[] args) {
         String banner = " ____  _                  \n"
                 + "|  _ \\| | __ _ _ __   __ _ \n"
@@ -130,24 +96,21 @@ public class Plana {
                     }
                     case DELETE -> {
                         String taskNumber = parsedCommand.arguments();
-                        int taskIndex = getTaskIndex(TaskAction.DELETE, taskNumber, tasks.size());
-                        Task deletedTask = tasks.remove(taskIndex);
+                        Task deletedTask = tasks.delete(taskNumber);
                         Storage.saveTasks(tasks);
                         ui.showTaskDeleted(deletedTask, tasks.size());
                     }
                     case MARK -> {
                         String taskNumber = parsedCommand.arguments();
-                        int taskIndex = getTaskIndex(TaskAction.MARK, taskNumber, tasks.size());
-                        tasks.get(taskIndex).markAsDone();
+                        Task markedTask = tasks.mark(taskNumber);
                         Storage.saveTasks(tasks);
-                        ui.showTaskMarkedDone(tasks.get(taskIndex));
+                        ui.showTaskMarkedDone(markedTask);
                     }
                     case UNMARK -> {
                         String taskNumber = parsedCommand.arguments();
-                        int taskIndex = getTaskIndex(TaskAction.UNMARK, taskNumber, tasks.size());
-                        tasks.get(taskIndex).markAsNotDone();
+                        Task unmarkedTask = tasks.unmark(taskNumber);
                         Storage.saveTasks(tasks);
-                        ui.showTaskMarkedNotDone(tasks.get(taskIndex));
+                        ui.showTaskMarkedNotDone(unmarkedTask);
                     }
                     case DEADLINE -> {
                         Parser.TaskArguments taskArguments = parser.parseTaskArguments(parsedCommand);

@@ -55,6 +55,88 @@ public class TaskList implements Iterable<Task> {
     }
 
     /**
+     * Deletes the task selected by a user-facing task number.
+     *
+     * @param taskNumber the one-based task number entered by the user
+     * @return the deleted task
+     * @throws PlanaException if the task number is missing, invalid, or out of range
+     */
+    public Task delete(String taskNumber) throws PlanaException {
+        return remove(getTaskIndex(TaskAction.DELETE, taskNumber));
+    }
+
+    /**
+     * Marks the task selected by a user-facing task number as done.
+     *
+     * @param taskNumber the one-based task number entered by the user
+     * @return the marked task
+     * @throws PlanaException if the task number is missing, invalid, or out of range
+     */
+    public Task mark(String taskNumber) throws PlanaException {
+        Task task = getSelectedTask(TaskAction.MARK, taskNumber);
+        task.markAsDone();
+        return task;
+    }
+
+    /**
+     * Marks the task selected by a user-facing task number as not done.
+     *
+     * @param taskNumber the one-based task number entered by the user
+     * @return the unmarked task
+     * @throws PlanaException if the task number is missing, invalid, or out of range
+     */
+    public Task unmark(String taskNumber) throws PlanaException {
+        Task task = getSelectedTask(TaskAction.UNMARK, taskNumber);
+        task.markAsNotDone();
+        return task;
+    }
+
+    /**
+     * Retrieves a task after validating the user-facing task number.
+     *
+     * @param action the command being performed, used to tailor validation errors
+     * @param taskNumber the one-based task number entered by the user
+     * @return the selected task
+     * @throws PlanaException if the task number is missing, invalid, or out of range
+     */
+    private Task getSelectedTask(TaskAction action, String taskNumber) throws PlanaException {
+        return get(getTaskIndex(action, taskNumber));
+    }
+
+    /**
+     * Converts a valid user-facing task number into a zero-based list index.
+     *
+     * @param action the command being performed, used to tailor validation errors
+     * @param taskNumber the one-based task number entered by the user
+     * @return the zero-based index of the selected task
+     * @throws PlanaException if the task number is missing, invalid, or out of range
+     */
+    private int getTaskIndex(TaskAction action, String taskNumber) throws PlanaException {
+        if (taskNumber.isBlank()) {
+            throw new PlanaException("Oops, " + action.getCommandText() + " needs a task number."
+                    + " Try: " + action.getCommandText() + " <number>.");
+        }
+
+        final int taskIndex;
+        try {
+            taskIndex = Integer.parseInt(taskNumber) - 1;
+        } catch (NumberFormatException exception) {
+            throw new PlanaException("Oops, '" + taskNumber + "' isn't a valid task number."
+                    + " Use a positive whole number, like " + action.getCommandText() + " 1.");
+        }
+
+        if (taskIndex < 0) {
+            throw new PlanaException("Oops, task numbers start at 1."
+                    + " Try " + action.getCommandText() + " 1 or another number from list.");
+        }
+        if (taskIndex >= size()) {
+            throw new PlanaException("Oops, task " + (taskIndex + 1) + " doesn't exist yet."
+                    + " Type list to check the task numbers you have.");
+        }
+        return taskIndex;
+    }
+
+    /**
      * Returns the number of tasks in the list.
      *
      * @return the task count
