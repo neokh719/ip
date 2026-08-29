@@ -85,25 +85,17 @@ public class Plana {
                     }
                     case DEADLINE -> {
                         Parser.TaskArguments taskArguments = parser.parseTaskArguments(parsedCommand);
-                        tasks.add(new Deadline(taskArguments.description(), taskArguments.firstDate()));
-                        Storage.saveTasks(tasks);
-                        int taskCount = tasks.size();
-                        ui.showTaskAdded(tasks.get(taskCount - 1), taskCount);
+                        new AddCommand(new Deadline(taskArguments.description(), taskArguments.firstDate()))
+                                .execute(tasks, ui, storage);
                     }
                     case EVENT -> {
                         Parser.TaskArguments taskArguments = parser.parseTaskArguments(parsedCommand);
-                        tasks.add(new Event(taskArguments.description(), taskArguments.firstDate(),
-                                taskArguments.secondDate()));
-                        Storage.saveTasks(tasks);
-                        int taskCount = tasks.size();
-                        ui.showTaskAdded(tasks.get(taskCount - 1), taskCount);
+                        new AddCommand(new Event(taskArguments.description(), taskArguments.firstDate(),
+                                taskArguments.secondDate())).execute(tasks, ui, storage);
                     }
                     case TODO -> {
                         Parser.TaskArguments taskArguments = parser.parseTaskArguments(parsedCommand);
-                        tasks.add(new ToDo(taskArguments.description()));
-                        Storage.saveTasks(tasks);
-                        int taskCount = tasks.size();
-                        ui.showTaskAdded(tasks.get(taskCount - 1), taskCount);
+                        new AddCommand(new ToDo(taskArguments.description())).execute(tasks, ui, storage);
                     }
                     case UNKNOWN -> {
                         if (command.isBlank()) {

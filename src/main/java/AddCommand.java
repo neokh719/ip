@@ -1,0 +1,29 @@
+/**
+ * Adds a task to the list and persists the updated task list.
+ */
+public class AddCommand extends Command {
+    private final Task task;
+
+    /**
+     * Creates an add command for a fully constructed task.
+     *
+     * @param task the task to add
+     */
+    public AddCommand(Task task) {
+        this.task = task;
+    }
+
+    /**
+     * Adds the task, saves the list, and displays the result.
+     *
+     * @param tasks the task list to update
+     * @param ui the user interface used for the response
+     * @param storage the storage collaborator used for persistence
+     */
+    @Override
+    public void execute(TaskList tasks, Ui ui, Storage storage) {
+        tasks.add(task);
+        Storage.saveTasks(tasks);
+        ui.showTaskAdded(task, tasks.size());
+    }
+}
