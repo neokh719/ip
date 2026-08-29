@@ -1,6 +1,4 @@
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.Locale;
 
 /**
  * Runs Plana's command-line task manager and responds in Plana's friendly voice.
@@ -9,8 +7,6 @@ public class Plana {
     private static final String EMPTY_COMMAND_ERROR = "Oops, I didn't catch a command."
             + " Type help to see what I can do.";
     private static final String ON_USAGE = "Try: on <date>.";
-    private static final DateTimeFormatter DISPLAY_DATE_FORMAT =
-            DateTimeFormatter.ofPattern("MMM dd yyyy", Locale.ENGLISH);
 
     public static void main(String[] args) {
         String banner = " ____  _                  \n"
@@ -76,22 +72,7 @@ public class Plana {
                             throw new PlanaException("Oops, on needs a date. " + ON_USAGE);
                         }
                         LocalDate date = parser.parseDate(dateText, "on");
-                        String displayDate = date.format(DISPLAY_DATE_FORMAT);
-                        boolean hasMatchingTask = false;
-                        ui.showTasksOnDateHeader(displayDate);
-                        for (int i = 0; i < tasks.size(); i++) {
-                            Task task = tasks.get(i);
-                            boolean matches = (task instanceof Deadline deadline && deadline.isOn(date))
-                                    || (task instanceof Event event && event.occursOn(date));
-                            if (matches) {
-                                ui.showTask(i, task);
-                                hasMatchingTask = true;
-                            }
-                        }
-                        if (!hasMatchingTask) {
-                            ui.showNoTasksOnDate(displayDate);
-                        }
-                        ui.showLine();
+                        new OnCommand(date).execute(tasks, ui, storage);
                     }
                     case DELETE -> {
                         String taskNumber = parsedCommand.arguments();
