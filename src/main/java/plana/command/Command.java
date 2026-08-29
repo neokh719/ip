@@ -1,4 +1,9 @@
-package plana;
+package plana.command;
+
+import plana.exception.PlanaException;
+import plana.storage.Storage;
+import plana.task.TaskList;
+import plana.ui.Ui;
 
 /**
  * Represents one executable command entered by the user.

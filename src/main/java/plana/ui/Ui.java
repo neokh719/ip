@@ -1,6 +1,9 @@
-package plana;
+package plana.ui;
 
 import java.util.Scanner;
+
+import plana.task.Task;
+import plana.task.TaskList;
 
 /**
  * Handles Plana's console input and user-facing interface formatting.

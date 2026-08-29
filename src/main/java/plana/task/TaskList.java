@@ -1,8 +1,11 @@
-package plana;
+package plana.task;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import plana.command.TaskAction;
+import plana.exception.PlanaException;
 
 /**
  * Owns Plana's ordered collection of tasks and provides the operations used by

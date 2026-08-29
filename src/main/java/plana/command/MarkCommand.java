@@ -1,22 +1,28 @@
-package plana;
+package plana.command;
+
+import plana.exception.PlanaException;
+import plana.storage.Storage;
+import plana.task.Task;
+import plana.task.TaskList;
+import plana.ui.Ui;
 
 /**
- * Deletes a task and persists the updated task list.
+ * Marks a selected task as done and persists the updated task list.
  */
-public class DeleteCommand extends Command {
+public class MarkCommand extends Command {
     private final String taskNumber;
 
     /**
-     * Creates a delete command for a user-facing task number.
+     * Creates a mark command for a user-facing task number.
      *
      * @param taskNumber the one-based task number entered by the user
      */
-    public DeleteCommand(String taskNumber) {
+    public MarkCommand(String taskNumber) {
         this.taskNumber = taskNumber;
     }
 
     /**
-     * Deletes the selected task, saves the list, and displays the result.
+     * Marks the selected task, saves the list, and displays the result.
      *
      * @param tasks the task list to update
      * @param ui the user interface used for the response
@@ -25,8 +31,8 @@ public class DeleteCommand extends Command {
      */
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) throws PlanaException {
-        Task deletedTask = tasks.delete(taskNumber);
+        Task markedTask = tasks.mark(taskNumber);
         storage.saveTasks(tasks);
-        ui.showTaskDeleted(deletedTask, tasks.size());
+        ui.showTaskMarkedDone(markedTask);
     }
 }

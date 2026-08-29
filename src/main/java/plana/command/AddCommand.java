@@ -1,4 +1,9 @@
-package plana;
+package plana.command;
+
+import plana.storage.Storage;
+import plana.task.Task;
+import plana.task.TaskList;
+import plana.ui.Ui;
 
 /**
  * Adds a task to the list and persists the updated task list.

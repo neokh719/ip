@@ -1,4 +1,4 @@
-package plana;
+package plana.storage;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -11,6 +11,12 @@ import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
+
+import plana.task.Deadline;
+import plana.task.Event;
+import plana.task.Task;
+import plana.task.TaskList;
+import plana.task.ToDo;
 
 /**
  * Saves and loads Plana's task list using a file relative to the project root.
@@ -141,7 +147,7 @@ public class Storage {
      * @param value the field to escape
      * @return the escaped field, or an empty field for {@code null}
      */
-    static String escapeField(String value) {
+    public static String escapeField(String value) {
         if (value == null) {
             return "";
         }

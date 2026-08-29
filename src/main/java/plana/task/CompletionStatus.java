@@ -1,4 +1,4 @@
-package plana;
+package plana.task;
 
 /**
  * Represents the completion state of a task.

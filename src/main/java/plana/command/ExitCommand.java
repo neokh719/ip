@@ -1,4 +1,8 @@
-package plana;
+package plana.command;
+
+import plana.storage.Storage;
+import plana.task.TaskList;
+import plana.ui.Ui;
 
 /**
  * Exits Plana after displaying its goodbye message.

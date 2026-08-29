@@ -1,4 +1,4 @@
-package plana;
+package plana.exception;
 
 /**
  * Represents an input error that Plana can explain to the user and recover from.
