@@ -17,8 +17,8 @@ try {
 
     $input = @"
 todo buy milk
-deadline submit report /by Friday
-event team meeting /from 2pm /to 3pm
+deadline submit report /by 2019-10-15
+event team meeting /from 2019-10-15 /to 2019-10-16
 mark 1
 delete 2
 bye
@@ -34,7 +34,7 @@ bye
     }
 
     $actual = [IO.File]::ReadAllText($dataFile)
-    $expected = "T | 1 | buy milk`nE | 0 | team meeting | 2pm | 3pm`n"
+    $expected = "T | 1 | buy milk`nE | 0 | team meeting | 2019-10-15 | 2019-10-16`n"
     $actual = $actual -replace "`r`n|`r", "`n"
     if ($actual -cne $expected) {
         throw "Saved file contents were incorrect.`nExpected:`n$expected`nActual:`n$actual"
@@ -58,7 +58,7 @@ bye
         throw "Plana exited with code $LASTEXITCODE while loading."
     }
     if (-not $secondOutput.Contains("1.[T][X] buy milk") -or
-        -not $secondOutput.Contains("2.[E][ ] team meeting (from: 2pm to: 3pm)") -or
+        -not $secondOutput.Contains("2.[E][ ] team meeting (from: Oct 15 2019 to: Oct 16 2019)") -or
         -not $secondOutput.Contains("3.[T][ ] escaped | pipe and \ slash")) {
         throw "Loaded task contents were incorrect."
     }

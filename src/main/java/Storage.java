@@ -5,6 +5,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.AtomicMoveNotSupportedException;
 import java.nio.file.StandardCopyOption;
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -177,13 +179,22 @@ public class Storage {
             if (parts.size() != 4 || parts.get(3).trim().isBlank()) {
                 return null;
             }
-            task = new Deadline(description, parts.get(3).trim());
+            try {
+                task = new Deadline(description, LocalDate.parse(parts.get(3).trim()));
+            } catch (DateTimeParseException exception) {
+                return null;
+            }
         }
         case "E" -> {
             if (parts.size() != 5 || parts.get(3).trim().isBlank() || parts.get(4).trim().isBlank()) {
                 return null;
             }
-            task = new Event(description, parts.get(3).trim(), parts.get(4).trim());
+            try {
+                task = new Event(description, LocalDate.parse(parts.get(3).trim()),
+                        LocalDate.parse(parts.get(4).trim()));
+            } catch (DateTimeParseException exception) {
+                return null;
+            }
         }
         default -> {
             return null;

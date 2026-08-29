@@ -65,6 +65,7 @@ Here's what I can do:
   todo <description>                          add a task
   deadline <description> /by <date>           add a deadline
   event <description> /from <start> /to <end> add an event
+  on <date>                                    show deadlines/events on a date
   list                                        show all tasks
   delete <number>                             delete a task
   mark <number>                               mark a task as done
@@ -79,6 +80,7 @@ Here's what I can do:
   todo <description>                          add a task
   deadline <description> /by <date>           add a deadline
   event <description> /from <start> /to <end> add an event
+  on <date>                                    show deadlines/events on a date
   list                                        show all tasks
   delete <number>                             delete a task
   mark <number>                               mark a task as done
@@ -93,6 +95,7 @@ Here's what I can do:
   todo <description>                          add a task
   deadline <description> /by <date>           add a deadline
   event <description> /from <start> /to <end> add an event
+  on <date>                                    show deadlines/events on a date
   list                                        show all tasks
   delete <number>                             delete a task
   mark <number>                               mark a task as done
@@ -107,15 +110,17 @@ ____________________________________________________________
 ```
 
 
-## Test Case: add and display a Deadline
+## Test Case: add and query a Deadline
 
-- Aim: Verify that the `deadline` command stores a due date as text and displays the Deadline marker and due date.
+- Aim: Verify that deadlines are stored as dates, displayed in a readable format, and found by the `on` command.
 
 ### Inputs
 
 ```text
-deadline submit report /by Sunday
+deadline submit report /by 2019-10-15
 list
+on 2019-10-15
+on 2019-10-16
 mark 1
 unmark 1
 bye
@@ -158,41 +163,52 @@ ____________________________________________________________
 Hi hi! I'm Plana.
 What shall we get done today?
 ____________________________________________________________
-deadline submit report /by Sunday
+deadline submit report /by 2019-10-15
 ____________________________________________________________
 Yay, I've added this task:
-  [D][ ] submit report (by: Sunday)
+  [D][ ] submit report (by: Oct 15 2019)
 Now you have 1 task in your list!
 ____________________________________________________________
 list
 ____________________________________________________________
  Here are your tasks:
- 1.[D][ ] submit report (by: Sunday)
+ 1.[D][ ] submit report (by: Oct 15 2019)
+____________________________________________________________
+on 2019-10-15
+____________________________________________________________
+ Here are the deadlines and events on Oct 15 2019:
+ 1.[D][ ] submit report (by: Oct 15 2019)
+____________________________________________________________
+on 2019-10-16
+____________________________________________________________
+ Here are the deadlines and events on Oct 16 2019:
+ No deadlines or events found on Oct 16 2019.
 ____________________________________________________________
 mark 1
 ____________________________________________________________
 Yay! I've marked this task as done:
-  [D][X] submit report (by: Sunday)
+  [D][X] submit report (by: Oct 15 2019)
 ____________________________________________________________
 unmark 1
 ____________________________________________________________
 No worries! I've marked this task as not done:
-  [D][ ] submit report (by: Sunday)
+  [D][ ] submit report (by: Oct 15 2019)
 ____________________________________________________________
 bye
 ____________________________________________________________
 Bye-bye! See you next time, okay?
 ____________________________________________________________
 ```
-## Test Case: add and display an Event
+## Test Case: add and query an Event
 
-- Aim: Verify that the `event` command stores start and end text and displays the Event marker and times.
+- Aim: Verify that events are stored as dates, displayed in a readable format, and found by the `on` command.
 
 ### Inputs
 
 ```text
-event project meeting /from Mon 2pm /to 4pm
+event project meeting /from 2019-10-15 /to 2019-10-16
 list
+on 2019-10-16
 mark 1
 unmark 1
 bye
@@ -235,26 +251,31 @@ ____________________________________________________________
 Hi hi! I'm Plana.
 What shall we get done today?
 ____________________________________________________________
-event project meeting /from Mon 2pm /to 4pm
+event project meeting /from 2019-10-15 /to 2019-10-16
 ____________________________________________________________
 Yay, I've added this task:
-  [E][ ] project meeting (from: Mon 2pm to: 4pm)
+  [E][ ] project meeting (from: Oct 15 2019 to: Oct 16 2019)
 Now you have 1 task in your list!
 ____________________________________________________________
 list
 ____________________________________________________________
  Here are your tasks:
- 1.[E][ ] project meeting (from: Mon 2pm to: 4pm)
+ 1.[E][ ] project meeting (from: Oct 15 2019 to: Oct 16 2019)
+____________________________________________________________
+on 2019-10-16
+____________________________________________________________
+ Here are the deadlines and events on Oct 16 2019:
+ 1.[E][ ] project meeting (from: Oct 15 2019 to: Oct 16 2019)
 ____________________________________________________________
 mark 1
 ____________________________________________________________
 Yay! I've marked this task as done:
-  [E][X] project meeting (from: Mon 2pm to: 4pm)
+  [E][X] project meeting (from: Oct 15 2019 to: Oct 16 2019)
 ____________________________________________________________
 unmark 1
 ____________________________________________________________
 No worries! I've marked this task as not done:
-  [E][ ] project meeting (from: Mon 2pm to: 4pm)
+  [E][ ] project meeting (from: Oct 15 2019 to: Oct 16 2019)
 ____________________________________________________________
 bye
 ____________________________________________________________
@@ -482,14 +503,14 @@ deadline
 deadline report
 deadline /by Friday
 deadline report /by
-deadline report /by Friday
+deadline report /by 2019-10-15
 event
 event team sync /to 3pm
 event team sync /from 2pm
 event /from 2pm /to 3pm
 event team sync /from /to 3pm
 event team sync /from 2pm /to
-event team sync /from 2pm /to 3pm
+event team sync /from 2019-10-15 /to 2019-10-16
 list
 bye
 ```
@@ -547,10 +568,10 @@ deadline report /by
 ____________________________________________________________
 Oops, that deadline is missing its due date. Try: deadline <description> /by <date>.
 ____________________________________________________________
-deadline report /by Friday
+deadline report /by 2019-10-15
 ____________________________________________________________
 Yay, I've added this task:
-  [D][ ] report (by: Friday)
+  [D][ ] report (by: Oct 15 2019)
 Now you have 1 task in your list!
 ____________________________________________________________
 event
@@ -577,17 +598,17 @@ event team sync /from 2pm /to
 ____________________________________________________________
 Oops, that event is missing its end time. Try: event <description> /from <start> /to <end>.
 ____________________________________________________________
-event team sync /from 2pm /to 3pm
+event team sync /from 2019-10-15 /to 2019-10-16
 ____________________________________________________________
 Yay, I've added this task:
-  [E][ ] team sync (from: 2pm to: 3pm)
+  [E][ ] team sync (from: Oct 15 2019 to: Oct 16 2019)
 Now you have 2 tasks in your list!
 ____________________________________________________________
 list
 ____________________________________________________________
  Here are your tasks:
- 1.[D][ ] report (by: Friday)
- 2.[E][ ] team sync (from: 2pm to: 3pm)
+ 1.[D][ ] report (by: Oct 15 2019)
+ 2.[E][ ] team sync (from: Oct 15 2019 to: Oct 16 2019)
 ____________________________________________________________
 bye
 ____________________________________________________________
