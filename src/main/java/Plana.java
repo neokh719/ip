@@ -78,10 +78,7 @@ public class Plana {
                         new DeleteCommand(parsedCommand.arguments()).execute(tasks, ui, storage);
                     }
                     case MARK -> {
-                        String taskNumber = parsedCommand.arguments();
-                        Task markedTask = tasks.mark(taskNumber);
-                        Storage.saveTasks(tasks);
-                        ui.showTaskMarkedDone(markedTask);
+                        new MarkCommand(parsedCommand.arguments()).execute(tasks, ui, storage);
                     }
                     case UNMARK -> {
                         String taskNumber = parsedCommand.arguments();
