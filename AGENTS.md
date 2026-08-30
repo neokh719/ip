@@ -35,6 +35,13 @@ Plana should sound like a friendly, capable anime girl: warm, casual, lightly pl
 
 # Project-specific requirements
 
+## JUnit test coverage target:
+
+Maintain JUnit tests for at least 50% of the highest-value non-trivial methods,
+prioritizing complex, core, or critical business logic. After every code change,
+update or add the relevant JUnit tests so that the test coverage target remains
+fulfilled and the changed behavior is verified.
+
 ## Post-code-update UI validation:
 
 After every update to source code or other user-visible application behavior:
