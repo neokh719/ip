@@ -1,6 +1,7 @@
 package plana.task;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.LocalDate;
@@ -49,5 +50,49 @@ public class EventTest {
         assertTrue(event.occursOn(EVENT_START));
         assertFalse(event.occursOn(EVENT_START.minusDays(1)));
         assertFalse(event.occursOn(EVENT_START.plusDays(1)));
+    }
+
+    /**
+     * Verifies that an incomplete event is displayed with its type, status,
+     * description, and formatted date range.
+     */
+    @Test
+    public void toString_incompleteEvent_formattedDetailsReturned() {
+        Event event = new Event("team planning", EVENT_START, EVENT_END);
+
+        assertEquals("[E][ ] team planning (from: Aug 31 2026 to: Sep 02 2026)", event.toString());
+    }
+
+    /**
+     * Verifies that the display format reflects a completed event.
+     */
+    @Test
+    public void toString_completedEvent_doneStatusReturned() {
+        Event event = new Event("team planning", EVENT_START, EVENT_END);
+        event.markAsDone();
+
+        assertEquals("[E][X] team planning (from: Aug 31 2026 to: Sep 02 2026)", event.toString());
+    }
+
+    /**
+     * Verifies that an incomplete event is serialized with its type, status,
+     * dates, and escaped description.
+     */
+    @Test
+    public void toStorageString_incompleteEvent_storageRecordReturned() {
+        Event event = new Event("review | plan", EVENT_START, EVENT_END);
+
+        assertEquals("E | 0 | review \\| plan | 2026-08-31 | 2026-09-02", event.toStorageString());
+    }
+
+    /**
+     * Verifies that the storage format reflects a completed event.
+     */
+    @Test
+    public void toStorageString_completedEvent_doneStatusReturned() {
+        Event event = new Event("team planning", EVENT_START, EVENT_END);
+        event.markAsDone();
+
+        assertEquals("E | 1 | team planning | 2026-08-31 | 2026-09-02", event.toStorageString());
     }
 }
