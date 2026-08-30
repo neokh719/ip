@@ -6,6 +6,8 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
@@ -54,6 +56,41 @@ public class TaskListTest {
         assertEquals(2, taskList.size());
         assertSame(firstTask, taskList.get(0));
         assertSame(lastTask, taskList.get(1));
+    }
+
+    /**
+     * Verifies that removing by zero-based index returns the selected task and
+     * shifts the remaining tasks into the correct order.
+     */
+    @Test
+    public void remove_validIndex_removedAndRemainingTasksShifted() {
+        Task firstTask = new ToDo("first task");
+        Task middleTask = new ToDo("middle task");
+        Task lastTask = new ToDo("last task");
+        TaskList taskList = new TaskList(List.of(firstTask, middleTask, lastTask));
+
+        Task removedTask = taskList.remove(1);
+
+        assertSame(middleTask, removedTask);
+        assertEquals(2, taskList.size());
+        assertSame(firstTask, taskList.get(0));
+        assertSame(lastTask, taskList.get(1));
+    }
+
+    /**
+     * Verifies that iteration exposes every task in insertion order.
+     */
+    @Test
+    public void iterator_tasksAreReturnedInInsertionOrder() {
+        TaskList taskList = new TaskList(List.of(
+                new ToDo("first task"), new ToDo("second task"), new ToDo("third task")));
+        Iterator<Task> iterator = taskList.iterator();
+        List<Task> iteratedTasks = new ArrayList<>();
+
+        iterator.forEachRemaining(iteratedTasks::add);
+
+        assertEquals(List.of("[T][ ] first task", "[T][ ] second task", "[T][ ] third task"),
+                iteratedTasks.stream().map(Task::toString).toList());
     }
 
     /**
