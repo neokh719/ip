@@ -40,6 +40,11 @@ public class Storage {
         this(Path.of(filePath));
     }
 
+    /**
+     * Creates storage backed by the supplied path.
+     *
+     * @param filePath the file used to load and save tasks
+     */
     private Storage(Path filePath) {
         this.dataFile = filePath;
     }
