@@ -15,7 +15,7 @@ public class MarkCommand extends Command {
     /**
      * Creates a mark command for a user-facing task number.
      *
-     * @param taskNumber the one-based task number entered by the user
+     * @param taskNumber the one-based task number entered by the user.
      */
     public MarkCommand(String taskNumber) {
         this.taskNumber = taskNumber;
@@ -24,9 +24,9 @@ public class MarkCommand extends Command {
     /**
      * Marks the selected task, saves the list, and displays the result.
      *
-     * @param tasks the task list to update
-     * @param ui the user interface used for the response
-     * @param storage the storage collaborator used for persistence
+     * @param tasks the task list to update.
+     * @param ui the user interface used for the response.
+     * @param storage the storage collaborator used for persistence.
      * @throws PlanaException if the task number is invalid
      */
     @Override

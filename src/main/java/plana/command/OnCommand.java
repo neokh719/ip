@@ -1,15 +1,15 @@
 package plana.command;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Locale;
+
 import plana.storage.Storage;
 import plana.task.Deadline;
 import plana.task.Event;
 import plana.task.Task;
 import plana.task.TaskList;
 import plana.ui.Ui;
-
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.Locale;
 
 /**
  * Displays deadlines and events that occur on a specified date.
@@ -22,7 +22,7 @@ public class OnCommand extends Command {
     /**
      * Creates a date query command.
      *
-     * @param date the date to query
+     * @param date the date to query.
      */
     public OnCommand(LocalDate date) {
         this.date = date;
@@ -31,9 +31,9 @@ public class OnCommand extends Command {
     /**
      * Displays matching deadlines and events, or an empty-result message.
      *
-     * @param tasks the task list to search
-     * @param ui the user interface used for the query response
-     * @param storage unused by this command
+     * @param tasks the task list to search.
+     * @param ui the user interface used for the query response.
+     * @param storage unused by this command.
      */
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) {

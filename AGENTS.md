@@ -35,6 +35,18 @@ Plana should sound like a friendly, capable anime girl: warm, casual, lightly pl
 
 # Project-specific requirements
 
+## SEEDU Java coding standard
+
+All Java source and test code in this project must follow the project-specific
+`seedu-java-coding-standard` skill, based on the SE-EDU Java basic and
+intermediate coding standard:
+
+<https://se-education.org/guides/conventions/java/intermediate.html>
+
+Use the skill when reviewing, adding, or modifying Java code. Preserve existing
+behavior and user-facing output while applying its naming, layout, statements,
+imports, variable, control-flow, and documentation rules.
+
 ## JUnit test coverage target:
 
 Maintain JUnit tests for at least 50% of the highest-value non-trivial methods,

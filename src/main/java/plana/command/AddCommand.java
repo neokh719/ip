@@ -14,7 +14,7 @@ public class AddCommand extends Command {
     /**
      * Creates an add command for a fully constructed task.
      *
-     * @param task the task to add
+     * @param task the task to add.
      */
     public AddCommand(Task task) {
         this.task = task;
@@ -23,9 +23,9 @@ public class AddCommand extends Command {
     /**
      * Adds the task, saves the list, and displays the result.
      *
-     * @param tasks the task list to update
-     * @param ui the user interface used for the response
-     * @param storage the storage collaborator used for persistence
+     * @param tasks the task list to update.
+     * @param ui the user interface used for the response.
+     * @param storage the storage collaborator used for persistence.
      */
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) {

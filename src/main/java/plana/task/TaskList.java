@@ -24,7 +24,7 @@ public class TaskList implements Iterable<Task> {
     /**
      * Creates a task list containing a copy of the supplied tasks.
      *
-     * @param tasks the initial tasks
+     * @param tasks the initial tasks.
      */
     public TaskList(List<Task> tasks) {
         this.tasks = new ArrayList<>(tasks);
@@ -33,7 +33,7 @@ public class TaskList implements Iterable<Task> {
     /**
      * Adds a task to the end of the list.
      *
-     * @param task the task to add
+     * @param task the task to add.
      */
     public void add(Task task) {
         tasks.add(task);
@@ -42,7 +42,7 @@ public class TaskList implements Iterable<Task> {
     /**
      * Returns the task at the specified zero-based index.
      *
-     * @param index the zero-based index
+     * @param index the zero-based index.
      * @return the task at that index
      */
     public Task get(int index) {
@@ -52,7 +52,7 @@ public class TaskList implements Iterable<Task> {
     /**
      * Removes and returns the task at the specified zero-based index.
      *
-     * @param index the zero-based index
+     * @param index the zero-based index.
      * @return the removed task
      */
     public Task remove(int index) {
@@ -62,7 +62,7 @@ public class TaskList implements Iterable<Task> {
     /**
      * Deletes the task selected by a user-facing task number.
      *
-     * @param taskNumber the one-based task number entered by the user
+     * @param taskNumber the one-based task number entered by the user.
      * @return the deleted task
      * @throws PlanaException if the task number is missing, invalid, or out of range
      */
@@ -73,7 +73,7 @@ public class TaskList implements Iterable<Task> {
     /**
      * Marks the task selected by a user-facing task number as done.
      *
-     * @param taskNumber the one-based task number entered by the user
+     * @param taskNumber the one-based task number entered by the user.
      * @return the marked task
      * @throws PlanaException if the task number is missing, invalid, or out of range
      */
@@ -86,7 +86,7 @@ public class TaskList implements Iterable<Task> {
     /**
      * Marks the task selected by a user-facing task number as not done.
      *
-     * @param taskNumber the one-based task number entered by the user
+     * @param taskNumber the one-based task number entered by the user.
      * @return the unmarked task
      * @throws PlanaException if the task number is missing, invalid, or out of range
      */
@@ -99,8 +99,8 @@ public class TaskList implements Iterable<Task> {
     /**
      * Retrieves a task after validating the user-facing task number.
      *
-     * @param action the command being performed, used to tailor validation errors
-     * @param taskNumber the one-based task number entered by the user
+     * @param action the command being performed, used to tailor validation errors.
+     * @param taskNumber the one-based task number entered by the user.
      * @return the selected task
      * @throws PlanaException if the task number is missing, invalid, or out of range
      */
@@ -111,8 +111,8 @@ public class TaskList implements Iterable<Task> {
     /**
      * Converts a valid user-facing task number into a zero-based list index.
      *
-     * @param action the command being performed, used to tailor validation errors
-     * @param taskNumber the one-based task number entered by the user
+     * @param action the command being performed, used to tailor validation errors.
+     * @param taskNumber the one-based task number entered by the user.
      * @return the zero-based index of the selected task
      * @throws PlanaException if the task number is missing, invalid, or out of range
      */
