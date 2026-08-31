@@ -11,6 +11,11 @@ import plana.ui.Ui;
  * Runs Plana's command-line task manager and responds in Plana's friendly voice.
  */
 public class Plana {
+    /**
+     * Starts Plana and processes commands until the user exits or input ends.
+     *
+     * @param args command-line arguments, currently unused
+     */
     public static void main(String[] args) {
         String banner = " ____  _                  \n"
                 + "|  _ \\| | __ _ _ __   __ _ \n"
