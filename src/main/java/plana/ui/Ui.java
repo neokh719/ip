@@ -66,6 +66,7 @@ public class Ui implements AutoCloseable {
         System.out.println("  deadline <description> /by <date>           add a deadline");
         System.out.println("  event <description> /from <start> /to <end> add an event");
         System.out.println("  on <date>                                    show deadlines/events on a date");
+        System.out.println("  find <keyword>                                find tasks by description");
         System.out.println("  list                                        show all tasks");
         System.out.println("  delete <number>                             delete a task");
         System.out.println("  mark <number>                               mark a task as done");
@@ -85,6 +86,20 @@ public class Ui implements AutoCloseable {
             showTask(i, tasks.get(i));
         }
         showLine();
+    }
+
+    /**
+     * Displays the heading for a keyword-filtered task query.
+     */
+    public void showMatchingTasksHeader() {
+        System.out.println(" Here are the matching tasks in your list:");
+    }
+
+    /**
+     * Displays the empty result message for a keyword-filtered task query.
+     */
+    public void showNoMatchingTasks() {
+        System.out.println(" No matching tasks found.");
     }
 
     /**

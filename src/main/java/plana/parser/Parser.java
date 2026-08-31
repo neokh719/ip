@@ -8,6 +8,7 @@ import plana.command.Command;
 import plana.command.CommandType;
 import plana.command.DeleteCommand;
 import plana.command.ExitCommand;
+import plana.command.FindCommand;
 import plana.command.HelpCommand;
 import plana.command.InvalidCommand;
 import plana.command.ListCommand;
@@ -61,6 +62,7 @@ public class Parser {
             case HELP -> new HelpCommand();
             case LIST -> new ListCommand();
             case ON -> parseOnCommand(parsedCommand.arguments());
+            case FIND -> parseFindCommand(parsedCommand.arguments());
             case DELETE -> new DeleteCommand(parsedCommand.arguments());
             case MARK -> new MarkCommand(parsedCommand.arguments());
             case UNMARK -> new UnmarkCommand(parsedCommand.arguments());
@@ -120,6 +122,20 @@ public class Parser {
             throw new PlanaException("Oops, on needs a date. Try: on <date>.");
         }
         return new OnCommand(parseDate(dateText, "on"));
+    }
+
+    /**
+     * Parses the keyword argument of a {@code find} command.
+     *
+     * @param keyword the keyword supplied with the command.
+     * @return the command that searches for the keyword
+     * @throws PlanaException if the keyword is missing
+     */
+    private Command parseFindCommand(String keyword) throws PlanaException {
+        if (keyword.isBlank()) {
+            throw new PlanaException("Oops, find needs a keyword. Try: find <keyword>.");
+        }
+        return new FindCommand(keyword);
     }
 
     /**

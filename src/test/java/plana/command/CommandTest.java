@@ -122,6 +122,31 @@ class CommandTest {
     }
 
     @Test
+    void findCommand_execute_matchingDescriptionsDisplayedWithOriginalNumbers(@TempDir Path temporaryDirectory) {
+        TaskList tasks = new TaskList(java.util.List.of(
+                new ToDo("read a book"),
+                new Deadline("submit report", LocalDate.of(2026, 8, 31)),
+                new ToDo("return BOOK")));
+
+        String response = execute(new FindCommand("book"), tasks, storageAt(temporaryDirectory));
+
+        assertTrue(response.contains("Here are the matching tasks in your list:"));
+        assertTrue(response.contains("1.[T][ ] read a book"));
+        assertTrue(response.contains("3.[T][ ] return BOOK"));
+        assertFalse(response.contains("submit report"));
+    }
+
+    @Test
+    void findCommand_execute_noMatches_emptyResultDisplayed(@TempDir Path temporaryDirectory) {
+        TaskList tasks = new TaskList(java.util.List.of(new ToDo("read a book")));
+
+        String response = execute(new FindCommand("movie"), tasks, storageAt(temporaryDirectory));
+
+        assertTrue(response.contains("No matching tasks found."));
+        assertFalse(response.contains("read a book"));
+    }
+
+    @Test
     void listCommand_execute_allTasksDisplayedInOrder(@TempDir Path temporaryDirectory) {
         TaskList tasks = new TaskList(java.util.List.of(new ToDo("first"), new ToDo("second")));
 

@@ -13,6 +13,7 @@ import plana.command.AddCommand;
 import plana.command.CommandType;
 import plana.command.DeleteCommand;
 import plana.command.ExitCommand;
+import plana.command.FindCommand;
 import plana.command.HelpCommand;
 import plana.command.InvalidCommand;
 import plana.command.ListCommand;
@@ -54,6 +55,7 @@ public class ParserTest {
         assertInstanceOf(HelpCommand.class, parser.parseCommand("?"));
         assertInstanceOf(ListCommand.class, parser.parseCommand("list"));
         assertInstanceOf(OnCommand.class, parser.parseCommand("on 2026-08-31"));
+        assertInstanceOf(FindCommand.class, parser.parseCommand("find book"));
         assertInstanceOf(DeleteCommand.class, parser.parseCommand("delete 1"));
         assertInstanceOf(MarkCommand.class, parser.parseCommand("mark 1"));
         assertInstanceOf(UnmarkCommand.class, parser.parseCommand("unmark 1"));
@@ -124,6 +126,14 @@ public class ParserTest {
     }
 
     /**
+     * Verifies that a find command requires a non-blank keyword.
+     */
+    @Test
+    public void parseCommand_findWithoutKeyword_exceptionReturned() {
+        assertParserCommandException("find", "Oops, find needs a keyword. Try: find <keyword>.");
+    }
+
+    /**
      * Verifies that malformed event markers, fields, ordering, and dates are
      * rejected without producing a partially valid task.
      */
@@ -165,6 +175,11 @@ public class ParserTest {
     private void assertParserException(String input, String expectedMessage) {
         PlanaException exception = assertThrows(PlanaException.class,
                 () -> parser.parseTaskArguments(parser.parse(input)));
+        assertEquals(expectedMessage, exception.getMessage());
+    }
+
+    private void assertParserCommandException(String input, String expectedMessage) {
+        PlanaException exception = assertThrows(PlanaException.class, () -> parser.parseCommand(input));
         assertEquals(expectedMessage, exception.getMessage());
     }
 }

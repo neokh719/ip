@@ -1,5 +1,7 @@
 package plana.task;
 
+import java.util.Locale;
+
 import plana.storage.Storage;
 
 /**
@@ -26,6 +28,17 @@ public class Task {
      */
     public String getStatusIcon() {
         return completionStatus.getStatusIcon();
+    }
+
+    /**
+     * Checks whether this task's description contains a keyword.
+     *
+     * @param keyword the keyword to search for.
+     * @return {@code true} when the description contains the keyword,
+     *         ignoring letter case
+     */
+    public boolean matchesKeyword(String keyword) {
+        return description.toLowerCase(Locale.ROOT).contains(keyword.toLowerCase(Locale.ROOT));
     }
 
     /**

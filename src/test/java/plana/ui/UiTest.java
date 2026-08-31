@@ -84,10 +84,24 @@ class UiTest {
         assertTrue(response.contains("deadline <description> /by <date>"));
         assertTrue(response.contains("event <description> /from <start> /to <end>"));
         assertTrue(response.contains("on <date>"));
+        assertTrue(response.contains("find <keyword>"));
         assertTrue(response.contains("delete <number>"));
         assertTrue(response.contains("mark <number>"));
         assertTrue(response.contains("unmark <number>"));
         assertTrue(response.contains("bye"));
+        ui.close();
+    }
+
+    @Test
+    void matchingTaskMessages_displayExpectedText() {
+        Ui ui = newUi("");
+
+        ui.showMatchingTasksHeader();
+        ui.showNoMatchingTasks();
+
+        String response = outputText();
+        assertTrue(response.contains("Here are the matching tasks in your list:"));
+        assertTrue(response.contains("No matching tasks found."));
         ui.close();
     }
 

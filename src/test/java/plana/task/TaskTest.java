@@ -1,6 +1,8 @@
 package plana.task;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
@@ -26,5 +28,14 @@ class TaskTest {
         task.markAsNotDone();
         assertEquals(" ", task.getStatusIcon());
         assertEquals("T | 0 | read book", task.toStorageString());
+    }
+
+    @Test
+    void matchesKeyword_descriptionContainsKeyword_caseInsensitiveResultReturned() {
+        Task task = new Task("Read a Book");
+
+        assertTrue(task.matchesKeyword("book"));
+        assertTrue(task.matchesKeyword("READ"));
+        assertFalse(task.matchesKeyword("movie"));
     }
 }
