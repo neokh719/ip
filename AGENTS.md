@@ -71,6 +71,19 @@ After every update to source code or other user-visible application behavior:
 
 Ensure that Java 25 is used when running the application or build tasks. On macOS, use `sdk use java 25.0.3.fx-zulu` to switch to Java 25 if needed.
 
+## SEEDU Git standard
+
+All future commits in this project must follow the project-specific
+`seedu-git-standard` skill, based on the SE-EDU Git conventions:
+
+<https://se-education.org/guides/conventions/git.html>
+
+Use the skill when preparing any commit. Commit subjects must use its
+imperative, capitalization, length, and punctuation rules. Non-trivial commits
+must include a properly separated, wrapped body explaining what and why.
+Branches must use meaningful kebab-case names, with issue-number prefixes when
+applicable. Continue to commit only when the user explicitly requests it.
+
 ## Git
 
 Use lightweight tags unless the user requests an annotated tag.
