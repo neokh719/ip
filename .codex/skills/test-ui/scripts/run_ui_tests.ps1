@@ -1,6 +1,6 @@
 param(
     [string]$TestPlanPath = "test/ui-test-plan.md",
-    [string]$MainClass = "Plana",
+    [string]$MainClass = "plana.Plana",
     [string]$SourcePath = "src/main/java",
     [int]$TimeoutSeconds = 30
 )
