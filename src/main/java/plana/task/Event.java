@@ -1,10 +1,10 @@
 package plana.task;
 
-import plana.storage.Storage;
-
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
+
+import plana.storage.Storage;
 
 /**
  * Represents a task that starts and ends on specified dates.
@@ -18,9 +18,9 @@ public class Event extends Task {
     /**
      * Creates an incomplete Event.
      *
-     * @param description the task description
-     * @param from the start date
-     * @param to the end date
+     * @param description the task description.
+     * @param from the start date.
+     * @param to the end date.
      */
     public Event(String description, LocalDate from, LocalDate to) {
         super(description);
@@ -54,7 +54,7 @@ public class Event extends Task {
      * Checks whether this event is happening on the supplied date, including
      * either endpoint of the event's date range.
      *
-     * @param date the date to check
+     * @param date the date to check.
      * @return {@code true} if the event includes the date
      */
     public boolean occursOn(LocalDate date) {

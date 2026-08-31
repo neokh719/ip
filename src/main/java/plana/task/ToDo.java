@@ -8,7 +8,7 @@ public class ToDo extends Task {
     /**
      * Creates an incomplete ToDo with the given description.
      *
-     * @param description the task description
+     * @param description the task description.
      */
     public ToDo(String description) {
         super(description);

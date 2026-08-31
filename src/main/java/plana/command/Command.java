@@ -15,9 +15,9 @@ public abstract class Command {
     /**
      * Executes this command using the application's collaborators.
      *
-     * @param tasks the current task list
-     * @param ui the user interface used for responses
-     * @param storage the task storage used for persistence
+     * @param tasks the current task list.
+     * @param ui the user interface used for responses.
+     * @param storage the task storage used for persistence.
      * @throws PlanaException if the command cannot be completed
      */
     public abstract void execute(TaskList tasks, Ui ui, Storage storage) throws PlanaException;

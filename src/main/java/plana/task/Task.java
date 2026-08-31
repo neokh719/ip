@@ -12,7 +12,7 @@ public class Task {
     /**
      * Creates a task that is initially not done.
      *
-     * @param description the task description
+     * @param description the task description.
      */
     public Task(String description) {
         this.description = description;

@@ -15,7 +15,7 @@ public class InvalidCommand extends Command {
     /**
      * Creates an invalid command with its user-facing explanation.
      *
-     * @param errorMessage the error to display when execution is attempted
+     * @param errorMessage the error to display when execution is attempted.
      */
     public InvalidCommand(String errorMessage) {
         this.errorMessage = errorMessage;
@@ -24,9 +24,9 @@ public class InvalidCommand extends Command {
     /**
      * Reports why the input could not be executed.
      *
-     * @param tasks unused by this command
-     * @param ui unused by this command
-     * @param storage unused by this command
+     * @param tasks unused by this command.
+     * @param ui unused by this command.
+     * @param storage unused by this command.
      * @throws PlanaException always, with the stored user-facing message
      */
     @Override

@@ -44,7 +44,7 @@ public enum CommandType {
     /**
      * Creates a command type with its command-line representation.
      *
-     * @param commandText the command text used for this command
+     * @param commandText the command text used for this command.
      */
     CommandType(String commandText) {
         this.commandText = commandText;
@@ -54,7 +54,7 @@ public enum CommandType {
      * Converts raw user input into a command type while preserving Plana's
      * existing command matching rules.
      *
-     * @param input the complete command entered by the user
+     * @param input the complete command entered by the user.
      * @return the matching command type, or {@link #UNKNOWN} if none matches
      */
     public static CommandType fromInput(String input) {

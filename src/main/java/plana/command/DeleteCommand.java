@@ -15,7 +15,7 @@ public class DeleteCommand extends Command {
     /**
      * Creates a delete command for a user-facing task number.
      *
-     * @param taskNumber the one-based task number entered by the user
+     * @param taskNumber the one-based task number entered by the user.
      */
     public DeleteCommand(String taskNumber) {
         this.taskNumber = taskNumber;
@@ -24,9 +24,9 @@ public class DeleteCommand extends Command {
     /**
      * Deletes the selected task, saves the list, and displays the result.
      *
-     * @param tasks the task list to update
-     * @param ui the user interface used for the response
-     * @param storage the storage collaborator used for persistence
+     * @param tasks the task list to update.
+     * @param ui the user interface used for the response.
+     * @param storage the storage collaborator used for persistence.
      * @throws PlanaException if the task number is invalid
      */
     @Override

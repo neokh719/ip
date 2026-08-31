@@ -3,9 +3,9 @@ package plana.storage;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.AtomicMoveNotSupportedException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.AtomicMoveNotSupportedException;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
@@ -34,7 +34,7 @@ public class Storage {
     /**
      * Creates storage using the supplied data-file path.
      *
-     * @param filePath the file used to load and save tasks
+     * @param filePath the file used to load and save tasks.
      */
     public Storage(String filePath) {
         this(Path.of(filePath));
@@ -43,7 +43,7 @@ public class Storage {
     /**
      * Creates storage backed by the supplied path.
      *
-     * @param filePath the file used to load and save tasks
+     * @param filePath the file used to load and save tasks.
      */
     private Storage(Path filePath) {
         this.dataFile = filePath;
@@ -52,7 +52,7 @@ public class Storage {
     /**
      * Writes the current task list to disk, creating the data directory when necessary.
      *
-     * @param tasks the tasks that should be saved
+     * @param tasks the tasks that should be saved.
      */
     public void saveTasks(TaskList tasks) {
         Path temporaryFile = null;
@@ -88,7 +88,7 @@ public class Storage {
     /**
      * Converts the supplied task list into file records while ignoring invalid entries.
      *
-     * @param tasks the tasks to serialize
+     * @param tasks the tasks to serialize.
      * @return the complete file contents
      */
     private String serializeTasks(TaskList tasks) {
@@ -149,7 +149,7 @@ public class Storage {
     /**
      * Escapes characters that have a special meaning in a storage record.
      *
-     * @param value the field to escape
+     * @param value the field to escape.
      * @return the escaped field, or an empty field for {@code null}
      */
     public static String escapeField(String value) {
@@ -166,8 +166,8 @@ public class Storage {
     /**
      * Reports a storage problem without terminating the chatbot.
      *
-     * @param operation the operation that failed
-     * @param exception the failure that occurred
+     * @param operation the operation that failed.
+     * @param exception the failure that occurred.
      */
     private void reportStorageError(String operation, Exception exception) {
         String message = exception.getMessage();
@@ -180,7 +180,7 @@ public class Storage {
     /**
      * Converts one saved line into a task.
      *
-     * @param line a record from the save file
+     * @param line a record from the save file.
      * @return the parsed task, or {@code null} when the record is malformed
      */
     private Task parseTask(String line) {
@@ -202,36 +202,37 @@ public class Storage {
 
         Task task;
         switch (type) {
-        case "T" -> {
-            if (parts.size() != 3) {
+            case "T" -> {
+                if (parts.size() != 3) {
+                    return null;
+                }
+                task = new ToDo(description);
+            }
+            case "D" -> {
+                if (parts.size() != 4 || parts.get(3).trim().isBlank()) {
+                    return null;
+                }
+                try {
+                    task = new Deadline(description, LocalDate.parse(parts.get(3).trim()));
+                } catch (DateTimeParseException exception) {
+                    return null;
+                }
+            }
+            case "E" -> {
+                if (parts.size() != 5 || parts.get(3).trim().isBlank()
+                        || parts.get(4).trim().isBlank()) {
+                    return null;
+                }
+                try {
+                    task = new Event(description, LocalDate.parse(parts.get(3).trim()),
+                            LocalDate.parse(parts.get(4).trim()));
+                } catch (DateTimeParseException exception) {
+                    return null;
+                }
+            }
+            default -> {
                 return null;
             }
-            task = new ToDo(description);
-        }
-        case "D" -> {
-            if (parts.size() != 4 || parts.get(3).trim().isBlank()) {
-                return null;
-            }
-            try {
-                task = new Deadline(description, LocalDate.parse(parts.get(3).trim()));
-            } catch (DateTimeParseException exception) {
-                return null;
-            }
-        }
-        case "E" -> {
-            if (parts.size() != 5 || parts.get(3).trim().isBlank() || parts.get(4).trim().isBlank()) {
-                return null;
-            }
-            try {
-                task = new Event(description, LocalDate.parse(parts.get(3).trim()),
-                        LocalDate.parse(parts.get(4).trim()));
-            } catch (DateTimeParseException exception) {
-                return null;
-            }
-        }
-        default -> {
-            return null;
-        }
         }
 
         if (status.equals("1")) {
@@ -243,7 +244,7 @@ public class Storage {
     /**
      * Splits a record on unescaped pipe characters.
      *
-     * @param line a raw storage record
+     * @param line a raw storage record.
      * @return the raw fields, or {@code null} when an escape is incomplete
      */
     private List<String> splitRecord(String line) {
@@ -283,7 +284,7 @@ public class Storage {
     /**
      * Reverses the escaping applied to a stored field.
      *
-     * @param value the escaped field
+     * @param value the escaped field.
      * @return the original field, or {@code null} for an invalid escape sequence
      */
     private String unescapeField(String value) {
@@ -299,12 +300,12 @@ public class Storage {
             }
             char escapedCharacter = value.charAt(++i);
             switch (escapedCharacter) {
-            case '\\', '|' -> unescaped.append(escapedCharacter);
-            case 'n' -> unescaped.append('\n');
-            case 'r' -> unescaped.append('\r');
-            default -> {
-                return null;
-            }
+                case '\\', '|' -> unescaped.append(escapedCharacter);
+                case 'n' -> unescaped.append('\n');
+                case 'r' -> unescaped.append('\r');
+                default -> {
+                    return null;
+                }
             }
         }
         return unescaped.toString();

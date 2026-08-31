@@ -15,7 +15,7 @@ public enum CompletionStatus {
     /**
      * Creates a completion status with its display icon.
      *
-     * @param statusIcon the icon used when displaying this status
+     * @param statusIcon the icon used when displaying this status.
      */
     CompletionStatus(String statusIcon) {
         this.statusIcon = statusIcon;

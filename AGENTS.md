@@ -35,6 +35,18 @@ Plana should sound like a friendly, capable anime girl: warm, casual, lightly pl
 
 # Project-specific requirements
 
+## SEEDU Java coding standard
+
+All Java source and test code in this project must follow the project-specific
+`seedu-java-coding-standard` skill, based on the SE-EDU Java basic and
+intermediate coding standard:
+
+<https://se-education.org/guides/conventions/java/intermediate.html>
+
+Use the skill when reviewing, adding, or modifying Java code. Preserve existing
+behavior and user-facing output while applying its naming, layout, statements,
+imports, variable, control-flow, and documentation rules.
+
 ## JUnit test coverage target:
 
 Maintain JUnit tests for at least 50% of the highest-value non-trivial methods,
@@ -58,6 +70,19 @@ After every update to source code or other user-visible application behavior:
 ## Java version:
 
 Ensure that Java 25 is used when running the application or build tasks. On macOS, use `sdk use java 25.0.3.fx-zulu` to switch to Java 25 if needed.
+
+## SEEDU Git standard
+
+All future commits in this project must follow the project-specific
+`seedu-git-standard` skill, based on the SE-EDU Git conventions:
+
+<https://se-education.org/guides/conventions/git.html>
+
+Use the skill when preparing any commit. Commit subjects must use its
+imperative, capitalization, length, and punctuation rules. Non-trivial commits
+must include a properly separated, wrapped body explaining what and why.
+Branches must use meaningful kebab-case names, with issue-number prefixes when
+applicable. Continue to commit only when the user explicitly requests it.
 
 ## Git
 

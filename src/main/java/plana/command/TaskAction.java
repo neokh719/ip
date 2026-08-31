@@ -18,7 +18,7 @@ public enum TaskAction {
     /**
      * Creates a task action with its command-line representation.
      *
-     * @param commandText the command text used for this action
+     * @param commandText the command text used for this action.
      */
     TaskAction(String commandText) {
         this.commandText = commandText;

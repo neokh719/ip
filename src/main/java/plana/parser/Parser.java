@@ -35,7 +35,7 @@ public class Parser {
     /**
      * Parses one complete line entered by the user.
      *
-     * @param input the complete command entered by the user
+     * @param input the complete command entered by the user.
      * @return the recognized command and its trimmed arguments
      */
     public ParsedCommand parse(String input) {
@@ -50,46 +50,46 @@ public class Parser {
      * <p>This is the boundary between command syntax and command behavior:
      * {@link Plana} only needs to execute the returned command.</p>
      *
-     * @param input the complete command entered by the user
+     * @param input the complete command entered by the user.
      * @return the command represented by the input
      * @throws PlanaException if the command contains invalid structured data
      */
     public Command parseCommand(String input) throws PlanaException {
         ParsedCommand parsedCommand = parse(input);
         return switch (parsedCommand.type()) {
-        case BYE -> new ExitCommand();
-        case HELP -> new HelpCommand();
-        case LIST -> new ListCommand();
-        case ON -> parseOnCommand(parsedCommand.arguments());
-        case DELETE -> new DeleteCommand(parsedCommand.arguments());
-        case MARK -> new MarkCommand(parsedCommand.arguments());
-        case UNMARK -> new UnmarkCommand(parsedCommand.arguments());
-        case DEADLINE, EVENT, TODO -> parseAddCommand(parsedCommand);
-        case UNKNOWN -> parseInvalidCommand(input);
+            case BYE -> new ExitCommand();
+            case HELP -> new HelpCommand();
+            case LIST -> new ListCommand();
+            case ON -> parseOnCommand(parsedCommand.arguments());
+            case DELETE -> new DeleteCommand(parsedCommand.arguments());
+            case MARK -> new MarkCommand(parsedCommand.arguments());
+            case UNMARK -> new UnmarkCommand(parsedCommand.arguments());
+            case DEADLINE, EVENT, TODO -> parseAddCommand(parsedCommand);
+            case UNKNOWN -> parseInvalidCommand(input);
         };
     }
 
     /**
      * Parses the syntax and dates for a task-creation command.
      *
-     * @param command the command and arguments returned by {@link #parse(String)}
+     * @param command the command and arguments returned by {@link #parse(String)}.
      * @return the validated task description and parsed date values
      * @throws PlanaException if the command syntax or any date is invalid
      */
     public TaskArguments parseTaskArguments(ParsedCommand command) throws PlanaException {
         return switch (command.type()) {
-        case TODO -> parseTodo(command.arguments());
-        case DEADLINE -> parseDeadline(command.arguments());
-        case EVENT -> parseEvent(command.arguments());
-        default -> throw new IllegalArgumentException("Task arguments requested for a non-task command");
+            case TODO -> parseTodo(command.arguments());
+            case DEADLINE -> parseDeadline(command.arguments());
+            case EVENT -> parseEvent(command.arguments());
+            default -> throw new IllegalArgumentException("Task arguments requested for a non-task command");
         };
     }
 
     /**
      * Parses a date used by a task command or the {@code on} query.
      *
-     * @param dateText the date entered by the user
-     * @param commandText the command using the date
+     * @param dateText the date entered by the user.
+     * @param commandText the command using the date.
      * @return the parsed date
      * @throws PlanaException if the date is not in {@code yyyy-MM-dd} format
      */
@@ -111,7 +111,7 @@ public class Parser {
     /**
      * Parses the date argument of an {@code on} command.
      *
-     * @param dateText the date text supplied with the command
+     * @param dateText the date text supplied with the command.
      * @return the date-filtering command
      * @throws PlanaException if the date is missing or invalid
      */
@@ -125,25 +125,25 @@ public class Parser {
     /**
      * Converts a parsed task-creation command into a concrete add command.
      *
-     * @param command the parsed task-creation command
+     * @param command the parsed task-creation command.
      * @return the command that creates the requested task
      * @throws PlanaException if the task arguments are invalid
      */
     private Command parseAddCommand(ParsedCommand command) throws PlanaException {
         TaskArguments taskArguments = parseTaskArguments(command);
         return switch (command.type()) {
-        case TODO -> new AddCommand(new ToDo(taskArguments.description()));
-        case DEADLINE -> new AddCommand(new Deadline(taskArguments.description(), taskArguments.firstDate()));
-        case EVENT -> new AddCommand(new Event(taskArguments.description(), taskArguments.firstDate(),
-                taskArguments.secondDate()));
-        default -> throw new IllegalArgumentException("Task arguments requested for a non-task command");
+            case TODO -> new AddCommand(new ToDo(taskArguments.description()));
+            case DEADLINE -> new AddCommand(new Deadline(taskArguments.description(), taskArguments.firstDate()));
+            case EVENT -> new AddCommand(new Event(taskArguments.description(), taskArguments.firstDate(),
+                    taskArguments.secondDate()));
+            default -> throw new IllegalArgumentException("Task arguments requested for a non-task command");
         };
     }
 
     /**
      * Creates a command that reports why an unrecognized input cannot run.
      *
-     * @param input the raw input entered by the user
+     * @param input the raw input entered by the user.
      * @return an invalid command containing the appropriate error message
      */
     private Command parseInvalidCommand(String input) {
@@ -157,7 +157,7 @@ public class Parser {
     /**
      * Validates the description of a ToDo command.
      *
-     * @param arguments the text after the {@code todo} keyword
+     * @param arguments the text after the {@code todo} keyword.
      * @return the validated ToDo arguments
      * @throws PlanaException if the description is empty
      */
@@ -171,7 +171,7 @@ public class Parser {
     /**
      * Validates and parses the description and due date of a deadline command.
      *
-     * @param arguments the text after the {@code deadline} keyword
+     * @param arguments the text after the {@code deadline} keyword.
      * @return the validated deadline arguments
      * @throws PlanaException if the description, marker, or due date is missing
      *         or invalid
@@ -198,7 +198,7 @@ public class Parser {
     /**
      * Validates and parses the description, start date, and end date of an event.
      *
-     * @param arguments the text after the {@code event} keyword
+     * @param arguments the text after the {@code event} keyword.
      * @return the validated event arguments
      * @throws PlanaException if an event component is missing or invalid
      */
@@ -235,7 +235,7 @@ public class Parser {
     /**
      * Creates a consistently formatted deadline parsing error.
      *
-     * @param problem the specific problem found in the command
+     * @param problem the specific problem found in the command.
      * @return an exception containing the problem and deadline usage guidance
      */
     private static PlanaException deadlineError(String problem) {
@@ -245,7 +245,7 @@ public class Parser {
     /**
      * Creates a consistently formatted event parsing error.
      *
-     * @param problem the specific problem found in the command
+     * @param problem the specific problem found in the command.
      * @return an exception containing the problem and event usage guidance
      */
     private static PlanaException eventError(String problem) {
@@ -255,8 +255,8 @@ public class Parser {
     /**
      * Extracts the portion of input after a command keyword.
      *
-     * @param input the complete command entered by the user
-     * @param type the command recognized from the input
+     * @param input the complete command entered by the user.
+     * @param type the command recognized from the input.
      * @return the command arguments, or an empty string for commands without arguments
      */
     private String extractArguments(String input, CommandType type) {
@@ -269,8 +269,8 @@ public class Parser {
     /**
      * Holds the result of parsing one user command.
      *
-     * @param type the command recognized from the input
-     * @param arguments the trimmed text after the command keyword
+     * @param type the command recognized from the input.
+     * @param arguments the trimmed text after the command keyword.
      */
     public record ParsedCommand(CommandType type, String arguments) {
     }
@@ -278,9 +278,9 @@ public class Parser {
     /**
      * Holds the validated values needed to construct a task.
      *
-     * @param description the task description
-     * @param firstDate the due date, or event start date
-     * @param secondDate the event end date, or {@code null} for other task types
+     * @param description the task description.
+     * @param firstDate the due date, or event start date.
+     * @param secondDate the event end date, or {@code null} for other task types.
      */
     public record TaskArguments(String description, LocalDate firstDate, LocalDate secondDate) {
     }

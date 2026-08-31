@@ -1,10 +1,10 @@
 package plana.task;
 
-import plana.storage.Storage;
-
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
+
+import plana.storage.Storage;
 
 /**
  * Represents a task that must be completed by a specified date.
@@ -17,8 +17,8 @@ public class Deadline extends Task {
     /**
      * Creates an incomplete Deadline.
      *
-     * @param description the task description
-     * @param dueDate the due date
+     * @param description the task description.
+     * @param dueDate the due date.
      */
     public Deadline(String description, LocalDate dueDate) {
         super(description);
@@ -49,7 +49,7 @@ public class Deadline extends Task {
     /**
      * Checks whether this deadline is due on the supplied date.
      *
-     * @param date the date to check
+     * @param date the date to check.
      * @return {@code true} if this deadline is due on the date
      */
     public boolean isOn(LocalDate date) {

@@ -14,7 +14,7 @@ public class Plana {
     /**
      * Starts Plana and processes commands until the user exits or input ends.
      *
-     * @param args command-line arguments, currently unused
+     * @param args command-line arguments, currently unused.
      */
     public static void main(String[] args) {
         String banner = " ____  _                  \n"
@@ -22,7 +22,7 @@ public class Plana {
                 + "| |_) | |/ _` | '_ \\ / _` |\n"
                 + "|  __/| | (_| | | | | (_| |\n"
                 + "|_|   |_|\\__,_|_| |_|\\__,_|\n";
-        String banner_art = """
+        String bannerArt = """
                 ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠿⡛⡫⢋⠍⠍⢅⢍⢑⠩⡉⢍⠫⢛⠻⡻⡿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
                 ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠿⡻⢿⠑⢌⢌⣔⣴⣵⢾⣾⣾⣾⣾⣾⡾⠶⡳⠵⢬⣢⢊⠌⠝⡛⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
                 ⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠫⠡⡑⡰⠴⢿⣿⣿⠟⡑⣌⣂⢊⢻⣿⣿⠏⠪⣨⣦⣥⡑⡸⣿⣷⣧⣊⠔⡨⢛⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
@@ -50,7 +50,7 @@ public class Plana {
                 ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣦⣥⣢⣡⣂⣅⣅⣣⣑⣔⣬⣶⣿⣾⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
                 """;
         Ui ui = new Ui();
-        ui.showWelcome(banner, banner_art);
+        ui.showWelcome(banner, bannerArt);
         Parser parser = new Parser();
         Storage storage = new Storage();
 
