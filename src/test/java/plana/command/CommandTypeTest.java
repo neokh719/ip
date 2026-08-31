@@ -14,6 +14,7 @@ class CommandTypeTest {
         assertEquals(CommandType.DEADLINE, CommandType.fromInput("deadline report /by 31/08/2026"));
         assertEquals(CommandType.EVENT, CommandType.fromInput("event meeting /from 31/08/2026 /to 01/09/2026"));
         assertEquals(CommandType.ON, CommandType.fromInput("on 31/08/2026"));
+        assertEquals(CommandType.FIND, CommandType.fromInput("find book"));
         assertEquals(CommandType.DELETE, CommandType.fromInput("delete 1"));
         assertEquals(CommandType.MARK, CommandType.fromInput("mark 1"));
         assertEquals(CommandType.UNMARK, CommandType.fromInput("unmark 1"));
@@ -38,6 +39,7 @@ class CommandTypeTest {
         assertEquals("help", CommandType.HELP.getCommandText());
         assertEquals("list", CommandType.LIST.getCommandText());
         assertEquals("on", CommandType.ON.getCommandText());
+        assertEquals("find", CommandType.FIND.getCommandText());
         assertEquals("delete", CommandType.DELETE.getCommandText());
         assertEquals("mark", CommandType.MARK.getCommandText());
         assertEquals("unmark", CommandType.UNMARK.getCommandText());

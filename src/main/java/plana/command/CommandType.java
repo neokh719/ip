@@ -18,6 +18,9 @@ public enum CommandType {
     /** Displays deadlines and events occurring on a date. */
     ON("on"),
 
+    /** Finds tasks whose descriptions contain a keyword. */
+    FIND("find"),
+
     /** Deletes a task. */
     DELETE("delete"),
 

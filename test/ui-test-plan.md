@@ -66,6 +66,7 @@ Here's what I can do:
   deadline <description> /by <date>           add a deadline
   event <description> /from <start> /to <end> add an event
   on <date>                                    show deadlines/events on a date
+  find <keyword>                                find tasks by description
   list                                        show all tasks
   delete <number>                             delete a task
   mark <number>                               mark a task as done
@@ -81,6 +82,7 @@ Here's what I can do:
   deadline <description> /by <date>           add a deadline
   event <description> /from <start> /to <end> add an event
   on <date>                                    show deadlines/events on a date
+  find <keyword>                                find tasks by description
   list                                        show all tasks
   delete <number>                             delete a task
   mark <number>                               mark a task as done
@@ -96,6 +98,7 @@ Here's what I can do:
   deadline <description> /by <date>           add a deadline
   event <description> /from <start> /to <end> add an event
   on <date>                                    show deadlines/events on a date
+  find <keyword>                                find tasks by description
   list                                        show all tasks
   delete <number>                             delete a task
   mark <number>                               mark a task as done
@@ -737,13 +740,14 @@ ____________________________________________________________
 
 ## Test Case: add and display a ToDo
 
-- Aim: Verify that the `todo` command creates an incomplete ToDo and displays its type marker.
+- Aim: Verify that the `todo` command creates an incomplete ToDo, displays its type marker, and that `find` locates it by description.
 
 ### Inputs
 
 ```text
 todo borrow book
 list
+find book
 bye
 ```
 
@@ -793,6 +797,11 @@ ____________________________________________________________
 list
 ____________________________________________________________
  Here are your tasks:
+ 1.[T][ ] borrow book
+____________________________________________________________
+find book
+____________________________________________________________
+ Here are the matching tasks in your list:
  1.[T][ ] borrow book
 ____________________________________________________________
 bye
