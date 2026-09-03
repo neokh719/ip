@@ -89,20 +89,20 @@ public class ParserTest {
     public void parseDate_validAndInvalidDates_expectedResultOrMessage() throws PlanaException {
         assertEquals(LocalDate.of(2026, 8, 31), parser.parseDate("2026-08-31", "on"));
 
-        PlanaException deadlineError = assertThrows(PlanaException.class,
-                () -> parser.parseDate("31-08-2026", "deadline"));
+        PlanaException deadlineError = assertThrows(PlanaException.class, () ->
+                parser.parseDate("31-08-2026", "deadline"));
         assertEquals("Oops, that deadline date isn't valid."
                 + " Use the date format yyyy-MM-dd, like 2019-10-15."
                 + " Try: deadline <description> /by <date>.", deadlineError.getMessage());
 
-        PlanaException eventError = assertThrows(PlanaException.class,
-                () -> parser.parseDate("2026-02-30", "event"));
+        PlanaException eventError = assertThrows(PlanaException.class, () ->
+                parser.parseDate("2026-02-30", "event"));
         assertEquals("Oops, that event date isn't valid."
                 + " Use the date format yyyy-MM-dd, like 2019-10-15."
                 + " Try: event <description> /from <start> /to <end>.", eventError.getMessage());
 
-        PlanaException queryError = assertThrows(PlanaException.class,
-                () -> parser.parseDate("tomorrow", "on"));
+        PlanaException queryError = assertThrows(PlanaException.class, () ->
+                parser.parseDate("tomorrow", "on"));
         assertEquals("Oops, that query date isn't valid."
                 + " Use the date format yyyy-MM-dd, like 2019-10-15. Try: on <date>.", queryError.getMessage());
     }
@@ -168,13 +168,13 @@ public class ParserTest {
      */
     @Test
     public void parseTaskArguments_nonTaskCommand_illegalArgumentExceptionThrown() {
-        assertThrows(IllegalArgumentException.class,
-                () -> parser.parseTaskArguments(new Parser.ParsedCommand(CommandType.LIST, "")));
+        assertThrows(IllegalArgumentException.class, () ->
+                parser.parseTaskArguments(new Parser.ParsedCommand(CommandType.LIST, "")));
     }
 
     private void assertParserException(String input, String expectedMessage) {
-        PlanaException exception = assertThrows(PlanaException.class,
-                () -> parser.parseTaskArguments(parser.parse(input)));
+        PlanaException exception = assertThrows(PlanaException.class, () ->
+                parser.parseTaskArguments(parser.parse(input)));
         assertEquals(expectedMessage, exception.getMessage());
     }
 

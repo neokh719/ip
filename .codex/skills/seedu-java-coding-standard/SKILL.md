@@ -1,11 +1,11 @@
 ---
 name: seedu-java-coding-standard
-description: Apply the SE-EDU Java basic and intermediate coding conventions when reviewing or changing Java code in this project.
+description: Apply the SE-EDU Java basic and intermediate coding conventions when reviewing or changing Java code.
 ---
 
 # SEEDU Java Coding Standard
 
-Use this skill for every Java code change in this project. Follow the SE-EDU Java coding standard (basic + intermediate rules):
+Use this skill for every Java code change in the target project. Follow the SE-EDU Java coding standard (basic + intermediate rules):
 
 - Use lowercase package names; PascalCase nouns for classes/enums; camelCase for variables and verb methods; SCREAMING_SNAKE_CASE for constants.
 - Keep names in English, avoid uppercase acronyms, use descriptive names for large scopes, boolean-sounding names for boolean values/methods, and plural names for collections. Keep iterator names such as `i`, `j`, and `k` limited to loop indices.
