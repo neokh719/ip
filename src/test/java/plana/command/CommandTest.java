@@ -111,7 +111,7 @@ class CommandTest {
     }
 
     @Test
-    void onCommand_execute_noMatches_emptyResultDisplayed(@TempDir Path temporaryDirectory) {
+    void onCommand_noMatches_emptyResultDisplayed(@TempDir Path temporaryDirectory) {
         LocalDate queriedDate = LocalDate.of(2026, 8, 31);
         TaskList tasks = new TaskList(java.util.List.of(new ToDo("not shown")));
 
@@ -137,7 +137,7 @@ class CommandTest {
     }
 
     @Test
-    void findCommand_execute_noMatches_emptyResultDisplayed(@TempDir Path temporaryDirectory) {
+    void findCommand_noMatches_emptyResultDisplayed(@TempDir Path temporaryDirectory) {
         TaskList tasks = new TaskList(java.util.List.of(new ToDo("read a book")));
 
         String response = execute(new FindCommand("movie"), tasks, storageAt(temporaryDirectory));
@@ -184,8 +184,8 @@ class CommandTest {
 
         PlanaException exception;
         try {
-            exception = assertThrows(PlanaException.class,
-                    () -> command.execute(new TaskList(), ui, new Storage("unused-test-file.txt")));
+            exception = assertThrows(PlanaException.class, () ->
+                    command.execute(new TaskList(), ui, new Storage("unused-test-file.txt")));
         } finally {
             ui.close();
         }
