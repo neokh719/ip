@@ -40,6 +40,24 @@ public class TaskListTest {
     }
 
     /**
+     * Verifies that adding a variable number of tasks preserves their supplied
+     * order and supports an empty input.
+     */
+    @Test
+    public void add_multipleTasksAddedInOrderAndEmptyInputIgnored() {
+        TaskList taskList = new TaskList();
+        Task firstTask = new ToDo("first task");
+        Task secondTask = new ToDo("second task");
+
+        taskList.add();
+        taskList.add(firstTask, secondTask);
+
+        assertEquals(2, taskList.size());
+        assertSame(firstTask, taskList.get(0));
+        assertSame(secondTask, taskList.get(1));
+    }
+
+    /**
      * Verifies that deletion uses one-based task numbers, returns the removed
      * task, and preserves the order of remaining tasks.
      */
