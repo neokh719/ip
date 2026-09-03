@@ -13,6 +13,14 @@
     -fx-border-radius: 1em 1em 1em 0;
 }
 
+.welcome-label {
+    -fx-font: 12px "Monospaced";
+}
+
+.banner-label {
+    -fx-font: 4px "Monospaced";
+}
+
 .add-label {
     -fx-background-color: #d8f6df;
 }
@@ -25,9 +33,18 @@
     -fx-background-color: #ffdbe3;
 }
 
+.error-label {
+    -fx-background-color: #ffe8ee;
+    -fx-border-color: #e89aac;
+    -fx-text-fill: #8c2f45;
+}
+
 #displayPicture {
     -fx-alignment: center;
     -fx-background-radius: 50%;
+    -fx-border-color: transparent;
+    -fx-border-radius: 50%;
+    -fx-border-width: 0;
     -fx-font: bold 13px "Arial";
     -fx-min-height: 42px;
     -fx-min-width: 42px;
