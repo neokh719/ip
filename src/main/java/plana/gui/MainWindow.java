@@ -23,7 +23,7 @@ public class MainWindow extends AnchorPane {
             + "\n"
             + "Hi hi! I'm Plana.\n"
             + "What shall we get done today?\n"
-            + "Type help to see what I can do.";
+            + "Type help to see what I can do :>";
 
     @FXML
     private ScrollPane scrollPane;

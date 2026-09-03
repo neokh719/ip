@@ -26,7 +26,7 @@ import plana.task.ToDo;
  */
 public class Parser {
     private static final String EMPTY_COMMAND_ERROR = "Oops, I didn't catch a command."
-            + " Type help to see what I can do.";
+            + " Type 'help' to see what I can do :>";
     private static final String TODO_DESCRIPTION_ERROR = "Oops, a ToDo description can't be empty."
             + " Try: todo <description>.";
     private static final String DEADLINE_USAGE = "Try: deadline <description> /by <date>.";
