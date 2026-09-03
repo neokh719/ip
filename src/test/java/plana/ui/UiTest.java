@@ -49,6 +49,7 @@ class UiTest {
         assertTrue(outputText().contains("BANNER\nART\n"));
         assertTrue(outputText().contains("Hi hi! I'm Plana."));
         assertTrue(outputText().contains("What shall we get done today?"));
+        assertTrue(outputText().indexOf("BANNER") < outputText().indexOf("Hi hi! I'm Plana."));
         ui.close();
     }
 

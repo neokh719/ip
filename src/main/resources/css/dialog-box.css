@@ -13,6 +13,10 @@
     -fx-border-radius: 1em 1em 1em 0;
 }
 
+.welcome-label {
+    -fx-font: 12px "Monospaced";
+}
+
 .add-label {
     -fx-background-color: #d8f6df;
 }

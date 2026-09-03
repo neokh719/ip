@@ -48,6 +48,7 @@ public class DialogBox extends HBox {
 
     private void changeDialogStyle(CommandType commandType) {
         if (commandType == null) {
+            dialog.getStyleClass().add("welcome-label");
             return;
         }
 
