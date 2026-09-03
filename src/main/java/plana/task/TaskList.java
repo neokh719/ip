@@ -31,12 +31,14 @@ public class TaskList implements Iterable<Task> {
     }
 
     /**
-     * Adds a task to the end of the list.
+     * Adds tasks to the end of the list in the order supplied.
      *
-     * @param task the task to add.
+     * @param tasks the tasks to add.
      */
-    public void add(Task task) {
-        tasks.add(task);
+    public void add(Task... tasks) {
+        for (Task task : tasks) {
+            this.tasks.add(task);
+        }
     }
 
     /**
