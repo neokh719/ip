@@ -93,4 +93,18 @@ public class DialogBox extends HBox {
         dialogBox.changeDialogStyle(commandType);
         return dialogBox;
     }
+
+    /**
+     * Creates a left-aligned Plana dialog bubble for the startup banner.
+     *
+     * @param text Plana's startup banner and decorative art.
+     * @return left-aligned banner bubble.
+     */
+    public static DialogBox getPlanaBannerDialog(String text) {
+        DialogBox dialogBox = new DialogBox(text, "P", "plana-avatar");
+        dialogBox.flip();
+        dialogBox.dialog.setWrapText(false);
+        dialogBox.dialog.getStyleClass().add("banner-label");
+        return dialogBox;
+    }
 }

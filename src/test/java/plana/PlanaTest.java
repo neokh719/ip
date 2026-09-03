@@ -17,6 +17,17 @@ import plana.storage.Storage;
  */
 class PlanaTest {
     @Test
+    void welcomeBanner_artAppearsBeforeGreeting() {
+        String banner = Plana.getWelcomeBanner();
+        String greeting = Plana.getWelcomeGreeting();
+        String introduction = banner + greeting;
+
+        assertTrue(banner.contains("⣿⣿⣿⣿"));
+        assertTrue(banner.contains(" ____  _"));
+        assertTrue(introduction.indexOf(" ____  _") < introduction.indexOf("Hi hi!"));
+    }
+
+    @Test
     void getResponse_taskCommandsUseExistingBehaviorAndPersist(@TempDir Path temporaryDirectory) {
         Plana plana = new Plana(new Storage(temporaryDirectory.resolve("tasks.txt").toString()));
 

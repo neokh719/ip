@@ -17,6 +17,10 @@
     -fx-font: 12px "Monospaced";
 }
 
+.banner-label {
+    -fx-font: 4px "Monospaced";
+}
+
 .add-label {
     -fx-background-color: #d8f6df;
 }

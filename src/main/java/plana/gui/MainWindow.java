@@ -15,16 +15,6 @@ import plana.Plana;
  * Controls Plana's main chat window and forwards user input to Plana's core logic.
  */
 public class MainWindow extends AnchorPane {
-    private static final String WELCOME_MESSAGE = " ____  _                  \n"
-            + "|  _ \\| | __ _ _ __   __ _ \n"
-            + "| |_) | |/ _` | '_ \\ / _` |\n"
-            + "|  __/| | (_| | | | | (_| |\n"
-            + "|_|   |_|\\__,_|_| |_|\\__,_|\n"
-            + "\n"
-            + "Hi hi! I'm Plana.\n"
-            + "What shall we get done today?\n"
-            + "Type help to see what I can do :>";
-
     @FXML
     private ScrollPane scrollPane;
 
@@ -54,7 +44,10 @@ public class MainWindow extends AnchorPane {
      */
     public void setPlana(Plana plana) {
         this.plana = plana;
-        dialogContainer.getChildren().add(DialogBox.getPlanaDialog(WELCOME_MESSAGE, null));
+        dialogContainer.getChildren().addAll(
+                DialogBox.getPlanaBannerDialog(Plana.getWelcomeBanner()),
+                DialogBox.getPlanaDialog(Plana.getWelcomeGreeting(), null)
+        );
     }
 
     /**
