@@ -16,6 +16,28 @@ import plana.ui.Ui;
  * Runs Plana's command-line task manager and responds in Plana's friendly voice.
  */
 public class Plana {
+    private final Parser parser;
+    private final Storage storage;
+    private final TaskList tasks;
+
+    /**
+     * Creates Plana with its default persistent task storage.
+     */
+    public Plana() {
+        this(new Storage());
+    }
+
+    /**
+     * Creates Plana with the supplied persistent task storage.
+     *
+     * @param storage storage used to load and save Plana's tasks.
+     */
+    public Plana(Storage storage) {
+        this.parser = new Parser();
+        this.storage = storage;
+        this.tasks = storage.loadTasks();
+    }
+
     /**
      * Starts Plana and processes commands until the user exits or input ends.
      *
@@ -76,28 +98,6 @@ public class Plana {
                 }
             }
         }
-    }
-
-    private final Parser parser;
-    private final Storage storage;
-    private final TaskList tasks;
-
-    /**
-     * Creates Plana with its default persistent task storage.
-     */
-    public Plana() {
-        this(new Storage());
-    }
-
-    /**
-     * Creates Plana with the supplied persistent task storage.
-     *
-     * @param storage storage used to load and save Plana's tasks.
-     */
-    public Plana(Storage storage) {
-        this.parser = new Parser();
-        this.storage = storage;
-        this.tasks = storage.loadTasks();
     }
 
     /**

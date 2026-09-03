@@ -76,7 +76,13 @@ try {
         throw "No test cases found. Add '## Test Case: ...' sections to $planFile."
     }
 
+    # JavaFX sources are compiled by Gradle; the console test runner excludes
+    # them so it can continue using javac without a JavaFX classpath.
     $sourceFiles = @(Get-ChildItem -LiteralPath $sourceDirectory -Filter *.java -File -Recurse |
+        Where-Object {
+            $_.Name -ne "Launcher.java" -and
+            $_.FullName -notmatch "[\\/]plana[\\/]gui[\\/]"
+        } |
         ForEach-Object { $_.FullName })
     if ($sourceFiles.Count -eq 0) {
         throw "No Java source files found under $sourceDirectory."

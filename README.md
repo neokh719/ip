@@ -13,7 +13,8 @@ Prerequisites: JDK 25, update Intellij to the most recent version.
    1. If there are any further prompts, accept the defaults.
 1. Configure the project to use **JDK 25** (not other versions) as explained in [here](https://www.jetbrains.com/help/idea/sdk.html#set-up-jdk).<br>
    In the same dialog, set the **Project language level** field to the `SDK default` option.
-1. After that, locate the `src/main/java/plana/Plana.java` file, right-click it, and choose `Run 'Plana.main()'` (if the code editor is showing compile errors, try restarting the IDE). If the setup is correct, you should see something like the below as the output:
+1. After that, locate the `src/main/java/plana/Launcher.java` file, right-click it, and choose `Run 'Launcher.main()'` (if the code editor is showing compile errors, try restarting the IDE). If the setup is correct, Plana's JavaFX chat window should open.
+1. To run the console interface for automated testing, locate `src/main/java/plana/Plana.java` and choose `Run 'Plana.main()'`.
    ```
     ____  _
    |  _ \| | __ _ _ __   __ _

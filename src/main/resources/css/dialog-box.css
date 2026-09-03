@@ -1,0 +1,45 @@
+.label {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #9ad9bd;
+    -fx-border-radius: 1em 1em 0 1em;
+    -fx-border-width: 1px;
+    -fx-background-radius: 1em 1em 0 1em;
+    -fx-font: 15px "Arial";
+    -fx-text-fill: #20352b;
+}
+
+.reply-label {
+    -fx-background-radius: 1em 1em 1em 0;
+    -fx-border-radius: 1em 1em 1em 0;
+}
+
+.add-label {
+    -fx-background-color: #d8f6df;
+}
+
+.marked-label {
+    -fx-background-color: #fff3bd;
+}
+
+.delete-label {
+    -fx-background-color: #ffdbe3;
+}
+
+#displayPicture {
+    -fx-alignment: center;
+    -fx-background-radius: 50%;
+    -fx-font: bold 13px "Arial";
+    -fx-min-height: 42px;
+    -fx-min-width: 42px;
+    -fx-max-height: 42px;
+    -fx-max-width: 42px;
+    -fx-text-fill: white;
+}
+
+.plana-avatar {
+    -fx-background-color: #38a978;
+}
+
+.user-avatar {
+    -fx-background-color: #6c8ed9;
+}
