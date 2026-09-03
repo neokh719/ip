@@ -1,6 +1,6 @@
 ---
 name: present-changes-visually
-description: Generate a self-contained GitHub-style split-view HTML page for changes in this Java project. Use when asked to show, review, share, or inspect code changes visually, compare revisions, or create an HTML diff.
+description: Generate a self-contained GitHub-style split-view HTML page for changes in a local Git repository. Use when asked to show, review, share, or inspect code changes visually, compare revisions, or create an HTML diff.
 ---
 
 # Present Changes Visually
@@ -9,13 +9,13 @@ Generate one interactive HTML page containing every changed file as a side-by-si
 
 ## Workflow
 
-1. Treat this repository as the target unless the user identifies another repository.
+1. Treat the current repository as the target unless the user identifies another repository.
 2. Use `HEAD` as the before point and `WORKTREE` as the after point unless the user specifies comparison points. `WORKTREE` includes staged, unstaged, and untracked (but not ignored) files.
 3. Write to `_temp/visual-diff.html` unless the user supplies an output path.
-4. From the repository root, run:
+4. From the target repository root, run the bundled `scripts/generate-split-view-diff.py` helper. When the skill is installed globally, use the helper from the directory containing this `SKILL.md`:
 
    ```powershell
-   py .codex/skills/present-changes-visually/scripts/generate-split-view-diff.py . HEAD WORKTREE _temp/visual-diff.html
+   py <path-to-this-skill>/scripts/generate-split-view-diff.py . HEAD WORKTREE _temp/visual-diff.html
    ```
 
    Replace the comparison points and output path when requested. The points may be any Git commit-ish such as `HEAD~1`, a tag, branch, or commit SHA.

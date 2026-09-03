@@ -1,11 +1,11 @@
 ---
 name: seedu-git-standard
-description: Apply the SE-EDU Git conventions when creating commits or naming branches in this project.
+description: Apply the SE-EDU Git conventions when creating commits or naming branches in a repository.
 ---
 
 # SEEDU Git Standard
 
-Use this skill whenever a commit is being prepared in this project. Follow the [SE-EDU Git conventions](https://se-education.org/guides/conventions/git.html):
+Use this skill whenever a commit is being prepared in the target repository. Follow the [SE-EDU Git conventions](https://se-education.org/guides/conventions/git.html):
 
 - Write a clear commit subject in the imperative mood. Capitalize its first letter, do not end it with a period, and keep it under 50 characters where practical (72 characters maximum). Add a meaningful scope or category prefix only when useful.
 - Give every non-trivial commit a body. Separate it from the subject with a blank line, wrap it at 72 characters, and use blank lines between paragraphs when needed.
