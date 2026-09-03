@@ -33,6 +33,12 @@
     -fx-background-color: #ffdbe3;
 }
 
+.error-label {
+    -fx-background-color: #ffe8ee;
+    -fx-border-color: #e89aac;
+    -fx-text-fill: #8c2f45;
+}
+
 #displayPicture {
     -fx-alignment: center;
     -fx-background-radius: 50%;

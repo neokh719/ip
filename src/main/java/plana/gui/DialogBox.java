@@ -46,7 +46,12 @@ public class DialogBox extends HBox {
         dialog.getStyleClass().add("reply-label");
     }
 
-    private void changeDialogStyle(CommandType commandType) {
+    private void changeDialogStyle(CommandType commandType, boolean isError) {
+        if (isError) {
+            dialog.getStyleClass().add("error-label");
+            return;
+        }
+
         if (commandType == null) {
             dialog.getStyleClass().add("welcome-label");
             return;
@@ -88,9 +93,21 @@ public class DialogBox extends HBox {
      * @return left-aligned Plana dialog bubble.
      */
     public static DialogBox getPlanaDialog(String text, CommandType commandType) {
+        return getPlanaDialog(text, commandType, false);
+    }
+
+    /**
+     * Creates a left-aligned Plana response bubble with a status-specific style.
+     *
+     * @param text Plana response to display.
+     * @param commandType command type used to style a successful response.
+     * @param isError whether the response describes a command error.
+     * @return left-aligned Plana response bubble.
+     */
+    public static DialogBox getPlanaDialog(String text, CommandType commandType, boolean isError) {
         DialogBox dialogBox = new DialogBox(text, "P", "plana-avatar");
         dialogBox.flip();
-        dialogBox.changeDialogStyle(commandType);
+        dialogBox.changeDialogStyle(commandType, isError);
         return dialogBox;
     }
 

@@ -133,10 +133,10 @@ public class Plana {
         try {
             Command command = parser.parseCommand(safeInput);
             command.execute(tasks, ui, storage);
-            return new Response("", commandType, command.isExit());
+            return new Response("", commandType, command.isExit(), false);
         } catch (PlanaException exception) {
             ui.showError(exception.getMessage());
-            return new Response("", commandType, false);
+            return new Response("", commandType, false, true);
         }
     }
 
@@ -153,7 +153,8 @@ public class Plana {
             Response commandResponse = executeCommand(input, responseUi);
             printStream.flush();
             String responseText = output.toString(StandardCharsets.UTF_8).stripTrailing();
-            return new Response(responseText, commandResponse.commandType(), commandResponse.exit());
+            return new Response(responseText, commandResponse.commandType(), commandResponse.exit(),
+                    commandResponse.error());
         }
     }
 
@@ -163,7 +164,8 @@ public class Plana {
      * @param text response text suitable for displaying in a chat bubble.
      * @param commandType type of the command that produced the response.
      * @param exit whether the command requests that the interface exits.
+     * @param error whether Plana could not execute the command.
      */
-    public record Response(String text, CommandType commandType, boolean exit) {
+    public record Response(String text, CommandType commandType, boolean exit, boolean error) {
     }
 }

@@ -36,6 +36,7 @@ class PlanaTest {
 
         assertEquals(CommandType.TODO, addResponse.commandType());
         assertFalse(addResponse.exit());
+        assertFalse(addResponse.error());
         assertTrue(addResponse.text().contains("Yay, I've added this task:"));
         assertTrue(listResponse.text().contains("1.[T][ ] read a book"));
         assertTrue(new Storage(temporaryDirectory.resolve("tasks.txt").toString())
@@ -47,13 +48,18 @@ class PlanaTest {
         Plana plana = new Plana(new Storage(temporaryDirectory.resolve("tasks.txt").toString()));
 
         Plana.Response errorResponse = plana.getResponse("not a command");
+        Plana.Response malformedResponse = plana.getResponse("todo");
         Plana.Response byeResponse = plana.getResponse("bye");
 
         assertEquals(CommandType.UNKNOWN, errorResponse.commandType());
         assertFalse(errorResponse.exit());
+        assertTrue(errorResponse.error());
         assertTrue(errorResponse.text().contains("I don't recognize 'not a command'"));
+        assertEquals(CommandType.TODO, malformedResponse.commandType());
+        assertTrue(malformedResponse.error());
         assertEquals(CommandType.BYE, byeResponse.commandType());
         assertTrue(byeResponse.exit());
+        assertFalse(byeResponse.error());
         assertTrue(byeResponse.text().contains("Bye-bye! See you next time, okay?"));
     }
 }

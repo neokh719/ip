@@ -63,7 +63,7 @@ public class MainWindow extends AnchorPane {
         Plana.Response response = plana.getResponse(input);
         dialogContainer.getChildren().addAll(
                 DialogBox.getUserDialog(input),
-                DialogBox.getPlanaDialog(response.text(), response.commandType())
+                DialogBox.getPlanaDialog(response.text(), response.commandType(), response.error())
         );
         userInput.clear();
 
