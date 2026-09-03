@@ -89,6 +89,10 @@ class UiTest {
         assertTrue(response.contains("mark <number>"));
         assertTrue(response.contains("unmark <number>"));
         assertTrue(response.contains("bye"));
+        String firstHelpItem = "  todo <description>" + System.lineSeparator()
+                + "    add a task";
+        assertTrue(response.contains(firstHelpItem));
+        assertFalse(response.contains("                          "));
         ui.close();
     }
 

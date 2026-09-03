@@ -62,49 +62,115 @@ help
 ____________________________________________________________
 Don't worry! I am always here to help :>
 Here's what I can do:
-  todo <description>                          add a task
-  deadline <description> /by <date>           add a deadline
-  event <description> /from <start> /to <end> add an event
-  on <date>                                    show deadlines/events on a date
-  find <keyword>                                find tasks by description
-  list                                        show all tasks
-  delete <number>                             delete a task
-  mark <number>                               mark a task as done
-  unmark <number>                             mark a task as not done
-  help or ?                                   show this help
-  bye                                         say goodbye
+
+  todo <description>
+    add a task
+
+  deadline <description> /by <date>
+    add a deadline
+
+  event <description> /from <start> /to <end>
+    add an event
+
+  on <date>
+    show deadlines/events on a date
+
+  find <keyword>
+    find tasks by description
+
+  list
+    show all tasks
+
+  delete <number>
+    delete a task
+
+  mark <number>
+    mark a task as done
+
+  unmark <number>
+    mark a task as not done
+
+  help or ?
+    show this help
+
+  bye
+    say goodbye
 ____________________________________________________________
 ?
 ____________________________________________________________
 Don't worry! I am always here to help :>
 Here's what I can do:
-  todo <description>                          add a task
-  deadline <description> /by <date>           add a deadline
-  event <description> /from <start> /to <end> add an event
-  on <date>                                    show deadlines/events on a date
-  find <keyword>                                find tasks by description
-  list                                        show all tasks
-  delete <number>                             delete a task
-  mark <number>                               mark a task as done
-  unmark <number>                             mark a task as not done
-  help or ?                                   show this help
-  bye                                         say goodbye
+
+  todo <description>
+    add a task
+
+  deadline <description> /by <date>
+    add a deadline
+
+  event <description> /from <start> /to <end>
+    add an event
+
+  on <date>
+    show deadlines/events on a date
+
+  find <keyword>
+    find tasks by description
+
+  list
+    show all tasks
+
+  delete <number>
+    delete a task
+
+  mark <number>
+    mark a task as done
+
+  unmark <number>
+    mark a task as not done
+
+  help or ?
+    show this help
+
+  bye
+    say goodbye
 ____________________________________________________________
 please help me
 ____________________________________________________________
 Don't worry! I am always here to help :>
 Here's what I can do:
-  todo <description>                          add a task
-  deadline <description> /by <date>           add a deadline
-  event <description> /from <start> /to <end> add an event
-  on <date>                                    show deadlines/events on a date
-  find <keyword>                                find tasks by description
-  list                                        show all tasks
-  delete <number>                             delete a task
-  mark <number>                               mark a task as done
-  unmark <number>                             mark a task as not done
-  help or ?                                   show this help
-  bye                                         say goodbye
+
+  todo <description>
+    add a task
+
+  deadline <description> /by <date>
+    add a deadline
+
+  event <description> /from <start> /to <end>
+    add an event
+
+  on <date>
+    show deadlines/events on a date
+
+  find <keyword>
+    find tasks by description
+
+  list
+    show all tasks
+
+  delete <number>
+    delete a task
+
+  mark <number>
+    mark a task as done
+
+  unmark <number>
+    mark a task as not done
+
+  help or ?
+    show this help
+
+  bye
+    say goodbye
 ____________________________________________________________
 bye
 ____________________________________________________________

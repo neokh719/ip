@@ -84,17 +84,39 @@ public class Ui implements AutoCloseable {
     public void showHelp() {
         output.println("Don't worry! I am always here to help :>");
         output.println("Here's what I can do:");
-        output.println("  todo <description>                          add a task");
-        output.println("  deadline <description> /by <date>           add a deadline");
-        output.println("  event <description> /from <start> /to <end> add an event");
-        output.println("  on <date>                                    show deadlines/events on a date");
-        output.println("  find <keyword>                                find tasks by description");
-        output.println("  list                                        show all tasks");
-        output.println("  delete <number>                             delete a task");
-        output.println("  mark <number>                               mark a task as done");
-        output.println("  unmark <number>                             mark a task as not done");
-        output.println("  help or ?                                   show this help");
-        output.println("  bye                                         say goodbye");
+        output.println();
+        output.println("  todo <description>");
+        output.println("    add a task");
+        output.println();
+        output.println("  deadline <description> /by <date>");
+        output.println("    add a deadline");
+        output.println();
+        output.println("  event <description> /from <start> /to <end>");
+        output.println("    add an event");
+        output.println();
+        output.println("  on <date>");
+        output.println("    show deadlines/events on a date");
+        output.println();
+        output.println("  find <keyword>");
+        output.println("    find tasks by description");
+        output.println();
+        output.println("  list");
+        output.println("    show all tasks");
+        output.println();
+        output.println("  delete <number>");
+        output.println("    delete a task");
+        output.println();
+        output.println("  mark <number>");
+        output.println("    mark a task as done");
+        output.println();
+        output.println("  unmark <number>");
+        output.println("    mark a task as not done");
+        output.println();
+        output.println("  help or ?");
+        output.println("    show this help");
+        output.println();
+        output.println("  bye");
+        output.println("    say goodbye");
     }
 
     /**
