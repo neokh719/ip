@@ -60,7 +60,7 @@ public enum CommandType {
      * @param input the complete command entered by the user.
      * @return the matching command type, or {@link #UNKNOWN} if none matches
      */
-    public static CommandType fromInput(String input) {
+    public static CommandType parseInput(String input) {
         if (input.equals("?")) {
             return HELP;
         }

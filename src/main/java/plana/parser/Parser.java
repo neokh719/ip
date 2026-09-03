@@ -40,7 +40,7 @@ public class Parser {
      * @return the recognized command and its trimmed arguments
      */
     public ParsedCommand parse(String input) {
-        CommandType type = CommandType.fromInput(input);
+        CommandType type = CommandType.parseInput(input);
         String arguments = extractArguments(input, type);
         return new ParsedCommand(type, arguments);
     }
