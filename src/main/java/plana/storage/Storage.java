@@ -22,6 +22,12 @@ import plana.task.ToDo;
  * Saves and loads Plana's task list using a file relative to the project root.
  */
 public class Storage {
+    private static final String TODO_TYPE = "T";
+    private static final String DEADLINE_TYPE = "D";
+    private static final String EVENT_TYPE = "E";
+    private static final String NOT_DONE_STATUS = "0";
+    private static final String DONE_STATUS = "1";
+
     private final Path dataFile;
 
     /**
@@ -196,49 +202,108 @@ public class Storage {
         String type = parts.get(0).trim();
         String status = parts.get(1).trim();
         String description = parts.get(2).trim();
-        if ((!status.equals("0") && !status.equals("1")) || description.isBlank()) {
+        if (!isValidStatus(status) || description.isBlank()) {
             return null;
         }
 
-        Task task;
-        switch (type) {
-            case "T" -> {
-                if (parts.size() != 3) {
-                    return null;
-                }
-                task = new ToDo(description);
-            }
-            case "D" -> {
-                if (parts.size() != 4 || parts.get(3).trim().isBlank()) {
-                    return null;
-                }
-                try {
-                    task = new Deadline(description, LocalDate.parse(parts.get(3).trim()));
-                } catch (DateTimeParseException exception) {
-                    return null;
-                }
-            }
-            case "E" -> {
-                if (parts.size() != 5 || parts.get(3).trim().isBlank()
-                        || parts.get(4).trim().isBlank()) {
-                    return null;
-                }
-                try {
-                    task = new Event(description, LocalDate.parse(parts.get(3).trim()),
-                            LocalDate.parse(parts.get(4).trim()));
-                } catch (DateTimeParseException exception) {
-                    return null;
-                }
-            }
-            default -> {
-                return null;
-            }
+        return switch (type) {
+            case TODO_TYPE -> parseToDo(parts, description, status);
+            case DEADLINE_TYPE -> parseDeadline(parts, description, status);
+            case EVENT_TYPE -> parseEvent(parts, description, status);
+            default -> null;
+        };
+    }
+
+    /**
+     * Checks whether a stored completion status is recognized.
+     *
+     * @param status the stored completion status.
+     * @return true when the status represents a known completion state
+     */
+    private boolean isValidStatus(String status) {
+        return status.equals(NOT_DONE_STATUS) || status.equals(DONE_STATUS);
+    }
+
+    /**
+     * Parses a stored ToDo record.
+     *
+     * @param parts the fields in the stored record.
+     * @param description the task description.
+     * @param status the stored completion status.
+     * @return the parsed ToDo, or {@code null} when the record shape is invalid
+     */
+    private Task parseToDo(List<String> parts, String description, String status) {
+        if (parts.size() != 3) {
+            return null;
+        }
+        return restoreCompletionStatus(new ToDo(description), status);
+    }
+
+    /**
+     * Parses a stored deadline record.
+     *
+     * @param parts the fields in the stored record.
+     * @param description the task description.
+     * @param status the stored completion status.
+     * @return the parsed deadline, or {@code null} when the record is invalid
+     */
+    private Task parseDeadline(List<String> parts, String description, String status) {
+        if (parts.size() != 4 || parts.get(3).trim().isBlank()) {
+            return null;
         }
 
-        // Every record that passes the type and field validation above must
-        // have produced a concrete task before its status is restored.
+        LocalDate dueDate = parseStoredDate(parts.get(3));
+        if (dueDate == null) {
+            return null;
+        }
+        return restoreCompletionStatus(new Deadline(description, dueDate), status);
+    }
+
+    /**
+     * Parses a stored event record.
+     *
+     * @param parts the fields in the stored record.
+     * @param description the task description.
+     * @param status the stored completion status.
+     * @return the parsed event, or {@code null} when the record is invalid
+     */
+    private Task parseEvent(List<String> parts, String description, String status) {
+        if (parts.size() != 5 || parts.get(3).trim().isBlank() || parts.get(4).trim().isBlank()) {
+            return null;
+        }
+
+        LocalDate startDate = parseStoredDate(parts.get(3));
+        LocalDate endDate = parseStoredDate(parts.get(4));
+        if (startDate == null || endDate == null) {
+            return null;
+        }
+        return restoreCompletionStatus(new Event(description, startDate, endDate), status);
+    }
+
+    /**
+     * Parses a date from a stored task field.
+     *
+     * @param dateText the stored date text.
+     * @return the parsed date, or {@code null} when the text is invalid
+     */
+    private LocalDate parseStoredDate(String dateText) {
+        try {
+            return LocalDate.parse(dateText.trim());
+        } catch (DateTimeParseException exception) {
+            return null;
+        }
+    }
+
+    /**
+     * Restores the completion state recorded for a task.
+     *
+     * @param task the newly parsed task.
+     * @param status the stored completion status.
+     * @return the task with its stored completion state
+     */
+    private Task restoreCompletionStatus(Task task, String status) {
         assert task != null : "A valid storage record must produce a task.";
-        if (status.equals("1")) {
+        if (status.equals(DONE_STATUS)) {
             task.markAsDone();
         }
         return task;

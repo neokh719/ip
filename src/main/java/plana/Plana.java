@@ -96,25 +96,16 @@ public class Plana {
      * @param args command-line arguments, currently unused.
      */
     public static void main(String[] args) {
-        Ui ui = new Ui();
-        ui.showWelcome(BANNER, BANNER_ART);
-        Parser parser = new Parser();
-        Storage storage = new Storage();
-
-        try (ui) {
-            TaskList tasks = storage.loadTasks();
+        try (Ui ui = new Ui()) {
+            ui.showWelcome(BANNER, BANNER_ART);
+            Plana plana = new Plana();
 
             while (ui.hasNextCommand()) {
                 String command = ui.readCommand();
 
-                try {
-                    Command parsedCommand = parser.parseCommand(command);
-                    parsedCommand.execute(tasks, ui, storage);
-                    if (parsedCommand.isExit()) {
-                        break;
-                    }
-                } catch (PlanaException exception) {
-                    ui.showError(exception.getMessage());
+                Response response = plana.executeCommand(command, ui);
+                if (response.exit()) {
+                    break;
                 }
             }
         }

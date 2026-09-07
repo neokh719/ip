@@ -13,6 +13,43 @@ import plana.task.TaskList;
  */
 public class Ui implements AutoCloseable {
     private static final String BORDER_LINE = "____________________________________________________________";
+    private static final String HELP_TEXT = """
+            Don't worry! I am always here to help :>
+            Here's what I can do:
+
+              todo <description>
+                add a task
+
+              deadline <description> /by <date>
+                add a deadline
+
+              event <description> /from <start> /to <end>
+                add an event
+
+              on <date>
+                show deadlines/events on a date
+
+              find <keyword>
+                find tasks by description
+
+              list
+                show all tasks
+
+              delete <number>
+                delete a task
+
+              mark <number>
+                mark a task as done
+
+              unmark <number>
+                mark a task as not done
+
+              help or ?
+                show this help
+
+              bye
+                say goodbye
+            """.replace("\n", System.lineSeparator());
 
     private final Scanner scanner;
     private final PrintStream output;
@@ -82,41 +119,7 @@ public class Ui implements AutoCloseable {
      * Displays the available commands.
      */
     public void showHelp() {
-        output.println("Don't worry! I am always here to help :>");
-        output.println("Here's what I can do:");
-        output.println();
-        output.println("  todo <description>");
-        output.println("    add a task");
-        output.println();
-        output.println("  deadline <description> /by <date>");
-        output.println("    add a deadline");
-        output.println();
-        output.println("  event <description> /from <start> /to <end>");
-        output.println("    add an event");
-        output.println();
-        output.println("  on <date>");
-        output.println("    show deadlines/events on a date");
-        output.println();
-        output.println("  find <keyword>");
-        output.println("    find tasks by description");
-        output.println();
-        output.println("  list");
-        output.println("    show all tasks");
-        output.println();
-        output.println("  delete <number>");
-        output.println("    delete a task");
-        output.println();
-        output.println("  mark <number>");
-        output.println("    mark a task as done");
-        output.println();
-        output.println("  unmark <number>");
-        output.println("    mark a task as not done");
-        output.println();
-        output.println("  help or ?");
-        output.println("    show this help");
-        output.println();
-        output.println("  bye");
-        output.println("    say goodbye");
+        output.print(HELP_TEXT);
     }
 
     /**
