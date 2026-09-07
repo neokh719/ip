@@ -1,7 +1,9 @@
 package plana.command;
 
+import java.util.List;
+import java.util.stream.IntStream;
+
 import plana.storage.Storage;
-import plana.task.Task;
 import plana.task.TaskList;
 import plana.ui.Ui;
 
@@ -29,16 +31,14 @@ public class FindCommand extends Command {
      */
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) {
-        boolean hasMatchingTask = false;
         ui.showMatchingTasksHeader();
-        for (int i = 0; i < tasks.size(); i++) {
-            Task task = tasks.get(i);
-            if (task.matchesKeyword(keyword)) {
-                ui.showTask(i, task);
-                hasMatchingTask = true;
-            }
-        }
-        if (!hasMatchingTask) {
+        List<Integer> matchingTaskIndexes = IntStream.range(0, tasks.size())
+                .filter(index -> tasks.get(index).matchesKeyword(keyword))
+                .boxed()
+                .toList();
+
+        matchingTaskIndexes.forEach(index -> ui.showTask(index, tasks.get(index)));
+        if (matchingTaskIndexes.isEmpty()) {
             ui.showNoMatchingTasks();
         }
         ui.showLine();
