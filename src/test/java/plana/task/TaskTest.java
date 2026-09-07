@@ -2,6 +2,7 @@ package plana.task;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
@@ -37,5 +38,10 @@ class TaskTest {
         assertTrue(task.matchesKeyword("book"));
         assertTrue(task.matchesKeyword("READ"));
         assertFalse(task.matchesKeyword("movie"));
+    }
+
+    @Test
+    void constructor_blankDescription_assertionFails() {
+        assertThrows(AssertionError.class, () -> new Task(" "));
     }
 }
