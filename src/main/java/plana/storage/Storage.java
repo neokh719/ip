@@ -235,6 +235,9 @@ public class Storage {
             }
         }
 
+        // Every record that passes the type and field validation above must
+        // have produced a concrete task before its status is restored.
+        assert task != null : "A valid storage record must produce a task.";
         if (status.equals("1")) {
             task.markAsDone();
         }

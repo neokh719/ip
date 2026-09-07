@@ -24,6 +24,9 @@ public class Event extends Task {
      */
     public Event(String description, LocalDate from, LocalDate to) {
         super(description);
+        // The event parser and storage loader supply both boundary dates before
+        // construction, so date-range operations can safely use both fields.
+        assert from != null && to != null : "An event must have start and end dates.";
         this.from = from;
         this.to = to;
     }

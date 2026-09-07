@@ -2,6 +2,7 @@ package plana.task;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.LocalDate;
@@ -94,5 +95,10 @@ public class EventTest {
         event.markAsDone();
 
         assertEquals("E | 1 | team planning | 2026-08-31 | 2026-09-02", event.toStorageString());
+    }
+
+    @Test
+    public void constructor_missingBoundaryDate_assertionFails() {
+        assertThrows(AssertionError.class, () -> new Event("team planning", EVENT_START, null));
     }
 }
