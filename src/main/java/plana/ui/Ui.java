@@ -49,7 +49,7 @@ public class Ui implements AutoCloseable {
 
               bye
                 say goodbye
-            """;
+            """.replace("\n", System.lineSeparator());
 
     private final Scanner scanner;
     private final PrintStream output;
