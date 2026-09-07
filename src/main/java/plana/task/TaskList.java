@@ -27,6 +27,10 @@ public class TaskList implements Iterable<Task> {
      * @param tasks the initial tasks.
      */
     public TaskList(List<Task> tasks) {
+        // All list entries must be real tasks because commands iterate over and
+        // invoke behavior on every entry without null checks.
+        assert tasks != null && tasks.stream().allMatch(task -> task != null)
+                : "A task list must contain only non-null tasks.";
         this.tasks = new ArrayList<>(tasks);
     }
 
@@ -36,7 +40,10 @@ public class TaskList implements Iterable<Task> {
      * @param tasks the tasks to add.
      */
     public void add(Task... tasks) {
+        // Preserve the list invariant for tasks added after construction.
+        assert tasks != null : "Tasks to add must not be null.";
         for (Task task : tasks) {
+            assert task != null : "A task list must not contain null tasks.";
             this.tasks.add(task);
         }
     }
@@ -140,6 +147,9 @@ public class TaskList implements Iterable<Task> {
             throw new PlanaException("Oops, task " + (taskIndex + 1) + " doesn't exist yet."
                     + " Type list to check the task numbers you have.");
         }
+        // The validation above guarantees that the one-based user number has
+        // been converted into a safe zero-based index before it is returned.
+        assert taskIndex >= 0 && taskIndex < size() : "Validated task index must be in bounds.";
         return taskIndex;
     }
 

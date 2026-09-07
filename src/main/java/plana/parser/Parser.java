@@ -147,11 +147,27 @@ public class Parser {
      */
     private Command parseAddCommand(ParsedCommand command) throws PlanaException {
         TaskArguments taskArguments = parseTaskArguments(command);
+        // Each task parser validates its description, and date-bearing task
+        // parsers populate exactly the date fields required by that task type.
+        assert taskArguments.description() != null && !taskArguments.description().isBlank()
+                : "Validated task arguments must contain a description.";
         return switch (command.type()) {
-            case TODO -> new AddCommand(new ToDo(taskArguments.description()));
-            case DEADLINE -> new AddCommand(new Deadline(taskArguments.description(), taskArguments.firstDate()));
-            case EVENT -> new AddCommand(new Event(taskArguments.description(), taskArguments.firstDate(),
-                    taskArguments.secondDate()));
+            case TODO -> {
+                assert taskArguments.firstDate() == null && taskArguments.secondDate() == null
+                        : "ToDo arguments must not contain dates.";
+                yield new AddCommand(new ToDo(taskArguments.description()));
+            }
+            case DEADLINE -> {
+                assert taskArguments.firstDate() != null && taskArguments.secondDate() == null
+                        : "Deadline arguments must contain only a due date.";
+                yield new AddCommand(new Deadline(taskArguments.description(), taskArguments.firstDate()));
+            }
+            case EVENT -> {
+                assert taskArguments.firstDate() != null && taskArguments.secondDate() != null
+                        : "Event arguments must contain both boundary dates.";
+                yield new AddCommand(new Event(taskArguments.description(), taskArguments.firstDate(),
+                        taskArguments.secondDate()));
+            }
             default -> throw new IllegalArgumentException("Task arguments requested for a non-task command");
         };
     }

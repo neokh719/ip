@@ -22,6 +22,9 @@ public class Deadline extends Task {
      */
     public Deadline(String description, LocalDate dueDate) {
         super(description);
+        // The deadline parser and storage loader supply a valid date before
+        // construction, so a Deadline can always display and serialize it.
+        assert dueDate != null : "A deadline must have a due date.";
         this.dueDate = dueDate;
     }
 

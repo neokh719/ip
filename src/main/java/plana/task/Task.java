@@ -17,6 +17,10 @@ public class Task {
      * @param description the task description.
      */
     public Task(String description) {
+        // Task creation is preceded by parser/storage validation, so every task
+        // can rely on having text that is meaningful to display and search.
+        assert description != null && !description.isBlank()
+                : "A task must have a non-blank description.";
         this.description = description;
         this.completionStatus = CompletionStatus.NOT_DONE;
     }
@@ -27,6 +31,8 @@ public class Task {
      * @return {@code X} if the task is done, or a space otherwise
      */
     public String getStatusIcon() {
+        // The completion status is assigned only from CompletionStatus values.
+        assert completionStatus != null : "A task must always have a completion status.";
         return completionStatus.getStatusIcon();
     }
 
