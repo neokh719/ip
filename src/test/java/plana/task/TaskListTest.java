@@ -155,4 +155,12 @@ public class TaskListTest {
         assertSame(task, taskList.get(0));
         assertEquals(" ", task.getStatusIcon());
     }
+
+    @Test
+    public void constructor_nullTask_assertionFails() {
+        List<Task> tasksWithNull = new ArrayList<>();
+        tasksWithNull.add(null);
+
+        assertThrows(AssertionError.class, () -> new TaskList(tasksWithNull));
+    }
 }

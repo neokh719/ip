@@ -2,6 +2,7 @@ package plana.task;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.LocalDate;
@@ -35,5 +36,10 @@ class DeadlineTest {
 
         assertEquals("[D][X] submit report (by: Aug 31 2026)", deadline.toString());
         assertEquals("D | 1 | submit report | 2026-08-31", deadline.toStorageString());
+    }
+
+    @Test
+    void constructor_missingDueDate_assertionFails() {
+        assertThrows(AssertionError.class, () -> new Deadline("submit report", null));
     }
 }

@@ -302,6 +302,7 @@ public class Storage {
      * @return the task with its stored completion state
      */
     private Task restoreCompletionStatus(Task task, String status) {
+        assert task != null : "A valid storage record must produce a task.";
         if (status.equals(DONE_STATUS)) {
             task.markAsDone();
         }
