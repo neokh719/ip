@@ -67,58 +67,59 @@ Here's what I can do:
   Task commands:
 
   todo <description>
-    add a task
+      add a task
 
   deadline <description> /by <date>
-    add a deadline
+      add a deadline
 
   event <description> /from <start> /to <end>
-    add an event
+      add an event
 
   on <date>
-    show deadlines/events on a date
+      show deadlines/events on a date
 
   find <keyword>
-    find tasks by description
+      find tasks by description
 
   list
-    show all tasks
+      show all tasks
 
   delete <number>
-    delete a task
+      delete a task
 
   mark <number>
-    mark a task as done
+      mark a task as done
 
   unmark <number>
-    mark a task as not done
+      mark a task as not done
 
   Client commands:
 
-  client add <name> /email <email> [/phone <phone>] [/address <address>]
-      [/preferences <preferences>] [/notes <notes>]
-    add a client
+  client add <name> /email <email>
+    [/phone <phone>] [/address <address>]
+    [/preferences <preferences>] [/notes <notes>]
+      add a client
 
   client list
-    show all clients
+      show all clients
 
   client view <position>
-    show client details
+      show client details
 
   client find <keyword>
-    find clients by keyword
+      find clients by keyword
 
   client edit <position> /field <value>
-    edit a client
+      edit a client
 
   client delete <position>
-    delete a client
+      delete a client
 
   help or ?
-    show this help
+      show this help
 
   bye
-    say goodbye
+      say goodbye
 ____________________________________________________________
 ?
 ____________________________________________________________
@@ -128,58 +129,59 @@ Here's what I can do:
   Task commands:
 
   todo <description>
-    add a task
+      add a task
 
   deadline <description> /by <date>
-    add a deadline
+      add a deadline
 
   event <description> /from <start> /to <end>
-    add an event
+      add an event
 
   on <date>
-    show deadlines/events on a date
+      show deadlines/events on a date
 
   find <keyword>
-    find tasks by description
+      find tasks by description
 
   list
-    show all tasks
+      show all tasks
 
   delete <number>
-    delete a task
+      delete a task
 
   mark <number>
-    mark a task as done
+      mark a task as done
 
   unmark <number>
-    mark a task as not done
+      mark a task as not done
 
   Client commands:
 
-  client add <name> /email <email> [/phone <phone>] [/address <address>]
-      [/preferences <preferences>] [/notes <notes>]
-    add a client
+  client add <name> /email <email>
+    [/phone <phone>] [/address <address>]
+    [/preferences <preferences>] [/notes <notes>]
+      add a client
 
   client list
-    show all clients
+      show all clients
 
   client view <position>
-    show client details
+      show client details
 
   client find <keyword>
-    find clients by keyword
+      find clients by keyword
 
   client edit <position> /field <value>
-    edit a client
+      edit a client
 
   client delete <position>
-    delete a client
+      delete a client
 
   help or ?
-    show this help
+      show this help
 
   bye
-    say goodbye
+      say goodbye
 ____________________________________________________________
 please help me
 ____________________________________________________________
@@ -189,58 +191,59 @@ Here's what I can do:
   Task commands:
 
   todo <description>
-    add a task
+      add a task
 
   deadline <description> /by <date>
-    add a deadline
+      add a deadline
 
   event <description> /from <start> /to <end>
-    add an event
+      add an event
 
   on <date>
-    show deadlines/events on a date
+      show deadlines/events on a date
 
   find <keyword>
-    find tasks by description
+      find tasks by description
 
   list
-    show all tasks
+      show all tasks
 
   delete <number>
-    delete a task
+      delete a task
 
   mark <number>
-    mark a task as done
+      mark a task as done
 
   unmark <number>
-    mark a task as not done
+      mark a task as not done
 
   Client commands:
 
-  client add <name> /email <email> [/phone <phone>] [/address <address>]
-      [/preferences <preferences>] [/notes <notes>]
-    add a client
+  client add <name> /email <email>
+    [/phone <phone>] [/address <address>]
+    [/preferences <preferences>] [/notes <notes>]
+      add a client
 
   client list
-    show all clients
+      show all clients
 
   client view <position>
-    show client details
+      show client details
 
   client find <keyword>
-    find clients by keyword
+      find clients by keyword
 
   client edit <position> /field <value>
-    edit a client
+      edit a client
 
   client delete <position>
-    delete a client
+      delete a client
 
   help or ?
-    show this help
+      show this help
 
   bye
-    say goodbye
+      say goodbye
 ____________________________________________________________
 bye
 ____________________________________________________________

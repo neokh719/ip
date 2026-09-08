@@ -9,8 +9,13 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 import plana.command.CommandType;
 
 /**
@@ -108,7 +113,43 @@ public class DialogBox extends HBox {
         DialogBox dialogBox = new DialogBox(text, "P", "plana-avatar");
         dialogBox.flip();
         dialogBox.changeDialogStyle(commandType, isError);
+        if (commandType == CommandType.HELP && !isError) {
+            dialogBox.formatHelpText(text);
+        }
         return dialogBox;
+    }
+
+    /**
+     * Applies rich text formatting to the help message so commands are easier to scan.
+     *
+     * @param helpText help message to format.
+     */
+    private void formatHelpText(String helpText) {
+        TextFlow helpFlow = new TextFlow();
+        helpFlow.setPrefWidth(370);
+        helpFlow.setMaxWidth(370);
+        for (String line : helpText.split("\\R", -1)) {
+            Text helpLine = new Text(line + "\n");
+            helpLine.setFont(Font.font("Monospaced", isCommandLine(line)
+                    ? FontWeight.BOLD : FontWeight.NORMAL, 12));
+            helpFlow.getChildren().add(helpLine);
+        }
+        dialog.setText("");
+        dialog.setGraphic(helpFlow);
+        dialog.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
+    }
+
+    /**
+     * Checks whether a help line contains a section heading or command syntax.
+     *
+     * @param line help line to inspect.
+     * @return true when the line should be emphasized.
+     */
+    private boolean isCommandLine(String line) {
+        String trimmedLine = line.trim();
+        return trimmedLine.endsWith("commands:")
+                || trimmedLine.startsWith("[/")
+                || (line.startsWith("  ") && !line.startsWith("      "));
     }
 
     /**

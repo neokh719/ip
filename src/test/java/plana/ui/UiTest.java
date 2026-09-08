@@ -98,8 +98,10 @@ class UiTest {
         assertTrue(response.indexOf("Task commands:") < response.indexOf("Client commands:"));
         assertTrue(response.indexOf("unmark <number>") < response.indexOf("Client commands:"));
         String firstHelpItem = "  todo <description>" + System.lineSeparator()
-                + "    add a task";
+                + "      add a task";
         assertTrue(response.contains(firstHelpItem));
+        assertTrue(response.contains("  client add <name> /email <email>" + System.lineSeparator()
+                + "    [/phone <phone>] [/address <address>]"));
         assertFalse(response.contains("                          "));
         ui.close();
     }
