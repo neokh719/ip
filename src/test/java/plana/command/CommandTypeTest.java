@@ -18,6 +18,7 @@ class CommandTypeTest {
         assertEquals(CommandType.DELETE, CommandType.parseInput("delete 1"));
         assertEquals(CommandType.MARK, CommandType.parseInput("mark 1"));
         assertEquals(CommandType.UNMARK, CommandType.parseInput("unmark 1"));
+        assertEquals(CommandType.CLIENT, CommandType.parseInput("client list"));
     }
 
     @Test
@@ -43,6 +44,7 @@ class CommandTypeTest {
         assertEquals("delete", CommandType.DELETE.getCommandText());
         assertEquals("mark", CommandType.MARK.getCommandText());
         assertEquals("unmark", CommandType.UNMARK.getCommandText());
+        assertEquals("client", CommandType.CLIENT.getCommandText());
         assertEquals("deadline", CommandType.DEADLINE.getCommandText());
         assertEquals("event", CommandType.EVENT.getCommandText());
         assertEquals("todo", CommandType.TODO.getCommandText());

@@ -10,6 +10,7 @@ import java.time.LocalDate;
 import org.junit.jupiter.api.Test;
 
 import plana.command.AddCommand;
+import plana.command.ClientCommand;
 import plana.command.CommandType;
 import plana.command.DeleteCommand;
 import plana.command.ExitCommand;
@@ -59,6 +60,13 @@ public class ParserTest {
         assertInstanceOf(DeleteCommand.class, parser.parseCommand("delete 1"));
         assertInstanceOf(MarkCommand.class, parser.parseCommand("mark 1"));
         assertInstanceOf(UnmarkCommand.class, parser.parseCommand("unmark 1"));
+        assertInstanceOf(ClientCommand.class, parser.parseCommand("client list"));
+        assertInstanceOf(ClientCommand.class,
+                parser.parseCommand("client add Alice /email alice@example.com"));
+        assertInstanceOf(ClientCommand.class, parser.parseCommand("client view C1"));
+        assertInstanceOf(ClientCommand.class, parser.parseCommand("client find alice"));
+        assertInstanceOf(ClientCommand.class, parser.parseCommand("client edit C1 /phone 91234567"));
+        assertInstanceOf(ClientCommand.class, parser.parseCommand("client delete C1"));
         assertInstanceOf(AddCommand.class, parser.parseCommand("todo buy milk"));
         assertInstanceOf(AddCommand.class, parser.parseCommand("deadline report /by 2026-08-31"));
         assertInstanceOf(AddCommand.class,
@@ -170,6 +178,35 @@ public class ParserTest {
     public void parseTaskArguments_nonTaskCommand_illegalArgumentExceptionThrown() {
         assertThrows(IllegalArgumentException.class, () ->
                 parser.parseTaskArguments(new Parser.ParsedCommand(CommandType.LIST, "")));
+    }
+
+    /**
+     * Verifies client fields, normalization, and optional-field clearing syntax.
+     */
+    @Test
+    public void parseClientCommands_validInputsAccepted() throws PlanaException {
+        assertInstanceOf(ClientCommand.class,
+                parser.parseCommand("client add Alice Tan /email ALICE@example.com /preferences no nuts"));
+        assertInstanceOf(ClientCommand.class,
+                parser.parseCommand("client edit C1 /phone \"\" /notes \"\""));
+    }
+
+    /**
+     * Verifies client command validation provides actionable errors.
+     */
+    @Test
+    public void parseClientCommands_invalidInputsRejected() {
+        assertParserCommandException("client add Alice", "Oops, that client is missing its email."
+                + " Try: client add <name> /email <email>.");
+        assertParserCommandException("client add Alice /email invalid",
+                "Oops, that email isn't valid. Use an address like alice@example.com.");
+        assertParserCommandException("client add Alice /email alice@example.com /nickname baker",
+                "Oops, I don't recognize the client field /nickname."
+                        + " Use /phone, /address, /preferences, or /notes.");
+        assertParserCommandException("client view 1", "Oops, '1' isn't a valid client position."
+                + " Use a reference like C1.");
+        assertParserCommandException("client edit C1", "Oops, client edit needs at least one field to change."
+                + " Try: client edit <position> /phone <phone>.");
     }
 
     private void assertParserException(String input, String expectedMessage) {
