@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 import plana.command.CommandType;
+import plana.storage.ClientStorage;
 import plana.storage.Storage;
 
 /**
@@ -29,7 +30,8 @@ class PlanaTest {
 
     @Test
     void getResponse_taskCommandsUseExistingBehaviorAndPersist(@TempDir Path temporaryDirectory) {
-        Plana plana = new Plana(new Storage(temporaryDirectory.resolve("tasks.txt").toString()));
+        Plana plana = new Plana(new Storage(temporaryDirectory.resolve("tasks.txt").toString()),
+                new ClientStorage(temporaryDirectory.resolve("clients.txt").toString()));
 
         Plana.Response addResponse = plana.getResponse("todo read a book");
         Plana.Response listResponse = plana.getResponse("list");
@@ -45,7 +47,8 @@ class PlanaTest {
 
     @Test
     void getResponse_errorsAndByeReturnChatMetadata(@TempDir Path temporaryDirectory) {
-        Plana plana = new Plana(new Storage(temporaryDirectory.resolve("tasks.txt").toString()));
+        Plana plana = new Plana(new Storage(temporaryDirectory.resolve("tasks.txt").toString()),
+                new ClientStorage(temporaryDirectory.resolve("clients.txt").toString()));
 
         Plana.Response errorResponse = plana.getResponse("not a command");
         Plana.Response malformedResponse = plana.getResponse("todo");
@@ -61,5 +64,21 @@ class PlanaTest {
         assertTrue(byeResponse.exit());
         assertFalse(byeResponse.error());
         assertTrue(byeResponse.text().contains("Bye-bye! See you next time, okay?"));
+    }
+
+    @Test
+    void getResponse_clientCommandsUseSeparateListAndStorage(@TempDir Path temporaryDirectory) {
+        ClientStorage clientStorage = new ClientStorage(temporaryDirectory.resolve("clients.txt").toString());
+        Plana plana = new Plana(new Storage(temporaryDirectory.resolve("tasks.txt").toString()), clientStorage);
+
+        Plana.Response addResponse = plana.getResponse("client add Alice /email alice@example.com");
+        Plana.Response viewResponse = plana.getResponse("client view C1");
+        Plana.Response taskListResponse = plana.getResponse("list");
+
+        assertEquals(CommandType.CLIENT, addResponse.commandType());
+        assertTrue(addResponse.text().contains("I've added this client"));
+        assertTrue(viewResponse.text().contains("Email: alice@example.com"));
+        assertFalse(taskListResponse.text().contains("alice@example.com"));
+        assertEquals("alice@example.com", clientStorage.loadClients().get(0).getEmail());
     }
 }

@@ -15,6 +15,8 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import plana.client.Client;
+import plana.client.ClientList;
 import plana.task.Deadline;
 import plana.task.TaskList;
 import plana.task.ToDo;
@@ -89,6 +91,7 @@ class UiTest {
         assertTrue(response.contains("delete <number>"));
         assertTrue(response.contains("mark <number>"));
         assertTrue(response.contains("unmark <number>"));
+        assertTrue(response.contains("client add <name> /email <email>"));
         assertTrue(response.contains("bye"));
         String firstHelpItem = "  todo <description>" + System.lineSeparator()
                 + "    add a task";
@@ -107,6 +110,31 @@ class UiTest {
         String response = outputText();
         assertTrue(response.contains("Here are the matching tasks in your list:"));
         assertTrue(response.contains("No matching tasks found."));
+        ui.close();
+    }
+
+    @Test
+    void clientMessages_displayExpectedText() {
+        Ui ui = newUi("");
+        Client client = new Client("Alice", "alice@example.com", "91234567", "", "no nuts", "");
+        ClientList clients = new ClientList(List.of(client));
+
+        ui.showClientList(clients);
+        ui.showClientDetails("C1", client);
+        ui.showMatchingClientsHeader();
+        ui.showClient(0, client);
+        ui.showNoMatchingClients();
+        ui.showClientAdded(client, 1);
+        ui.showClientUpdated("C1", client);
+        ui.showClientDeleted("C1", client, 0);
+
+        String response = outputText();
+        assertTrue(response.contains("C1. Alice <alice@example.com>"));
+        assertTrue(response.contains("Phone: 91234567"));
+        assertTrue(response.contains("Address: Not provided"));
+        assertTrue(response.contains("No matching clients found."));
+        assertTrue(response.contains("Now you have 1 client in your list."));
+        assertTrue(response.contains("Now you have 0 clients in the list."));
         ui.close();
     }
 

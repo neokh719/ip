@@ -30,6 +30,9 @@ public enum CommandType {
     /** Marks a task as not completed. */
     UNMARK("unmark"),
 
+    /** Manages client records. */
+    CLIENT("client"),
+
     /** Adds a deadline task. */
     DEADLINE("deadline"),
 

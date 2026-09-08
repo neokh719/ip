@@ -5,6 +5,8 @@ import java.io.PrintStream;
 import java.util.Objects;
 import java.util.Scanner;
 
+import plana.client.Client;
+import plana.client.ClientList;
 import plana.task.Task;
 import plana.task.TaskList;
 
@@ -43,6 +45,25 @@ public class Ui implements AutoCloseable {
 
               unmark <number>
                 mark a task as not done
+
+              client add <name> /email <email> [/phone <phone>] [/address <address>]
+                  [/preferences <preferences>] [/notes <notes>]
+                add a client
+
+              client list
+                show all clients
+
+              client view <position>
+                show client details
+
+              client find <keyword>
+                find clients by keyword
+
+              client edit <position> /field <value>
+                edit a client
+
+              client delete <position>
+                delete a client
 
               help or ?
                 show this help
@@ -150,6 +171,105 @@ public class Ui implements AutoCloseable {
     }
 
     /**
+     * Displays every client in creation order.
+     *
+     * @param clients the clients to display.
+     */
+    public void showClientList(ClientList clients) {
+        output.println(" Here are your clients:");
+        if (clients.size() == 0) {
+            output.println(" No clients found.");
+        } else {
+            for (int i = 0; i < clients.size(); i++) {
+                showClient(i, clients.get(i));
+            }
+        }
+        showLine();
+    }
+
+    /**
+     * Displays the heading for a client search.
+     */
+    public void showMatchingClientsHeader() {
+        output.println(" Here are the matching clients in your list:");
+    }
+
+    /**
+     * Displays the empty result message for a client search.
+     */
+    public void showNoMatchingClients() {
+        output.println(" No matching clients found.");
+    }
+
+    /**
+     * Displays a client using its current list-position reference.
+     *
+     * @param zeroBasedIndex the client's zero-based index.
+     * @param client the client to display.
+     */
+    public void showClient(int zeroBasedIndex, Client client) {
+        output.println(" C" + (zeroBasedIndex + 1) + ". " + client.getSummary());
+    }
+
+    /**
+     * Displays the details of one client.
+     *
+     * @param reference the client's list-position reference.
+     * @param client the client to display.
+     */
+    public void showClientDetails(String reference, Client client) {
+        output.println(" Here are the details for client " + reference + ":");
+        output.println(" Name: " + client.getName());
+        output.println(" Email: " + client.getEmail());
+        output.println(" Phone: " + displayOptional(client.getPhone()));
+        output.println(" Address: " + displayOptional(client.getAddress()));
+        output.println(" Preferences: " + displayOptional(client.getPreferences()));
+        output.println(" Notes: " + displayOptional(client.getNotes()));
+        showLine();
+    }
+
+    /**
+     * Displays the confirmation for adding a client.
+     *
+     * @param client the newly added client.
+     * @param clientCount the number of clients after adding.
+     */
+    public void showClientAdded(Client client, int clientCount) {
+        output.println("Yay, I've added this client:");
+        output.println("  [C" + clientCount + "] " + client.getSummary());
+        output.println("Now you have " + clientCount + (clientCount == 1 ? " client" : " clients")
+                + " in your list.");
+        showLine();
+    }
+
+    /**
+     * Displays the confirmation for editing a client.
+     *
+     * @param reference the client's list-position reference.
+     * @param client the updated client.
+     */
+    public void showClientUpdated(String reference, Client client) {
+        output.println("Noted. I've updated this client:");
+        output.println("  [" + reference + "] " + client.getSummary());
+        showLine();
+    }
+
+    /**
+     * Displays the confirmation for deleting a client.
+     *
+     * @param reference the deleted client's list-position reference.
+     * @param client the deleted client.
+     * @param remainingClientCount the number of clients after deletion.
+     */
+    public void showClientDeleted(String reference, Client client, int remainingClientCount) {
+        output.println("Noted. I've removed this client:");
+        output.println("  [" + reference + "] " + client.getSummary());
+        output.println("Now you have " + remainingClientCount
+                + (remainingClientCount == 1 ? " client" : " clients") + " in the list.");
+        showLine();
+    }
+
+    /**
      * Displays a task using the one-based number shown to the user.
      *
      * @param zeroBasedIndex the task's zero-based index.
@@ -252,6 +372,10 @@ public class Ui implements AutoCloseable {
         if (showSeparators) {
             output.println(BORDER_LINE);
         }
+    }
+
+    private String displayOptional(String value) {
+        return value.isBlank() ? "Not provided" : value;
     }
 
     /**

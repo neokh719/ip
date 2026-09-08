@@ -4,10 +4,12 @@ import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 
+import plana.client.ClientList;
 import plana.command.Command;
 import plana.command.CommandType;
 import plana.exception.PlanaException;
 import plana.parser.Parser;
+import plana.storage.ClientStorage;
 import plana.storage.Storage;
 import plana.task.TaskList;
 import plana.ui.Ui;
@@ -52,13 +54,15 @@ public class Plana {
             + "What shall we get done today?";
     private final Parser parser;
     private final Storage storage;
+    private final ClientStorage clientStorage;
     private final TaskList tasks;
+    private final ClientList clients;
 
     /**
      * Creates Plana with its default persistent task storage.
      */
     public Plana() {
-        this(new Storage());
+        this(new Storage(), new ClientStorage());
     }
 
     /**
@@ -67,9 +71,21 @@ public class Plana {
      * @param storage storage used to load and save Plana's tasks.
      */
     public Plana(Storage storage) {
+        this(storage, new ClientStorage());
+    }
+
+    /**
+     * Creates Plana with supplied task and client storage collaborators.
+     *
+     * @param storage storage used to load and save tasks.
+     * @param clientStorage storage used to load and save clients.
+     */
+    public Plana(Storage storage, ClientStorage clientStorage) {
         this.parser = new Parser();
         this.storage = storage;
+        this.clientStorage = clientStorage;
         this.tasks = storage.loadTasks();
+        this.clients = clientStorage.loadClients();
     }
 
     /**
@@ -123,7 +139,7 @@ public class Plana {
         CommandType commandType = parser.parse(safeInput).type();
         try {
             Command command = parser.parseCommand(safeInput);
-            command.execute(tasks, ui, storage);
+            command.execute(tasks, clients, ui, storage, clientStorage);
             return new Response("", commandType, command.isExit(), false);
         } catch (PlanaException exception) {
             ui.showError(exception.getMessage());

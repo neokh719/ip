@@ -21,6 +21,7 @@ please help me
 bye
 ```
 
+
 ### Expected Output
 
 ```text
@@ -90,6 +91,25 @@ Here's what I can do:
   unmark <number>
     mark a task as not done
 
+  client add <name> /email <email> [/phone <phone>] [/address <address>]
+      [/preferences <preferences>] [/notes <notes>]
+    add a client
+
+  client list
+    show all clients
+
+  client view <position>
+    show client details
+
+  client find <keyword>
+    find clients by keyword
+
+  client edit <position> /field <value>
+    edit a client
+
+  client delete <position>
+    delete a client
+
   help or ?
     show this help
 
@@ -128,6 +148,25 @@ Here's what I can do:
   unmark <number>
     mark a task as not done
 
+  client add <name> /email <email> [/phone <phone>] [/address <address>]
+      [/preferences <preferences>] [/notes <notes>]
+    add a client
+
+  client list
+    show all clients
+
+  client view <position>
+    show client details
+
+  client find <keyword>
+    find clients by keyword
+
+  client edit <position> /field <value>
+    edit a client
+
+  client delete <position>
+    delete a client
+
   help or ?
     show this help
 
@@ -165,6 +204,25 @@ Here's what I can do:
 
   unmark <number>
     mark a task as not done
+
+  client add <name> /email <email> [/phone <phone>] [/address <address>]
+      [/preferences <preferences>] [/notes <notes>]
+    add a client
+
+  client list
+    show all clients
+
+  client view <position>
+    show client details
+
+  client find <keyword>
+    find clients by keyword
+
+  client edit <position> /field <value>
+    edit a client
+
+  client delete <position>
+    delete a client
 
   help or ?
     show this help
@@ -553,7 +611,7 @@ Oops, I don't recognize 'blah'. Type help to see the commands I know.
 ____________________________________________________________
 
 ____________________________________________________________
-Oops, I didn't catch a command. Type help to see what I can do.
+Oops, I didn't catch a command. Type 'help' to see what I can do :>
 ____________________________________________________________
 bye
 ____________________________________________________________
@@ -869,6 +927,124 @@ find book
 ____________________________________________________________
  Here are the matching tasks in your list:
  1.[T][ ] borrow book
+____________________________________________________________
+bye
+____________________________________________________________
+Bye-bye! See you next time, okay?
+____________________________________________________________
+```
+
+## Test Case: manage clients
+
+- Aim: Verify that clients can be added, listed, viewed, found, edited, and deleted independently from tasks.
+
+### Inputs
+
+```text
+client add Alice Tan /email alice@example.com /phone 91234567 /address 12 Baker Street /preferences no nuts, less sweet /notes Birthday cake customer
+client list
+client view C1
+client find nuts
+client edit C1 /phone 98765432 /notes ""
+client view C1
+client delete C1
+client list
+list
+bye
+```
+
+### Expected Output
+
+```text
+____________________________________________________________
+ ____  _                  
+|  _ \| | __ _ _ __   __ _ 
+| |_) | |/ _` | '_ \ / _` |
+|  __/| | (_| | | | | (_| |
+|_|   |_|\__,_|_| |_|\__,_|
+⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠿⡛⡫⢋⠍⠍⢅⢍⢑⠩⡉⢍⠫⢛⠻⡻⡿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
+⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠿⡻⢿⠑⢌⢌⣔⣴⣵⢾⣾⣾⣾⣾⣾⡾⠶⡳⠵⢬⣢⢊⠌⠝⡛⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
+⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠫⠡⡑⡰⠴⢿⣿⣿⠟⡑⣌⣂⢊⢻⣿⣿⠏⠪⣨⣦⣥⡑⡸⣿⣷⣧⣊⠔⡨⢛⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
+⣿⣿⣿⣿⣿⣿⣿⡟⡣⠊⣌⢎⠎⠪⡘⣾⣿⠣⢨⣺⣿⣿⡢⠡⣿⡇⢅⢽⣿⣿⣿⣗⠌⣺⣿⣿⡇⢕⢐⠡⡘⠿⣿⣿⣿⣿⣿⣿⣿⣿
+⣿⣿⣿⣿⣿⡿⠋⢔⣰⣽⣿⡧⡊⢌⣺⣿⡇⢅⣽⣿⣿⣿⠪⢨⣿⡪⢐⣽⣿⣿⣿⠣⢊⢼⣿⡿⡟⠆⡢⢑⣴⡡⠂⠝⢿⣿⣿⣿⣿⣿
+⣿⣿⣿⣿⠏⡢⣱⣵⣿⣿⣿⠣⡊⢴⣿⣿⢇⢂⢿⣿⢟⠏⣊⣾⣿⣧⡅⢝⠩⢋⢂⢕⣼⣿⣿⣧⠪⡐⢌⢘⠍⡢⢑⠡⡑⢜⣿⣿⣿⣿
+⣿⣿⣿⠣⢑⣴⣿⣿⣿⣿⡏⡊⡲⣿⣿⣿⣷⣐⢌⢂⡢⣱⣾⣿⣿⣿⣿⣷⣷⣶⣷⣿⣿⣿⣿⣷⣧⣶⣗⢐⠅⠢⣱⣮⡆⢅⠚⣿⣿⣿
+⣿⣿⢃⠪⣸⣿⣿⣿⣿⣿⡐⢌⢼⣿⣿⣿⡿⠿⢟⢓⣛⣙⣭⡮⠾⡚⣛⣍⣝⣬⣵⣭⣮⡭⣏⣻⣟⣛⠿⢦⣾⣼⣾⣿⣿⡦⡑⡘⣿⣿
+⣿⢇⢑⢸⣿⣿⣿⣿⣿⡿⢿⠻⡛⡙⣅⣥⣪⣮⣾⡿⠻⣙⣕⣼⣾⣾⣿⣿⣿⣿⣿⡿⡫⣸⣿⣿⣿⣿⣿⣾⣬⣙⢟⢿⣿⣿⡆⠪⡸⣿
+⡿⢐⠡⣺⣿⣿⡟⢭⡑⣌⣦⣵⣾⣿⢿⡻⣛⣫⣵⣼⢞⣻⣿⣿⣿⣿⣿⣿⣿⢿⠫⢨⢰⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣧⣙⠿⣯⠊⠌⣿
+⡏⡢⢑⣿⣿⣿⣿⣿⢙⣙⣍⣵⣥⣾⣶⣿⣿⡿⡛⣼⣾⣿⣿⣿⣿⡿⡿⢋⠣⠡⣊⣴⣿⣿⣿⡿⢿⣿⣿⣿⣿⣿⣿⣿⣿⣮⣪⠣⡑⡸
+⡇⡊⢼⣿⣿⣿⣿⣿⣤⢍⢛⠻⡛⢟⠻⣫⡧⡱⣞⠻⢛⢛⠝⡩⢃⠣⡨⣂⣵⣷⣿⣿⣿⣿⣿⡿⣸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡌⢔⢘
+⡌⡂⡊⡃⣻⣿⣿⣿⣿⣇⠢⡑⡐⡡⠿⡛⣴⣿⣿⣿⣿⠢⢗⢂⣓⣃⠪⣿⣿⣿⣿⠏⣽⣿⣿⠣⣾⣿⣿⣿⣿⣿⢹⣿⣿⣿⣿⡯⡐⠌
+⣇⢊⠔⡁⢎⢛⢙⢽⣿⣿⣿⣯⣦⡦⡑⣴⣿⣿⣿⣿⢣⢳⣱⣿⣿⣿⡎⣽⣿⣿⣿⢨⣿⡿⢣⢡⠩⡙⡻⣿⣿⣿⠸⣿⣿⣿⣿⡗⡨⢨
+⣿⡐⠬⡎⢔⢐⠡⣙⣿⣿⡏⡙⡣⠑⢬⣾⣿⣿⣿⡿⣨⢾⠻⢛⢛⠻⢿⡆⢿⣿⡯⢪⡟⢅⣿⣷⠡⣻⣦⣝⣿⣟⢬⣿⣿⣿⣿⢇⠺⣿
+⣿⡆⠅⢍⠢⡘⢾⣿⣿⣿⣮⡐⠔⡡⣳⣿⡿⣻⣿⠂⢕⣠⣵⣶⣦⣅⢕⣿⣧⠹⡯⣂⣾⠟⢟⠻⡳⢨⢻⣿⣿⡇⣺⣿⣿⣿⡿⡂⢝⣿
+⣿⣮⠊⠔⡁⣢⣿⣿⣿⣿⣿⣬⠎⢄⢿⣿⡗⣺⡇⣵⠿⡿⣻⢿⣿⣿⣿⣿⣿⣿⣬⣼⣧⣼⣴⣥⣌⢂⢊⢝⢿⠌⣾⣿⣿⣿⡓⢌⣺⣿
+⣿⣿⡎⠌⠜⣾⣿⣿⣿⣿⣿⠇⠕⡁⣿⣿⡧⢺⡇⣺⣼⣇⣟⣼⣿⡿⣿⣿⣿⣿⣿⣿⣿⣿⢫⡿⢿⣷⣕⢐⠔⣹⣿⣿⣿⡿⡈⢦⣿⣿
+⣿⣿⣿⣎⠌⢜⢻⣿⣿⣿⠣⡑⡡⠢⢹⣿⢑⣥⡢⣹⣿⣿⣿⣿⣗⠅⣂⣪⣬⣙⡝⡻⢿⣯⣢⣟⣼⡢⣿⡇⡢⣿⣿⣿⠫⡑⢼⣿⣿⣿
+⣿⣿⣿⣿⣮⢐⠡⠻⣿⣿⣷⡟⡢⣱⣇⠣⡸⣿⣿⣿⣿⣿⣿⣿⣇⣺⣿⣿⣿⣿⣿⣷⡩⣿⣿⣿⣿⣿⢏⢢⡿⣏⡿⠡⡑⣼⣿⣿⣿⣿
+⣿⣿⣿⣿⣿⣷⡅⠕⡩⠻⡏⡢⡢⣿⣿⡇⣚⣿⣿⣿⣿⣿⣿⣿⡧⣺⣿⣿⣿⣿⣿⣿⢪⣿⣿⣿⡿⢫⡼⡛⡱⢑⢐⣱⣾⣿⣿⣿⣿⣿
+⣿⣿⣿⣿⣿⣿⣿⣷⣔⠡⢒⠫⢸⣿⣿⢇⡢⡙⢿⣿⣿⣿⣿⣿⣯⢜⢿⣿⣿⣿⣿⠏⣼⣿⣯⣣⣪⣱⢔⠌⡂⣕⣾⣿⣿⣿⣿⣿⣿⣿
+⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣥⡊⠔⡩⢙⢂⢿⠠⠡⡙⡻⣿⣿⣿⣿⣷⣍⠻⡻⡻⣱⣽⣿⣿⠿⡫⢃⢅⢢⣪⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿
+⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣬⣂⢅⠢⣡⢑⢐⠔⡨⢋⠿⠿⠿⠿⠿⡻⡚⢏⠫⡑⡡⣊⣤⣷⣽⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
+⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣦⣥⣢⣡⣂⣅⣅⣣⣑⣔⣬⣶⣿⣾⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
+Hi hi! I'm Plana.
+What shall we get done today?
+____________________________________________________________
+client add Alice Tan /email alice@example.com /phone 91234567 /address 12 Baker Street /preferences no nuts, less sweet /notes Birthday cake customer
+____________________________________________________________
+Yay, I've added this client:
+  [C1] Alice Tan <alice@example.com>
+Now you have 1 client in your list.
+____________________________________________________________
+client list
+____________________________________________________________
+ Here are your clients:
+ C1. Alice Tan <alice@example.com>
+____________________________________________________________
+client view C1
+____________________________________________________________
+ Here are the details for client C1:
+ Name: Alice Tan
+ Email: alice@example.com
+ Phone: 91234567
+ Address: 12 Baker Street
+ Preferences: no nuts, less sweet
+ Notes: Birthday cake customer
+____________________________________________________________
+client find nuts
+____________________________________________________________
+ Here are the matching clients in your list:
+ C1. Alice Tan <alice@example.com>
+____________________________________________________________
+client edit C1 /phone 98765432 /notes ""
+____________________________________________________________
+Noted. I've updated this client:
+  [C1] Alice Tan <alice@example.com>
+____________________________________________________________
+client view C1
+____________________________________________________________
+ Here are the details for client C1:
+ Name: Alice Tan
+ Email: alice@example.com
+ Phone: 98765432
+ Address: 12 Baker Street
+ Preferences: no nuts, less sweet
+ Notes: Not provided
+____________________________________________________________
+client delete C1
+____________________________________________________________
+Noted. I've removed this client:
+  [C1] Alice Tan <alice@example.com>
+Now you have 0 clients in the list.
+____________________________________________________________
+client list
+____________________________________________________________
+ Here are your clients:
+ No clients found.
+____________________________________________________________
+list
+____________________________________________________________
+ Here are your tasks:
 ____________________________________________________________
 bye
 ____________________________________________________________
