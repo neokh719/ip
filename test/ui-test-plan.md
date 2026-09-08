@@ -64,6 +64,8 @@ ____________________________________________________________
 Don't worry! I am always here to help :>
 Here's what I can do:
 
+  Task commands:
+
   todo <description>
     add a task
 
@@ -90,6 +92,8 @@ Here's what I can do:
 
   unmark <number>
     mark a task as not done
+
+  Client commands:
 
   client add <name> /email <email> [/phone <phone>] [/address <address>]
       [/preferences <preferences>] [/notes <notes>]
@@ -121,6 +125,8 @@ ____________________________________________________________
 Don't worry! I am always here to help :>
 Here's what I can do:
 
+  Task commands:
+
   todo <description>
     add a task
 
@@ -147,6 +153,8 @@ Here's what I can do:
 
   unmark <number>
     mark a task as not done
+
+  Client commands:
 
   client add <name> /email <email> [/phone <phone>] [/address <address>]
       [/preferences <preferences>] [/notes <notes>]
@@ -178,6 +186,8 @@ ____________________________________________________________
 Don't worry! I am always here to help :>
 Here's what I can do:
 
+  Task commands:
+
   todo <description>
     add a task
 
@@ -204,6 +214,8 @@ Here's what I can do:
 
   unmark <number>
     mark a task as not done
+
+  Client commands:
 
   client add <name> /email <email> [/phone <phone>] [/address <address>]
       [/preferences <preferences>] [/notes <notes>]

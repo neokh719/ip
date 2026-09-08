@@ -93,6 +93,10 @@ class UiTest {
         assertTrue(response.contains("unmark <number>"));
         assertTrue(response.contains("client add <name> /email <email>"));
         assertTrue(response.contains("bye"));
+        assertTrue(response.contains("Task commands:"));
+        assertTrue(response.contains("Client commands:"));
+        assertTrue(response.indexOf("Task commands:") < response.indexOf("Client commands:"));
+        assertTrue(response.indexOf("unmark <number>") < response.indexOf("Client commands:"));
         String firstHelpItem = "  todo <description>" + System.lineSeparator()
                 + "    add a task";
         assertTrue(response.contains(firstHelpItem));
