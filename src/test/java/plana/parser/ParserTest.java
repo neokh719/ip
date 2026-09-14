@@ -45,6 +45,20 @@ public class ParserTest {
     }
 
     /**
+     * Verifies that null, whitespace, aliases, and case variations are
+     * normalized before command arguments are extracted.
+     */
+    @Test
+    public void parse_nullWhitespaceAndHelpAliases_normalizedValuesReturned() {
+        assertEquals(new Parser.ParsedCommand(CommandType.UNKNOWN, ""), parser.parse(null));
+        assertEquals(new Parser.ParsedCommand(CommandType.UNKNOWN, ""), parser.parse("   "));
+        assertEquals(new Parser.ParsedCommand(CommandType.HELP, "extra"), parser.parse("help extra"));
+        assertEquals(new Parser.ParsedCommand(CommandType.HELP, ""), parser.parse(" please HELP me "));
+        assertEquals(new Parser.ParsedCommand(CommandType.TODO, "buy milk"),
+                parser.parse("  TODO   buy milk  "));
+    }
+
+    /**
      * Verifies that each command category is dispatched to the appropriate
      * executable command class.
      */
@@ -139,10 +153,12 @@ public class ParserTest {
      * Verifies that a find command requires a non-blank keyword.
      */
     @Test
-    public void parseCommand_findWithoutKeyword_exceptionReturned() {
+    public void parseCommand_findWithoutKeyword_exceptionReturned() throws PlanaException {
         assertParserCommandException("find", "Oops, find needs a keyword. Try: find <keyword>.");
         assertParserCommandException("list extra", "Oops, list doesn't take any arguments. Try: list.");
         assertParserCommandException("bye later", "Oops, bye doesn't take any arguments. Try: bye.");
+        assertInstanceOf(InvalidCommand.class, parser.parseCommand(""));
+        assertParserCommandException("on", "Oops, on needs a date. Try: on <date>.");
     }
 
     /**
@@ -217,6 +233,67 @@ public class ParserTest {
                 + " Use a reference like C1.");
         assertParserCommandException("client edit C1", "Oops, client edit needs at least one field to change."
                 + " Try: client edit <position> /phone <phone>.");
+    }
+
+    /**
+     * Verifies client actions reject missing subcommands, malformed
+     * references, duplicate fields, and invalid optional values.
+     */
+    @Test
+    public void parseClientCommands_missingAndInvalidFields_rejected() {
+        assertParserCommandException("client", "Oops, client needs an action."
+                + " Try: client add <name> /email <email>.");
+        assertParserCommandException("client archive", "Oops, I don't recognize client action 'archive'."
+                + " Try: client add <name> /email <email>.");
+        assertParserCommandException("client list extra",
+                "Oops, client list doesn't take any arguments. Try: client list.");
+        assertParserCommandException("client view", "Oops, client view needs a client position."
+                + " Try: client view C1.");
+        assertParserCommandException("client delete C0", "Oops, 'C0' isn't a valid client position."
+                + " Use a reference like C1.");
+        assertParserCommandException("client add /email alice@example.com", "Oops, that client is missing its name."
+                + " Try: client add <name> /email <email>.");
+        assertParserCommandException("client add Alice /email", "Oops, that client is missing its email."
+                + " Try: client add <name> /email <email>.");
+        assertParserCommandException("client add Alice /email alice@example.com /name Alicia",
+                "Oops, put the client name before the field markers."
+                        + " Try: client add <name> /email <email>.");
+        assertParserCommandException("client add Alice /email alice@example.com /email other@example.com",
+                "Oops, the client field /email was provided more than once.");
+        assertParserCommandException("client add Alice /email alice@example.com /phone",
+                "Oops, /phone needs a value or should be left out.");
+        assertParserCommandException("client add Alice /email alice@example.com /phone 123",
+                "Oops, that phone number isn't valid. Use 7 to 15 digits.");
+        assertParserCommandException("client add Alice /email alice@example.com /phone 123-4567x",
+                "Oops, that phone number isn't valid. Use 7 to 15 digits.");
+        assertParserCommandException("client edit C1 Alice",
+                "Oops, client edit fields must use markers such as /phone or /notes.");
+        assertParserCommandException("client edit C1 /phone 91234567 /phone 98765432",
+                "Oops, the client field /phone was provided more than once.");
+    }
+
+    /**
+     * Verifies task and client text limits reject control characters and
+     * values longer than their documented limits.
+     */
+    @Test
+    public void textValidation_overlongAndControlCharacterValues_rejected() {
+        String longDescription = "a".repeat(201);
+        assertParserException("todo " + longDescription, "Oops, that ToDo description is too long"
+                + " or contains invalid characters. Use 200 characters or fewer.");
+        assertParserException("deadline " + longDescription + " /by 2026-08-31",
+                "Oops, that deadline description is too long"
+                        + " or contains invalid characters. Use 200 characters or fewer.");
+        assertParserException("event " + longDescription + " /from 2026-08-31 /to 2026-09-01",
+                "Oops, that event description is too long"
+                        + " or contains invalid characters. Use 200 characters or fewer.");
+        assertParserException("todo line1\nline2", "Oops, that ToDo description is too long"
+                + " or contains invalid characters. Use 200 characters or fewer.");
+        assertParserCommandException("client add " + "a".repeat(101)
+                        + " /email alice@example.com",
+                "Oops, that client name isn't valid. Use 100 characters or fewer.");
+        assertParserCommandException("client add Alice /email alice@example.com /notes bad\nnotes",
+                "Oops, /notes is too long or contains invalid characters.");
     }
 
     private void assertParserException(String input, String expectedMessage) {

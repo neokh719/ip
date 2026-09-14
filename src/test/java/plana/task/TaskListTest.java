@@ -12,6 +12,7 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
+import plana.command.TaskAction;
 import plana.exception.PlanaException;
 
 /**
@@ -55,6 +56,24 @@ public class TaskListTest {
         assertEquals(2, taskList.size());
         assertSame(firstTask, taskList.get(0));
         assertSame(secondTask, taskList.get(1));
+    }
+
+    @Test
+    public void addAtIndex_duplicateDetectionAndRestore_preserveTaskIdentity() throws PlanaException {
+        Task firstTask = new ToDo("first task");
+        Task insertedTask = new ToDo("inserted task");
+        TaskList taskList = new TaskList(List.of(firstTask));
+
+        taskList.add(0, insertedTask);
+        List<Task> snapshot = taskList.copyTasks();
+        taskList.remove(1);
+        taskList.restoreTasks(snapshot);
+
+        assertSame(insertedTask, taskList.get(0));
+        assertSame(firstTask, taskList.get(1));
+        assertTrue(taskList.containsSameTask(new ToDo("first task")));
+        assertFalse(taskList.containsSameTask(new ToDo("different task")));
+        assertFalse(taskList.isDone(TaskAction.MARK, "1"));
     }
 
     /**
@@ -162,5 +181,14 @@ public class TaskListTest {
         tasksWithNull.add(null);
 
         assertThrows(AssertionError.class, () -> new TaskList(tasksWithNull));
+    }
+
+    @Test
+    public void nullTaskInputs_assertionsFail() {
+        TaskList taskList = new TaskList();
+
+        assertThrows(AssertionError.class, () -> taskList.add((Task[]) null));
+        assertThrows(AssertionError.class, () -> taskList.add(0, null));
+        assertThrows(AssertionError.class, () -> taskList.restoreTasks(null));
     }
 }

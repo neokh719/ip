@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.PrintStream;
 import java.nio.file.Path;
 import java.time.LocalDate;
@@ -20,6 +21,7 @@ import plana.exception.PlanaException;
 import plana.storage.Storage;
 import plana.task.Deadline;
 import plana.task.Event;
+import plana.task.Task;
 import plana.task.TaskList;
 import plana.task.ToDo;
 import plana.ui.Ui;
@@ -77,6 +79,22 @@ class CommandTest {
     }
 
     @Test
+    void deleteCommand_saveFailure_taskIsRestored(@TempDir Path temporaryDirectory) throws IOException {
+        Path blockedDirectory = temporaryDirectory.resolve("blocked-directory");
+        java.nio.file.Files.writeString(blockedDirectory, "This path is deliberately a file.");
+        TaskList tasks = new TaskList(java.util.List.of(new ToDo("keep me")));
+        Storage storage = new Storage(blockedDirectory.resolve("tasks.txt").toString());
+
+        PlanaException exception = assertThrows(PlanaException.class, () ->
+                executeAllowingFailure(new DeleteCommand("1"), tasks, storage));
+
+        assertEquals("Oops, I couldn't save that change."
+                + " Please check that the data folder is writable.", exception.getMessage());
+        assertEquals(1, tasks.size());
+        assertEquals("[T][ ] keep me", tasks.get(0).toString());
+    }
+
+    @Test
     void markAndUnmarkCommand_execute_statusPersistedAndDisplayed(@TempDir Path temporaryDirectory)
             throws PlanaException {
         TaskList tasks = new TaskList(java.util.List.of(new ToDo("finish me")));
@@ -92,6 +110,27 @@ class CommandTest {
         assertEquals("[T][ ] finish me", storage.loadTasks().get(0).toString());
         String unmarkMessage = "No worries at all! Plans can change, so I've marked this task as not done:";
         assertTrue(unmarkResponse.contains(unmarkMessage));
+    }
+
+    @Test
+    void markAndUnmarkCommand_saveFailure_originalCompletionStatusIsRestored(@TempDir Path temporaryDirectory)
+            throws IOException {
+        Path blockedDirectory = temporaryDirectory.resolve("blocked-directory");
+        java.nio.file.Files.writeString(blockedDirectory, "This path is deliberately a file.");
+        Storage storage = new Storage(blockedDirectory.resolve("tasks.txt").toString());
+
+        Task incompleteTask = new ToDo("unfinished");
+        TaskList incompleteTasks = new TaskList(java.util.List.of(incompleteTask));
+        assertThrows(PlanaException.class, () ->
+                executeAllowingFailure(new MarkCommand("1"), incompleteTasks, storage));
+        assertEquals(" ", incompleteTask.getStatusIcon());
+
+        Task completedTask = new ToDo("finished");
+        completedTask.markAsDone();
+        TaskList completedTasks = new TaskList(java.util.List.of(completedTask));
+        assertThrows(PlanaException.class, () ->
+                executeAllowingFailure(new UnmarkCommand("1"), completedTasks, storage));
+        assertEquals("X", completedTask.getStatusIcon());
     }
 
     @Test
@@ -220,5 +259,15 @@ class CommandTest {
             ui.close();
         }
         return output.toString();
+    }
+
+    private void executeAllowingFailure(Command command, TaskList tasks, Storage storage)
+            throws PlanaException {
+        Ui ui = new Ui();
+        try {
+            command.execute(tasks, ui, storage);
+        } finally {
+            ui.close();
+        }
     }
 }
