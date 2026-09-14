@@ -30,11 +30,11 @@ public class MainWindow extends AnchorPane {
     private Plana plana;
 
     /**
-     * Initializes automatic scrolling after the FXML fields have been injected.
+     * Initializes the window after the FXML fields have been injected.
      */
     @FXML
     public void initialize() {
-        scrollPane.vvalueProperty().bind(dialogContainer.heightProperty());
+        userInput.requestFocus();
     }
 
     /**
@@ -48,6 +48,7 @@ public class MainWindow extends AnchorPane {
                 DialogBox.getPlanaBannerDialog(Plana.getWelcomeBanner()),
                 DialogBox.getPlanaDialog(Plana.getWelcomeGreeting(), null)
         );
+        scrollToLatestMessage();
     }
 
     /**
@@ -66,6 +67,7 @@ public class MainWindow extends AnchorPane {
                 DialogBox.getPlanaDialog(response.text(), response.commandType(), response.error())
         );
         userInput.clear();
+        scrollToLatestMessage();
 
         if (response.exit()) {
             userInput.setDisable(true);
@@ -73,6 +75,15 @@ public class MainWindow extends AnchorPane {
             PauseTransition exitDelay = new PauseTransition(Duration.seconds(0.8));
             exitDelay.setOnFinished(event -> Platform.exit());
             exitDelay.play();
+        } else {
+            userInput.requestFocus();
         }
+    }
+
+    /**
+     * Scrolls to the newest response without preventing users from reading older messages.
+     */
+    private void scrollToLatestMessage() {
+        Platform.runLater(() -> scrollPane.setVvalue(1.0));
     }
 }
