@@ -251,8 +251,8 @@ public class DialogBox extends HBox {
                 return false;
             }
             return switch (commandType) {
-            case TODO, DEADLINE, EVENT, LIST, ON, FIND, DELETE, MARK, UNMARK, CLIENT -> true;
-            default -> false;
+                case TODO, DEADLINE, EVENT, LIST, ON, FIND, DELETE, MARK, UNMARK, CLIENT -> true;
+                default -> false;
             };
         }
     }

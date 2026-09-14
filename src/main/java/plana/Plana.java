@@ -50,8 +50,8 @@ public class Plana {
             ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣬⣂⢅⠢⣡⢑⢐⠔⡨⢋⠿⠿⠿⠿⠿⡻⡚⢏⠫⡑⡡⣊⣤⣷⣽⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
             ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣦⣥⣢⣡⣂⣅⣅⣣⣑⣔⣬⣶⣿⣾⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
             """;
-    private static final String WELCOME_GREETING = "Hi hi! I'm Plana.\n"
-            + "What shall we get done today?";
+    private static final String WELCOME_GREETING = "Hi hi! I'm Plana, your cheerful task buddy!\n"
+            + "Ready to make today a little more organised?";
     private final Parser parser;
     private final Storage storage;
     private final ClientStorage clientStorage;

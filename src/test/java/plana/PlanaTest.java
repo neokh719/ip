@@ -63,7 +63,7 @@ class PlanaTest {
         assertEquals(CommandType.BYE, byeResponse.commandType());
         assertTrue(byeResponse.exit());
         assertFalse(byeResponse.error());
-        assertTrue(byeResponse.text().contains("Bye-bye! See you next time, okay?"));
+        assertTrue(byeResponse.text().contains("Bye-bye! Keep being awesome, okay?"));
     }
 
     @Test
