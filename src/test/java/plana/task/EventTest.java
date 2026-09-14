@@ -42,15 +42,12 @@ public class EventTest {
     }
 
     /**
-     * Verifies that a one-day event includes only its single event date.
+     * Verifies that an event with equal start and end dates is rejected.
      */
     @Test
-    public void occursOn_oneDayEvent_onlyEventDateIncluded() {
-        Event event = new Event("presentation", EVENT_START, EVENT_START);
-
-        assertTrue(event.occursOn(EVENT_START));
-        assertFalse(event.occursOn(EVENT_START.minusDays(1)));
-        assertFalse(event.occursOn(EVENT_START.plusDays(1)));
+    public void constructor_equalBoundaryDates_illegalArgumentExceptionThrown() {
+        assertThrows(IllegalArgumentException.class, () ->
+                new Event("presentation", EVENT_START, EVENT_START));
     }
 
     /**

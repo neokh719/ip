@@ -49,8 +49,9 @@ public class ClientStorage {
      * Writes the current client list to disk.
      *
      * @param clients the clients that should be saved.
+     * @return true when every client was written successfully.
      */
-    public void saveClients(ClientList clients) {
+    public boolean saveClients(ClientList clients) {
         Path temporaryFile = null;
         try {
             Path parentDirectory = dataFile.getParent();
@@ -69,6 +70,7 @@ public class ClientStorage {
             }
         } catch (IOException | SecurityException exception) {
             reportStorageError("save", exception);
+            return false;
         } finally {
             if (temporaryFile != null) {
                 try {
@@ -78,6 +80,7 @@ public class ClientStorage {
                 }
             }
         }
+        return true;
     }
 
     /**
@@ -146,7 +149,7 @@ public class ClientStorage {
 
     private boolean isValidClient(String email, String name, String phone, String address,
                                   String preferences, String notes) {
-        return !name.isBlank() && name.length() <= 100
+        return !name.isBlank() && isValidText(name, 100)
                 && email.length() <= 254 && email.matches(EMAIL_PATTERN)
                 && isValidText(phone, 30) && isValidText(address, 200)
                 && isValidText(preferences, 300) && isValidText(notes, 500)

@@ -4,6 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 
 import org.junit.jupiter.api.Test;
@@ -43,6 +45,35 @@ class PlanaTest {
         assertTrue(listResponse.text().contains("1.[T][ ] read a book"));
         assertTrue(new Storage(temporaryDirectory.resolve("tasks.txt").toString())
                 .loadTasks().get(0).toString().contains("read a book"));
+    }
+
+    @Test
+    void getResponse_duplicateTaskRejectedAndOriginalTaskPreserved(@TempDir Path temporaryDirectory) {
+        Plana plana = new Plana(new Storage(temporaryDirectory.resolve("tasks.txt").toString()),
+                new ClientStorage(temporaryDirectory.resolve("clients.txt").toString()));
+
+        plana.getResponse("todo read a book");
+        Plana.Response duplicateResponse = plana.getResponse("todo read a book");
+        Plana.Response listResponse = plana.getResponse("list");
+
+        assertTrue(duplicateResponse.error());
+        assertTrue(duplicateResponse.text().contains("that task already exists"));
+        assertEquals(1, listResponse.text().split("read a book", -1).length - 1);
+    }
+
+    @Test
+    void getResponse_saveFailureChangeIsRolledBack(@TempDir Path temporaryDirectory) throws IOException {
+        Path blockedDirectory = temporaryDirectory.resolve("blocked-directory");
+        Files.writeString(blockedDirectory, "This path is deliberately a file.");
+        Plana plana = new Plana(new Storage(blockedDirectory.resolve("tasks.txt").toString()),
+                new ClientStorage(temporaryDirectory.resolve("clients.txt").toString()));
+
+        Plana.Response addResponse = plana.getResponse("todo read a book");
+        Plana.Response listResponse = plana.getResponse("list");
+
+        assertTrue(addResponse.error());
+        assertTrue(addResponse.text().contains("couldn't save that task"));
+        assertFalse(listResponse.text().contains("read a book"));
     }
 
     @Test

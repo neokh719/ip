@@ -59,8 +59,9 @@ public class Storage {
      * Writes the current task list to disk, creating the data directory when necessary.
      *
      * @param tasks the tasks that should be saved.
+     * @return true when every task was written successfully.
      */
-    public void saveTasks(TaskList tasks) {
+    public boolean saveTasks(TaskList tasks) {
         Path temporaryFile = null;
         try {
             Path parentDirectory = dataFile.getParent();
@@ -80,6 +81,7 @@ public class Storage {
             }
         } catch (IOException | SecurityException exception) {
             reportStorageError("save", exception);
+            return false;
         } finally {
             if (temporaryFile != null) {
                 try {
@@ -89,6 +91,7 @@ public class Storage {
                 }
             }
         }
+        return true;
     }
 
     /**
@@ -141,7 +144,7 @@ public class Storage {
                 String line;
                 while ((line = reader.readLine()) != null) {
                     Task task = parseTask(line);
-                    if (task != null) {
+                    if (task != null && !tasks.containsSameTask(task)) {
                         tasks.add(task);
                     }
                 }
@@ -274,7 +277,7 @@ public class Storage {
 
         LocalDate startDate = parseStoredDate(parts.get(3));
         LocalDate endDate = parseStoredDate(parts.get(4));
-        if (startDate == null || endDate == null) {
+        if (startDate == null || endDate == null || !startDate.isBefore(endDate)) {
             return null;
         }
         return restoreCompletionStatus(new Event(description, startDate, endDate), status);

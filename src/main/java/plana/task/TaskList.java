@@ -49,6 +49,48 @@ public class TaskList implements Iterable<Task> {
     }
 
     /**
+     * Inserts a task at a specified zero-based position.
+     *
+     * @param index the position at which to insert the task.
+     * @param task the task to insert.
+     */
+    public void add(int index, Task task) {
+        assert task != null : "A task list must not contain null tasks.";
+        tasks.add(index, task);
+    }
+
+    /**
+     * Checks whether the list already has a task with the same details.
+     *
+     * @param task the task to look for.
+     * @return true when an equivalent task already exists.
+     */
+    public boolean containsSameTask(Task task) {
+        return tasks.stream().anyMatch(existingTask -> existingTask.hasSameDetails(task));
+    }
+
+    /**
+     * Returns a snapshot of the tasks in their current order.
+     *
+     * @return an unmodifiable copy of the current tasks.
+     */
+    public List<Task> copyTasks() {
+        return List.copyOf(tasks);
+    }
+
+    /**
+     * Replaces all tasks with a previously captured snapshot.
+     *
+     * @param savedTasks the tasks to restore in display order.
+     */
+    public void restoreTasks(List<Task> savedTasks) {
+        assert savedTasks != null && savedTasks.stream().allMatch(task -> task != null)
+                : "A task list must contain only non-null tasks.";
+        tasks.clear();
+        tasks.addAll(savedTasks);
+    }
+
+    /**
      * Returns the task at the specified zero-based index.
      *
      * @param index the zero-based index.
@@ -103,6 +145,18 @@ public class TaskList implements Iterable<Task> {
         Task task = getSelectedTask(TaskAction.UNMARK, taskNumber);
         task.markAsNotDone();
         return task;
+    }
+
+    /**
+     * Checks the current completion status of a selected task.
+     *
+     * @param action the command validating the user-facing task number.
+     * @param taskNumber the one-based task number entered by the user.
+     * @return true when the selected task is complete.
+     * @throws PlanaException if the task number is missing, invalid, or out of range.
+     */
+    public boolean isDone(TaskAction action, String taskNumber) throws PlanaException {
+        return getSelectedTask(action, taskNumber).isDone();
     }
 
     /**

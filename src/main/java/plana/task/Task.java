@@ -62,6 +62,36 @@ public class Task {
     }
 
     /**
+     * Checks whether this task is marked as complete.
+     *
+     * @return true when this task is complete.
+     */
+    public boolean isDone() {
+        return completionStatus == CompletionStatus.DONE;
+    }
+
+    /**
+     * Checks whether this task has the same user-supplied details as another task.
+     * Completion status is intentionally excluded because it does not identify
+     * the task itself.
+     *
+     * @param otherTask the task to compare.
+     * @return true when both tasks have the same type and details.
+     */
+    public boolean hasSameDetails(Task otherTask) {
+        return otherTask != null && getDetailsKey().equals(otherTask.getDetailsKey());
+    }
+
+    /**
+     * Returns a key made from the parts of this task that identify it.
+     *
+     * @return a task-type and description key.
+     */
+    protected String getDetailsKey() {
+        return "T\u0000" + description;
+    }
+
+    /**
      * Returns the task in the format used by the storage file.
      *
      * @return the task type, completion status, and description

@@ -115,6 +115,27 @@ public class ClientList implements Iterable<Client> {
     }
 
     /**
+     * Returns a snapshot of the clients in their current order.
+     *
+     * @return an unmodifiable copy of the current clients.
+     */
+    public List<Client> copyClients() {
+        return List.copyOf(clients);
+    }
+
+    /**
+     * Replaces all clients with a previously captured snapshot.
+     *
+     * @param savedClients the clients to restore in display order.
+     */
+    public void restoreClients(List<Client> savedClients) {
+        assert savedClients != null && savedClients.stream().allMatch(client -> client != null)
+                : "A client list must contain only non-null clients.";
+        clients.clear();
+        clients.addAll(savedClients);
+    }
+
+    /**
      * Returns an iterator over clients in creation order.
      *
      * @return an iterator over this client list.

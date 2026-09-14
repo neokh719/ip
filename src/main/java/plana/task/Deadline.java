@@ -58,4 +58,14 @@ public class Deadline extends Task {
     public boolean isOn(LocalDate date) {
         return dueDate.equals(date);
     }
+
+    /**
+     * Returns a key made from this deadline's identifying details.
+     *
+     * @return the task type, description, and due date key.
+     */
+    @Override
+    protected String getDetailsKey() {
+        return "D\u0000" + description + "\u0000" + dueDate;
+    }
 }

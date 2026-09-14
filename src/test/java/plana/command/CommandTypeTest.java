@@ -19,18 +19,20 @@ class CommandTypeTest {
         assertEquals(CommandType.MARK, CommandType.parseInput("mark 1"));
         assertEquals(CommandType.UNMARK, CommandType.parseInput("unmark 1"));
         assertEquals(CommandType.CLIENT, CommandType.parseInput("client list"));
+        assertEquals(CommandType.TODO, CommandType.parseInput("  TODO   buy milk  "));
     }
 
     @Test
     void parseInput_helpAliasesAndCaseInsensitiveHelp_helpReturned() {
         assertEquals(CommandType.HELP, CommandType.parseInput("?"));
-        assertEquals(CommandType.HELP, CommandType.parseInput("please HELP me"));
+        assertEquals(CommandType.HELP, CommandType.parseInput("HELP"));
     }
 
     @Test
     void parseInput_unknownOrPartialCommand_unknownReturned() {
         assertEquals(CommandType.UNKNOWN, CommandType.parseInput("todoist buy milk"));
-        assertEquals(CommandType.UNKNOWN, CommandType.parseInput("bye now"));
+        assertEquals(CommandType.BYE, CommandType.parseInput("bye now"));
+        assertEquals(CommandType.HELP, CommandType.parseInput("please HELP me"));
         assertEquals(CommandType.UNKNOWN, CommandType.parseInput(""));
     }
 
