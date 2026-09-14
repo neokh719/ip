@@ -49,9 +49,10 @@ class UiTest {
         ui.showWelcome("BANNER\n", "ART\n");
 
         assertTrue(outputText().contains("BANNER\nART\n"));
-        assertTrue(outputText().contains("Hi hi! I'm Plana."));
-        assertTrue(outputText().contains("What shall we get done today?"));
-        assertTrue(outputText().indexOf("BANNER") < outputText().indexOf("Hi hi! I'm Plana."));
+        assertTrue(outputText().contains("Hi hi! I'm Plana, your cheerful task buddy!"));
+        assertTrue(outputText().contains("Ready to make today a little more organised?"));
+        assertTrue(outputText().indexOf("BANNER")
+                < outputText().indexOf("Hi hi! I'm Plana, your cheerful task buddy!"));
         ui.close();
     }
 
@@ -206,9 +207,10 @@ class UiTest {
         ui.showLine();
 
         String response = outputText();
-        assertTrue(response.contains("marked this task as done"));
-        assertTrue(response.contains("marked this task as not done"));
-        assertTrue(response.contains("Bye-bye! See you next time, okay?"));
+        String unmarkMessage = "No worries at all! Plans can change, so I've marked this task as not done:";
+        assertTrue(response.contains("Amazing work! You've completed this task:"));
+        assertTrue(response.contains(unmarkMessage));
+        assertTrue(response.contains("Bye-bye! Keep being awesome, okay?"));
         assertTrue(response.contains("Oops, something went wrong."));
         assertTrue(response.contains("____________________________________________________________"));
         ui.close();

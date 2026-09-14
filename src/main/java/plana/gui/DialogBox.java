@@ -12,6 +12,8 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -35,9 +37,9 @@ public class DialogBox extends HBox {
     private Label dialog;
 
     @FXML
-    private Label displayPicture;
+    private ImageView displayPicture;
 
-    private DialogBox(String text, String avatarText, String avatarStyleClass) {
+    private DialogBox(String text, Avatar avatar) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("/view/DialogBox.fxml"));
             fxmlLoader.setController(this);
@@ -48,8 +50,7 @@ public class DialogBox extends HBox {
         }
 
         dialog.setText(text);
-        displayPicture.setText(avatarText);
-        displayPicture.getStyleClass().add(avatarStyleClass);
+        displayPicture.setImage(avatar.getImage());
     }
 
     private void flip() {
@@ -66,8 +67,6 @@ public class DialogBox extends HBox {
     private void changeDialogStyle(CommandType commandType, boolean isError) {
         if (isError) {
             dialog.getStyleClass().add("error-label");
-            displayPicture.setText("!");
-            displayPicture.getStyleClass().add("error-avatar");
             return;
         }
 
@@ -101,7 +100,7 @@ public class DialogBox extends HBox {
      * @return right-aligned user dialog bubble.
      */
     public static DialogBox getUserDialog(String text) {
-        DialogBox dialogBox = new DialogBox(text, "", "user-avatar");
+        DialogBox dialogBox = new DialogBox(text, Avatar.COOL);
         dialogBox.getChildren().remove(dialogBox.displayPicture);
         dialogBox.setAlignment(Pos.TOP_RIGHT);
         dialogBox.dialog.getStyleClass().add("user-label");
@@ -130,7 +129,7 @@ public class DialogBox extends HBox {
      * @return left-aligned Plana response bubble.
      */
     public static DialogBox getPlanaDialog(String text, CommandType commandType, boolean isError) {
-        DialogBox dialogBox = new DialogBox(text, "P", "plana-avatar");
+        DialogBox dialogBox = new DialogBox(text, Avatar.forResponse(commandType, isError));
         dialogBox.flip();
         dialogBox.changeDialogStyle(commandType, isError);
         if (commandType == CommandType.HELP && !isError) {
@@ -191,10 +190,70 @@ public class DialogBox extends HBox {
      * @return left-aligned banner bubble.
      */
     public static DialogBox getPlanaBannerDialog(String text) {
-        DialogBox dialogBox = new DialogBox(text, "P", "plana-avatar");
+        DialogBox dialogBox = new DialogBox(text, Avatar.COOL);
         dialogBox.flip();
         dialogBox.dialog.setWrapText(false);
         dialogBox.dialog.getStyleClass().add("banner-label");
         return dialogBox;
+    }
+
+    /**
+     * Represents the visual state that accompanies a Plana response.
+     */
+    private enum Avatar {
+        COOL("/images/plana-cool.png"),
+        CONFUSED("/images/plana-confused.png"),
+        TASK_SUCCESS("/images/plana-task-success.png");
+
+        private final Image image;
+
+        /**
+         * Creates an avatar from a packaged image resource.
+         *
+         * @param resourcePath absolute classpath location of the avatar image.
+         */
+        Avatar(String resourcePath) {
+            var resource = Main.class.getResource(resourcePath);
+            if (resource == null) {
+                throw new IllegalStateException("Unable to load Plana avatar: " + resourcePath);
+            }
+            image = new Image(resource.toExternalForm());
+        }
+
+        /**
+         * Returns the image shown for this avatar state.
+         *
+         * @return packaged avatar image.
+         */
+        Image getImage() {
+            return image;
+        }
+
+        /**
+         * Returns the avatar appropriate for a command response.
+         *
+         * @param commandType parsed type of the command that produced the response.
+         * @param isError whether Plana could execute the command.
+         * @return avatar that expresses the response state.
+         */
+        static Avatar forResponse(CommandType commandType, boolean isError) {
+            if (isError && commandType == CommandType.UNKNOWN) {
+                return CONFUSED;
+            }
+            if (!isError && isPlannerOperation(commandType)) {
+                return TASK_SUCCESS;
+            }
+            return COOL;
+        }
+
+        private static boolean isPlannerOperation(CommandType commandType) {
+            if (commandType == null) {
+                return false;
+            }
+            return switch (commandType) {
+                case TODO, DEADLINE, EVENT, LIST, ON, FIND, DELETE, MARK, UNMARK, CLIENT -> true;
+                default -> false;
+            };
+        }
     }
 }

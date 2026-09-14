@@ -35,6 +35,8 @@ public class MainWindow extends AnchorPane {
     @FXML
     public void initialize() {
         userInput.requestFocus();
+        dialogContainer.heightProperty().addListener((observable, previousHeight, currentHeight) ->
+                scrollPane.setVvalue(1.0));
     }
 
     /**

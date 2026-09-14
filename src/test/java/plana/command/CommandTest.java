@@ -85,12 +85,13 @@ class CommandTest {
         String markResponse = execute(new MarkCommand("1"), tasks, storage);
         assertEquals("[T][X] finish me", tasks.get(0).toString());
         assertEquals("[T][X] finish me", storage.loadTasks().get(0).toString());
-        assertTrue(markResponse.contains("marked this task as done"));
+        assertTrue(markResponse.contains("Amazing work! You've completed this task:"));
 
         String unmarkResponse = execute(new UnmarkCommand("1"), tasks, storage);
         assertEquals("[T][ ] finish me", tasks.get(0).toString());
         assertEquals("[T][ ] finish me", storage.loadTasks().get(0).toString());
-        assertTrue(unmarkResponse.contains("marked this task as not done"));
+        String unmarkMessage = "No worries at all! Plans can change, so I've marked this task as not done:";
+        assertTrue(unmarkResponse.contains(unmarkMessage));
     }
 
     @Test
@@ -174,7 +175,7 @@ class CommandTest {
         String response = execute(command, new TaskList(), storageAt(temporaryDirectory));
 
         assertTrue(command.isExit());
-        assertTrue(response.contains("Bye-bye! See you next time, okay?"));
+        assertTrue(response.contains("Bye-bye! Keep being awesome, okay?"));
     }
 
     @Test

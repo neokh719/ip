@@ -16,7 +16,7 @@ import plana.task.TaskList;
 public class Ui implements AutoCloseable {
     private static final String BORDER_LINE = "____________________________________________________________";
     private static final String HELP_TEXT = """
-            Don't worry! I am always here to help :>
+            Hi hi! Need a hand? I'd be super happy to help you plan your day!
             Here's what I can do:
 
               Task commands:
@@ -115,8 +115,8 @@ public class Ui implements AutoCloseable {
         showLine();
         output.print(banner);
         output.print(bannerArt);
-        output.println("Hi hi! I'm Plana.");
-        output.println("What shall we get done today?");
+        output.println("Hi hi! I'm Plana, your cheerful task buddy!");
+        output.println("Ready to make today a little more organised?");
         showLine();
     }
 
@@ -254,7 +254,7 @@ public class Ui implements AutoCloseable {
      * @param client the updated client.
      */
     public void showClientUpdated(String reference, Client client) {
-        output.println("Noted. I've updated this client:");
+        output.println("All set! I've updated this client:");
         output.println("  [" + reference + "] " + client.getSummary());
         showLine();
     }
@@ -267,7 +267,7 @@ public class Ui implements AutoCloseable {
      * @param remainingClientCount the number of clients after deletion.
      */
     public void showClientDeleted(String reference, Client client, int remainingClientCount) {
-        output.println("Noted. I've removed this client:");
+        output.println("All set! I've removed this client:");
         output.println("  [" + reference + "] " + client.getSummary());
         output.println("Now you have " + remainingClientCount
                 + (remainingClientCount == 1 ? " client" : " clients") + " in the list.");
@@ -323,7 +323,7 @@ public class Ui implements AutoCloseable {
      * @param remainingTaskCount the number of tasks after deletion.
      */
     public void showTaskDeleted(Task task, int remainingTaskCount) {
-        output.println("Noted. I've removed this task:");
+        output.println("All set! I've removed this task:");
         output.println("  " + task);
         output.println("Now you have " + remainingTaskCount
                 + (remainingTaskCount == 1 ? " task" : " tasks") + " in the list.");
@@ -336,7 +336,7 @@ public class Ui implements AutoCloseable {
      * @param task the completed task.
      */
     public void showTaskMarkedDone(Task task) {
-        output.println("Yay! I've marked this task as done:");
+        output.println("Amazing work! You've completed this task:");
         output.println("  " + task);
         showLine();
     }
@@ -347,7 +347,7 @@ public class Ui implements AutoCloseable {
      * @param task the task marked as not done.
      */
     public void showTaskMarkedNotDone(Task task) {
-        output.println("No worries! I've marked this task as not done:");
+        output.println("No worries at all! Plans can change, so I've marked this task as not done:");
         output.println("  " + task);
         showLine();
     }
@@ -356,7 +356,7 @@ public class Ui implements AutoCloseable {
      * Displays Plana's goodbye message.
      */
     public void showGoodbye() {
-        output.println("Bye-bye! See you next time, okay?");
+        output.println("Bye-bye! Keep being awesome, okay?");
         showLine();
     }
 
