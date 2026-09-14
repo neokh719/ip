@@ -37,19 +37,18 @@ import plana.task.ToDo;
 public class Parser {
     private static final String EMPTY_COMMAND_ERROR = "Oops, I didn't catch a command."
             + " Type 'help' to see what I can do :>";
-    private static final String TODO_DESCRIPTION_ERROR = "Oops, a ToDo description can't be empty."
-            + " Try: todo <description>.";
     private static final String DEADLINE_USAGE = "Try: deadline <description> /by <date>.";
     private static final String EVENT_USAGE = "Try: event <description> /from <start> /to <end>.";
     private static final String DATE_FORMAT_HINT = "Use the date format yyyy-MM-dd, like 2019-10-15.";
     private static final String CLIENT_ADD_USAGE = "Try: client add <name> /email <email>.";
     private static final String CLIENT_FIELD_USAGE = "Use /phone, /address, /preferences, or /notes.";
     private static final String CLIENT_EMAIL_PATTERN = "^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$";
-    private static final int MAXIMUM_TASK_DESCRIPTION_LENGTH = 200;
     private static final Pattern CLIENT_FIELD_PATTERN = Pattern.compile(
             "(?:^|\\s)/(name|email|phone|address|preferences|notes)(?=\\s|$)");
     private static final Pattern CLIENT_MARKER_PATTERN = Pattern.compile(
             "(?:^|\\s)/([A-Za-z][A-Za-z0-9_-]*)(?=\\s|$)");
+
+    private final TaskCommandParser taskCommandParser = new TaskCommandParser(this);
 
     /**
      * Parses one complete line entered by the user.
@@ -108,12 +107,7 @@ public class Parser {
      * @throws PlanaException if the command syntax or any date is invalid
      */
     public TaskArguments parseTaskArguments(ParsedCommand command) throws PlanaException {
-        return switch (command.type()) {
-            case TODO -> parseTodo(command.arguments());
-            case DEADLINE -> parseDeadline(command.arguments());
-            case EVENT -> parseEvent(command.arguments());
-            default -> throw new IllegalArgumentException("Task arguments requested for a non-task command");
-        };
+        return taskCommandParser.parseTaskArguments(command);
     }
 
     /**
@@ -429,141 +423,12 @@ public class Parser {
     }
 
     /**
-     * Validates the description of a ToDo command.
-     *
-     * @param arguments the text after the {@code todo} keyword.
-     * @return the validated ToDo arguments
-     * @throws PlanaException if the description is empty
-     */
-    private TaskArguments parseTodo(String arguments) throws PlanaException {
-        if (arguments.isBlank()) {
-            throw new PlanaException(TODO_DESCRIPTION_ERROR);
-        }
-        validateTaskDescription(arguments, "ToDo");
-        return new TaskArguments(arguments, null, null);
-    }
-
-    /**
-     * Validates and parses the description and due date of a deadline command.
-     *
-     * @param arguments the text after the {@code deadline} keyword.
-     * @return the validated deadline arguments
-     * @throws PlanaException if the description, marker, or due date is missing
-     *         or invalid
-     */
-    private TaskArguments parseDeadline(String arguments) throws PlanaException {
-        if (arguments.isBlank()) {
-            throw deadlineError("a deadline needs a description and a due date.");
-        }
-        List<Integer> byMarkers = findMarkers(arguments, "by");
-        if (byMarkers.isEmpty()) {
-            throw deadlineError("I couldn't find /by and a due date is missing.");
-        }
-        if (byMarkers.size() > 1) {
-            throw deadlineError("the /by marker was provided more than once.");
-        }
-        int bySeparatorIndex = byMarkers.get(0);
-        String description = arguments.substring(0, bySeparatorIndex).trim();
-        String dueDate = arguments.substring(bySeparatorIndex + "/by".length()).trim();
-        if (description.isBlank()) {
-            throw deadlineError("that deadline is missing its description.");
-        }
-        if (dueDate.isBlank()) {
-            throw deadlineError("that deadline is missing its due date.");
-        }
-        validateTaskDescription(description, "deadline");
-        return new TaskArguments(description, parseDate(dueDate, "deadline"), null);
-    }
-
-    /**
-     * Validates and parses the description, start date, and end date of an event.
-     *
-     * @param arguments the text after the {@code event} keyword.
-     * @return the validated event arguments
-     * @throws PlanaException if an event component is missing or invalid
-     */
-    private TaskArguments parseEvent(String arguments) throws PlanaException {
-        if (arguments.isBlank()) {
-            throw eventError("an event needs a description, a start, and an end.");
-        }
-        List<Integer> fromMarkers = findMarkers(arguments, "from");
-        List<Integer> toMarkers = findMarkers(arguments, "to");
-        if (fromMarkers.isEmpty()) {
-            throw eventError("that event is missing its start marker /from.");
-        }
-        if (toMarkers.isEmpty()) {
-            throw eventError("that event is missing its end marker /to.");
-        }
-        if (fromMarkers.size() > 1) {
-            throw eventError("the /from marker was provided more than once.");
-        }
-        if (toMarkers.size() > 1) {
-            throw eventError("the /to marker was provided more than once.");
-        }
-        int fromSeparatorIndex = fromMarkers.get(0);
-        int toSeparatorIndex = toMarkers.get(0);
-        if (toSeparatorIndex < fromSeparatorIndex) {
-            throw eventError("use /from before /to in an event.");
-        }
-        String description = arguments.substring(0, fromSeparatorIndex).trim();
-        String from = arguments.substring(fromSeparatorIndex + "/from".length(), toSeparatorIndex).trim();
-        String to = arguments.substring(toSeparatorIndex + "/to".length()).trim();
-        if (description.isBlank()) {
-            throw eventError("that event is missing its description.");
-        }
-        if (from.isBlank()) {
-            throw eventError("that event is missing its start time.");
-        }
-        if (to.isBlank()) {
-            throw eventError("that event is missing its end time.");
-        }
-        validateTaskDescription(description, "event");
-        LocalDate startDate = parseDate(from, "event");
-        LocalDate endDate = parseDate(to, "event");
-        if (!startDate.isBefore(endDate)) {
-            throw eventError("an event's start date must be before its end date.");
-        }
-        return new TaskArguments(description, startDate, endDate);
-    }
-
-    /**
-     * Finds complete field markers that are separated from surrounding text.
-     *
-     * @param arguments the complete command arguments.
-     * @param markerName the marker name without its slash.
-     * @return the start positions of every complete marker.
-     */
-    private List<Integer> findMarkers(String arguments, String markerName) {
-        Pattern markerPattern = Pattern.compile("(?:^|\\s)/" + Pattern.quote(markerName) + "(?=\\s|$)");
-        Matcher matcher = markerPattern.matcher(arguments);
-        List<Integer> markerPositions = new ArrayList<>();
-        while (matcher.find()) {
-            markerPositions.add(matcher.start() + (matcher.group().startsWith("/") ? 0 : 1));
-        }
-        return markerPositions;
-    }
-
-    /**
-     * Validates text that will be shown in task lists and persisted to storage.
-     *
-     * @param description the task description to validate.
-     * @param taskType the task type used in the error message.
-     * @throws PlanaException if the description contains control characters or is too long.
-     */
-    private void validateTaskDescription(String description, String taskType) throws PlanaException {
-        if (description.length() > MAXIMUM_TASK_DESCRIPTION_LENGTH || containsControlCharacter(description)) {
-            throw new PlanaException("Oops, that " + taskType
-                    + " description is too long or contains invalid characters. Use 200 characters or fewer.");
-        }
-    }
-
-    /**
      * Creates a consistently formatted deadline parsing error.
      *
      * @param problem the specific problem found in the command.
      * @return an exception containing the problem and deadline usage guidance
      */
-    private static PlanaException deadlineError(String problem) {
+    static PlanaException deadlineError(String problem) {
         return new PlanaException("Oops, " + problem + " " + DEADLINE_USAGE);
     }
 
@@ -573,7 +438,7 @@ public class Parser {
      * @param problem the specific problem found in the command.
      * @return an exception containing the problem and event usage guidance
      */
-    private static PlanaException eventError(String problem) {
+    static PlanaException eventError(String problem) {
         return new PlanaException("Oops, " + problem + " " + EVENT_USAGE);
     }
 
