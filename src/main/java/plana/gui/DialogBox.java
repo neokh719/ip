@@ -3,6 +3,7 @@ package plana.gui;
 import java.io.IOException;
 import java.util.Collections;
 
+import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -22,6 +23,14 @@ import plana.command.CommandType;
  * Represents a chat bubble containing a speaker marker and message text.
  */
 public class DialogBox extends HBox {
+    private static final double MINIMUM_MESSAGE_WIDTH = 220;
+    private static final double USER_MESSAGE_WIDTH_RATIO = 0.72;
+    private static final double PLANA_MESSAGE_WIDTH_RATIO = 0.88;
+    private static final double USER_MESSAGE_MAXIMUM_WIDTH = 420;
+    private static final double PLANA_MESSAGE_MAXIMUM_WIDTH = 620;
+    private static final double USER_MESSAGE_HORIZONTAL_SPACE = 12;
+    private static final double PLANA_MESSAGE_HORIZONTAL_SPACE = 48;
+
     @FXML
     private Label dialog;
 
@@ -49,11 +58,16 @@ public class DialogBox extends HBox {
         getChildren().setAll(children);
         setAlignment(Pos.TOP_LEFT);
         dialog.getStyleClass().add("reply-label");
+        dialog.getStyleClass().add("plana-label");
+        configureMessageWidth(PLANA_MESSAGE_WIDTH_RATIO, PLANA_MESSAGE_MAXIMUM_WIDTH,
+                PLANA_MESSAGE_HORIZONTAL_SPACE);
     }
 
     private void changeDialogStyle(CommandType commandType, boolean isError) {
         if (isError) {
             dialog.getStyleClass().add("error-label");
+            displayPicture.setText("!");
+            displayPicture.getStyleClass().add("error-avatar");
             return;
         }
 
@@ -87,7 +101,13 @@ public class DialogBox extends HBox {
      * @return right-aligned user dialog bubble.
      */
     public static DialogBox getUserDialog(String text) {
-        return new DialogBox(text, "YOU", "user-avatar");
+        DialogBox dialogBox = new DialogBox(text, "", "user-avatar");
+        dialogBox.getChildren().remove(dialogBox.displayPicture);
+        dialogBox.setAlignment(Pos.TOP_RIGHT);
+        dialogBox.dialog.getStyleClass().add("user-label");
+        dialogBox.configureMessageWidth(USER_MESSAGE_WIDTH_RATIO, USER_MESSAGE_MAXIMUM_WIDTH,
+                USER_MESSAGE_HORIZONTAL_SPACE);
+        return dialogBox;
     }
 
     /**
@@ -126,8 +146,8 @@ public class DialogBox extends HBox {
      */
     private void formatHelpText(String helpText) {
         TextFlow helpFlow = new TextFlow();
-        helpFlow.setPrefWidth(370);
-        helpFlow.setMaxWidth(370);
+        helpFlow.prefWidthProperty().bind(dialog.maxWidthProperty().subtract(20));
+        helpFlow.maxWidthProperty().bind(dialog.maxWidthProperty().subtract(20));
         for (String line : helpText.split("\\R", -1)) {
             Text helpLine = new Text(line + "\n");
             helpLine.setFont(Font.font("Monospaced", isCommandLine(line)
@@ -137,6 +157,18 @@ public class DialogBox extends HBox {
         dialog.setText("");
         dialog.setGraphic(helpFlow);
         dialog.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
+    }
+
+    /**
+     * Limits a message width according to the available conversation width.
+     *
+     * @param widthRatio proportion of the available dialog row used by the message.
+     * @param maximumWidth largest width the message can occupy.
+     * @param horizontalSpace space reserved for padding and an optional avatar.
+     */
+    private void configureMessageWidth(double widthRatio, double maximumWidth, double horizontalSpace) {
+        dialog.maxWidthProperty().bind(Bindings.min(maximumWidth,
+                Bindings.max(MINIMUM_MESSAGE_WIDTH, widthProperty().multiply(widthRatio).subtract(horizontalSpace))));
     }
 
     /**

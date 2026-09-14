@@ -1,16 +1,28 @@
 .label {
     -fx-background-color: #ffffff;
-    -fx-border-color: #9ad9bd;
-    -fx-border-radius: 1em 1em 0 1em;
+    -fx-border-color: #efcad5;
+    -fx-border-radius: 1em 1em 1em 0.3em;
     -fx-border-width: 1px;
-    -fx-background-radius: 1em 1em 0 1em;
-    -fx-font: 14px "Arial";
-    -fx-text-fill: #20352b;
+    -fx-background-radius: 1em 1em 1em 0.3em;
+    -fx-font: 14px "System";
+    -fx-text-fill: #3d2630;
 }
 
 .reply-label {
-    -fx-background-radius: 1em 1em 1em 0;
-    -fx-border-radius: 1em 1em 1em 0;
+    -fx-background-radius: 1em 1em 1em 0.3em;
+    -fx-border-radius: 1em 1em 1em 0.3em;
+}
+
+.user-label {
+    -fx-background-color: #a83860;
+    -fx-background-radius: 1em 1em 0.3em 1em;
+    -fx-border-color: transparent;
+    -fx-border-radius: 1em 1em 0.3em 1em;
+    -fx-text-fill: white;
+}
+
+.plana-label {
+    -fx-background-color: #ffffff;
 }
 
 .welcome-label {
@@ -22,21 +34,22 @@
 }
 
 .add-label {
-    -fx-background-color: #d8f6df;
+    -fx-background-color: #fce8ef;
 }
 
 .marked-label {
-    -fx-background-color: #fff3bd;
+    -fx-background-color: #fff2d8;
 }
 
 .delete-label {
-    -fx-background-color: #ffdbe3;
+    -fx-background-color: #ffe4ea;
 }
 
 .error-label {
-    -fx-background-color: #ffe8ee;
-    -fx-border-color: #e89aac;
-    -fx-text-fill: #8c2f45;
+    -fx-background-color: #fff0f3;
+    -fx-border-color: #c74466;
+    -fx-border-width: 1px 1px 1px 4px;
+    -fx-text-fill: #73203a;
 }
 
 #displayPicture {
@@ -45,18 +58,22 @@
     -fx-border-color: transparent;
     -fx-border-radius: 50%;
     -fx-border-width: 0;
-    -fx-font: bold 13px "Arial";
-    -fx-min-height: 42px;
-    -fx-min-width: 42px;
-    -fx-max-height: 42px;
-    -fx-max-width: 42px;
+    -fx-font: bold 12px "System";
+    -fx-min-height: 28px;
+    -fx-min-width: 28px;
+    -fx-max-height: 28px;
+    -fx-max-width: 28px;
     -fx-text-fill: white;
 }
 
 .plana-avatar {
-    -fx-background-color: #38a978;
+    -fx-background-color: #a83860;
 }
 
 .user-avatar {
-    -fx-background-color: #6c8ed9;
+    -fx-background-color: transparent;
+}
+
+.error-avatar {
+    -fx-background-color: #c74466;
 }

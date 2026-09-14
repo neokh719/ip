@@ -8,7 +8,6 @@
 <fx:root alignment="TOP_RIGHT"
          maxHeight="1.7976931348623157E308"
          maxWidth="1.7976931348623157E308"
-         prefWidth="480.0"
          type="javafx.scene.layout.HBox"
          xmlns="http://javafx.com/javafx/17"
          xmlns:fx="http://javafx.com/fxml/1">
@@ -16,7 +15,7 @@
         <URL value="@../css/dialog-box.css" />
     </stylesheets>
     <children>
-        <Label fx:id="dialog" text="Message" wrapText="true" maxWidth="390.0">
+        <Label fx:id="dialog" text="Message" wrapText="true">
             <HBox.margin>
                 <Insets left="7.0" right="7.0" />
             </HBox.margin>
