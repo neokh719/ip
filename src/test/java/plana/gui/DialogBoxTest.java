@@ -15,6 +15,7 @@ import org.junit.jupiter.api.Test;
 import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
+import javafx.scene.image.ImageView;
 import plana.command.CommandType;
 
 /**
@@ -59,24 +60,42 @@ class DialogBoxTest {
     void getPlanaDialog_responseAndErrorUseDistinctPresentation() throws Exception {
         onFxThread(() -> {
             DialogBox responseDialog = DialogBox.getPlanaDialog("Task added", CommandType.TODO);
-            Label responseAvatar = (Label) responseDialog.getChildren().get(0);
+            ImageView responseAvatar = (ImageView) responseDialog.getChildren().get(0);
             Label responseMessage = (Label) responseDialog.getChildren().get(1);
             DialogBox errorDialog = DialogBox.getPlanaDialog("Invalid command", CommandType.UNKNOWN, true);
-            Label errorAvatar = (Label) errorDialog.getChildren().get(0);
+            ImageView errorAvatar = (ImageView) errorDialog.getChildren().get(0);
             Label errorMessage = (Label) errorDialog.getChildren().get(1);
 
             assertEquals(Pos.TOP_LEFT, responseDialog.getAlignment());
-            assertEquals("P", responseAvatar.getText());
+            assertAvatar(responseAvatar, "plana-task-success.png");
             assertTrue(responseMessage.getStyleClass().contains("plana-label"));
             assertTrue(responseMessage.getStyleClass().contains("add-label"));
 
             responseDialog.resize(900, 100);
             assertEquals(620, responseMessage.getMaxWidth());
-            assertEquals("!", errorAvatar.getText());
-            assertTrue(errorAvatar.getStyleClass().contains("error-avatar"));
+            assertAvatar(errorAvatar, "plana-confused.png");
             assertTrue(errorMessage.getStyleClass().contains("error-label"));
             return null;
         });
+    }
+
+    @Test
+    void getPlanaDialog_normalAndKnownErrorRepliesUseCoolAvatar() throws Exception {
+        onFxThread(() -> {
+            DialogBox helpDialog = DialogBox.getPlanaDialog("Help is here!", CommandType.HELP);
+            DialogBox malformedTodoDialog = DialogBox.getPlanaDialog(
+                    "A ToDo description cannot be empty.", CommandType.TODO, true);
+            DialogBox bannerDialog = DialogBox.getPlanaBannerDialog("Welcome!");
+
+            assertAvatar((ImageView) helpDialog.getChildren().get(0), "plana-cool.png");
+            assertAvatar((ImageView) malformedTodoDialog.getChildren().get(0), "plana-cool.png");
+            assertAvatar((ImageView) bannerDialog.getChildren().get(0), "plana-cool.png");
+            return null;
+        });
+    }
+
+    private void assertAvatar(ImageView avatar, String imageFileName) {
+        assertTrue(avatar.getImage().getUrl().endsWith(imageFileName));
     }
 
     private <T> T onFxThread(Callable<T> action) throws Exception {
