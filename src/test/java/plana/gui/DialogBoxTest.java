@@ -3,6 +3,7 @@ package plana.gui;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.io.IOException;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.FutureTask;
@@ -13,13 +14,19 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import javafx.application.Platform;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 import plana.command.CommandType;
 
 /**
- * Tests the message presentation created for Plana's JavaFX conversation view.
+ * Tests Plana's JavaFX conversation presentation and scrolling behavior.
  */
 class DialogBoxTest {
     private static final long TOOLKIT_START_TIMEOUT_SECONDS = 10;
@@ -94,8 +101,40 @@ class DialogBoxTest {
         });
     }
 
+    @Test
+    void contentGrowth_scrollsToLatestDialog() throws Exception {
+        onFxThread(() -> {
+            AnchorPane mainWindow = loadMainWindow();
+            Scene scene = new Scene(mainWindow);
+            Stage stage = new Stage();
+            stage.setScene(scene);
+            stage.show();
+
+            try {
+                ScrollPane scrollPane = (ScrollPane) scene.lookup("#scrollPane");
+                VBox dialogContainer = (VBox) scene.lookup("#dialogContainer");
+                dialogContainer.setMinHeight(1000);
+                mainWindow.layout();
+                scrollPane.setVvalue(0.0);
+
+                dialogContainer.setMinHeight(1600);
+                mainWindow.layout();
+
+                assertEquals(1.0, scrollPane.getVvalue());
+            } finally {
+                stage.hide();
+            }
+            return null;
+        });
+    }
+
     private void assertAvatar(ImageView avatar, String imageFileName) {
         assertTrue(avatar.getImage().getUrl().endsWith(imageFileName));
+    }
+
+    private AnchorPane loadMainWindow() throws IOException {
+        FXMLLoader loader = new FXMLLoader(Main.class.getResource("/view/MainWindow.fxml"));
+        return loader.load();
     }
 
     private <T> T onFxThread(Callable<T> action) throws Exception {
