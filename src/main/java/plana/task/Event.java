@@ -27,6 +27,9 @@ public class Event extends Task {
         // The event parser and storage loader supply both boundary dates before
         // construction, so date-range operations can safely use both fields.
         assert from != null && to != null : "An event must have start and end dates.";
+        if (from == null || to == null || !from.isBefore(to)) {
+            throw new IllegalArgumentException("An event's start date must be before its end date.");
+        }
         this.from = from;
         this.to = to;
     }
@@ -62,5 +65,15 @@ public class Event extends Task {
      */
     public boolean occursOn(LocalDate date) {
         return !date.isBefore(from) && !date.isAfter(to);
+    }
+
+    /**
+     * Returns a key made from this event's identifying details.
+     *
+     * @return the task type, description, start date, and end date key.
+     */
+    @Override
+    protected String getDetailsKey() {
+        return "E\u0000" + description + "\u0000" + from + "\u0000" + to;
     }
 }

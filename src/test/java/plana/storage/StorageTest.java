@@ -82,9 +82,11 @@ public class StorageTest {
         Path dataFile = temporaryDirectory.resolve("mixed-records.txt");
         Files.writeString(dataFile, String.join(System.lineSeparator(),
                 "T | 0 | valid task",
+                "T | 1 | valid task",
                 "not a storage record",
                 "D | 0 | missing date |",
                 "E | 2 | invalid status | 2026-09-04 | 2026-09-05",
+                "E | 0 | reversed event | 2026-09-05 | 2026-09-04",
                 "X | 0 | unknown type",
                 "T | 1 | completed task",
                 "T | 0 | incomplete escape\\"));

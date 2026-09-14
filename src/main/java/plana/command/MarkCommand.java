@@ -31,8 +31,21 @@ public class MarkCommand extends Command {
      */
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) throws PlanaException {
+        boolean wasDone = tasks.isDone(TaskAction.MARK, taskNumber);
         Task markedTask = tasks.mark(taskNumber);
-        storage.saveTasks(tasks);
+        if (!storage.saveTasks(tasks)) {
+            restoreCompletionStatus(markedTask, wasDone);
+            throw new PlanaException("Oops, I couldn't save that change."
+                    + " Please check that the data folder is writable.");
+        }
         ui.showTaskMarkedDone(markedTask);
+    }
+
+    private void restoreCompletionStatus(Task task, boolean wasDone) {
+        if (wasDone) {
+            task.markAsDone();
+        } else {
+            task.markAsNotDone();
+        }
     }
 }

@@ -132,8 +132,9 @@ public class ClientCommand extends Command {
         ClientStorage clientStorage) throws PlanaException {
         switch (action) {
             case ADD:
+                List<Client> clientsBeforeAddition = clients.copyClients();
                 clients.add(client);
-                clientStorage.saveClients(clients);
+                saveClientsOrRestore(clients, clientsBeforeAddition, clientStorage);
                 ui.showClientAdded(client, clients.size());
                 break;
             case LIST:
@@ -158,9 +159,10 @@ public class ClientCommand extends Command {
                 editClient(clients, clientStorage, ui);
                 break;
             case DELETE:
+                List<Client> clientsBeforeDeletion = clients.copyClients();
                 Client deletedClient = clients.get(reference, "delete");
                 clients.delete(reference);
-                clientStorage.saveClients(clients);
+                saveClientsOrRestore(clients, clientsBeforeDeletion, clientStorage);
                 ui.showClientDeleted(reference, deletedClient, clients.size());
                 break;
             default:
@@ -178,8 +180,26 @@ public class ClientCommand extends Command {
                 changes.getOrDefault(Field.ADDRESS, currentClient.getAddress()),
                 changes.getOrDefault(Field.PREFERENCES, currentClient.getPreferences()),
                 changes.getOrDefault(Field.NOTES, currentClient.getNotes()));
+        List<Client> savedClients = clients.copyClients();
         clients.replace(reference, updatedClient);
-        clientStorage.saveClients(clients);
+        saveClientsOrRestore(clients, savedClients, clientStorage);
         ui.showClientUpdated(reference, updatedClient);
+    }
+
+    /**
+     * Saves changed clients or restores the in-memory list after a save failure.
+     *
+     * @param clients the client list that was changed.
+     * @param savedClients the client list before the change.
+     * @param clientStorage the client storage used for persistence.
+     * @throws PlanaException if the changed list could not be saved.
+     */
+    private void saveClientsOrRestore(ClientList clients, List<Client> savedClients,
+                                      ClientStorage clientStorage) throws PlanaException {
+        if (!clientStorage.saveClients(clients)) {
+            clients.restoreClients(savedClients);
+            throw new PlanaException("Oops, I couldn't save that client change."
+                    + " Please check that the data folder is writable.");
+        }
     }
 }

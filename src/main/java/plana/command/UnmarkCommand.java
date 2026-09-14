@@ -31,8 +31,21 @@ public class UnmarkCommand extends Command {
      */
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) throws PlanaException {
+        boolean wasDone = tasks.isDone(TaskAction.UNMARK, taskNumber);
         Task unmarkedTask = tasks.unmark(taskNumber);
-        storage.saveTasks(tasks);
+        if (!storage.saveTasks(tasks)) {
+            restoreCompletionStatus(unmarkedTask, wasDone);
+            throw new PlanaException("Oops, I couldn't save that change."
+                    + " Please check that the data folder is writable.");
+        }
         ui.showTaskMarkedNotDone(unmarkedTask);
+    }
+
+    private void restoreCompletionStatus(Task task, boolean wasDone) {
+        if (wasDone) {
+            task.markAsDone();
+        } else {
+            task.markAsNotDone();
+        }
     }
 }

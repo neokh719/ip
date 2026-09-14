@@ -1,5 +1,8 @@
 package plana.command;
 
+import java.util.List;
+
+import plana.exception.PlanaException;
 import plana.storage.Storage;
 import plana.task.Task;
 import plana.task.TaskList;
@@ -28,9 +31,16 @@ public class AddCommand extends Command {
      * @param storage the storage collaborator used for persistence.
      */
     @Override
-    public void execute(TaskList tasks, Ui ui, Storage storage) {
+    public void execute(TaskList tasks, Ui ui, Storage storage) throws PlanaException {
+        if (tasks.containsSameTask(task)) {
+            throw new PlanaException("Oops, that task already exists. Change its details or edit the existing task.");
+        }
+        List<Task> savedTasks = tasks.copyTasks();
         tasks.add(task);
-        storage.saveTasks(tasks);
+        if (!storage.saveTasks(tasks)) {
+            tasks.restoreTasks(savedTasks);
+            throw new PlanaException("Oops, I couldn't save that task. Please check that the data folder is writable.");
+        }
         ui.showTaskAdded(task, tasks.size());
     }
 }

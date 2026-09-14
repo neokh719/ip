@@ -45,6 +45,7 @@ public class Parser {
     private static final String CLIENT_ADD_USAGE = "Try: client add <name> /email <email>.";
     private static final String CLIENT_FIELD_USAGE = "Use /phone, /address, /preferences, or /notes.";
     private static final String CLIENT_EMAIL_PATTERN = "^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$";
+    private static final int MAXIMUM_TASK_DESCRIPTION_LENGTH = 200;
     private static final Pattern CLIENT_FIELD_PATTERN = Pattern.compile(
             "(?:^|\\s)/(name|email|phone|address|preferences|notes)(?=\\s|$)");
     private static final Pattern CLIENT_MARKER_PATTERN = Pattern.compile(
@@ -57,8 +58,9 @@ public class Parser {
      * @return the recognized command and its trimmed arguments
      */
     public ParsedCommand parse(String input) {
-        CommandType type = CommandType.parseInput(input);
-        String arguments = extractArguments(input, type);
+        String normalizedInput = input == null ? "" : input.trim();
+        CommandType type = CommandType.parseInput(normalizedInput);
+        String arguments = extractArguments(normalizedInput, type);
         return new ParsedCommand(type, arguments);
     }
 
@@ -75,9 +77,18 @@ public class Parser {
     public Command parseCommand(String input) throws PlanaException {
         ParsedCommand parsedCommand = parse(input);
         return switch (parsedCommand.type()) {
-            case BYE -> new ExitCommand();
-            case HELP -> new HelpCommand();
-            case LIST -> new ListCommand();
+            case BYE -> {
+                ensureNoArguments("bye", parsedCommand.arguments());
+                yield new ExitCommand();
+            }
+            case HELP -> {
+                ensureNoArguments("help", parsedCommand.arguments());
+                yield new HelpCommand();
+            }
+            case LIST -> {
+                ensureNoArguments("list", parsedCommand.arguments());
+                yield new ListCommand();
+            }
             case ON -> parseOnCommand(parsedCommand.arguments());
             case FIND -> parseFindCommand(parsedCommand.arguments());
             case DELETE -> new DeleteCommand(parsedCommand.arguments());
@@ -140,6 +151,20 @@ public class Parser {
             throw new PlanaException("Oops, on needs a date. Try: on <date>.");
         }
         return new OnCommand(parseDate(dateText, "on"));
+    }
+
+    /**
+     * Rejects unexpected arguments for a command that takes none.
+     *
+     * @param commandText the command's user-facing name.
+     * @param arguments the text supplied after the command.
+     * @throws PlanaException if arguments were supplied.
+     */
+    private void ensureNoArguments(String commandText, String arguments) throws PlanaException {
+        if (!arguments.isBlank()) {
+            throw new PlanaException("Oops, " + commandText
+                    + " doesn't take any arguments. Try: " + commandText + ".");
+        }
     }
 
     /**
@@ -414,6 +439,7 @@ public class Parser {
         if (arguments.isBlank()) {
             throw new PlanaException(TODO_DESCRIPTION_ERROR);
         }
+        validateTaskDescription(arguments, "ToDo");
         return new TaskArguments(arguments, null, null);
     }
 
@@ -429,10 +455,14 @@ public class Parser {
         if (arguments.isBlank()) {
             throw deadlineError("a deadline needs a description and a due date.");
         }
-        int bySeparatorIndex = arguments.indexOf("/by");
-        if (bySeparatorIndex < 0) {
+        List<Integer> byMarkers = findMarkers(arguments, "by");
+        if (byMarkers.isEmpty()) {
             throw deadlineError("I couldn't find /by and a due date is missing.");
         }
+        if (byMarkers.size() > 1) {
+            throw deadlineError("the /by marker was provided more than once.");
+        }
+        int bySeparatorIndex = byMarkers.get(0);
         String description = arguments.substring(0, bySeparatorIndex).trim();
         String dueDate = arguments.substring(bySeparatorIndex + "/by".length()).trim();
         if (description.isBlank()) {
@@ -441,6 +471,7 @@ public class Parser {
         if (dueDate.isBlank()) {
             throw deadlineError("that deadline is missing its due date.");
         }
+        validateTaskDescription(description, "deadline");
         return new TaskArguments(description, parseDate(dueDate, "deadline"), null);
     }
 
@@ -455,14 +486,22 @@ public class Parser {
         if (arguments.isBlank()) {
             throw eventError("an event needs a description, a start, and an end.");
         }
-        int fromSeparatorIndex = arguments.indexOf("/from");
-        int toSeparatorIndex = arguments.indexOf("/to");
-        if (fromSeparatorIndex < 0) {
+        List<Integer> fromMarkers = findMarkers(arguments, "from");
+        List<Integer> toMarkers = findMarkers(arguments, "to");
+        if (fromMarkers.isEmpty()) {
             throw eventError("that event is missing its start marker /from.");
         }
-        if (toSeparatorIndex < 0) {
+        if (toMarkers.isEmpty()) {
             throw eventError("that event is missing its end marker /to.");
         }
+        if (fromMarkers.size() > 1) {
+            throw eventError("the /from marker was provided more than once.");
+        }
+        if (toMarkers.size() > 1) {
+            throw eventError("the /to marker was provided more than once.");
+        }
+        int fromSeparatorIndex = fromMarkers.get(0);
+        int toSeparatorIndex = toMarkers.get(0);
         if (toSeparatorIndex < fromSeparatorIndex) {
             throw eventError("use /from before /to in an event.");
         }
@@ -478,7 +517,44 @@ public class Parser {
         if (to.isBlank()) {
             throw eventError("that event is missing its end time.");
         }
-        return new TaskArguments(description, parseDate(from, "event"), parseDate(to, "event"));
+        validateTaskDescription(description, "event");
+        LocalDate startDate = parseDate(from, "event");
+        LocalDate endDate = parseDate(to, "event");
+        if (!startDate.isBefore(endDate)) {
+            throw eventError("an event's start date must be before its end date.");
+        }
+        return new TaskArguments(description, startDate, endDate);
+    }
+
+    /**
+     * Finds complete field markers that are separated from surrounding text.
+     *
+     * @param arguments the complete command arguments.
+     * @param markerName the marker name without its slash.
+     * @return the start positions of every complete marker.
+     */
+    private List<Integer> findMarkers(String arguments, String markerName) {
+        Pattern markerPattern = Pattern.compile("(?:^|\\s)/" + Pattern.quote(markerName) + "(?=\\s|$)");
+        Matcher matcher = markerPattern.matcher(arguments);
+        List<Integer> markerPositions = new ArrayList<>();
+        while (matcher.find()) {
+            markerPositions.add(matcher.start() + (matcher.group().startsWith("/") ? 0 : 1));
+        }
+        return markerPositions;
+    }
+
+    /**
+     * Validates text that will be shown in task lists and persisted to storage.
+     *
+     * @param description the task description to validate.
+     * @param taskType the task type used in the error message.
+     * @throws PlanaException if the description contains control characters or is too long.
+     */
+    private void validateTaskDescription(String description, String taskType) throws PlanaException {
+        if (description.length() > MAXIMUM_TASK_DESCRIPTION_LENGTH || containsControlCharacter(description)) {
+            throw new PlanaException("Oops, that " + taskType
+                    + " description is too long or contains invalid characters. Use 200 characters or fewer.");
+        }
     }
 
     /**
@@ -509,7 +585,14 @@ public class Parser {
      * @return the command arguments, or an empty string for commands without arguments
      */
     private String extractArguments(String input, CommandType type) {
-        if (type == CommandType.UNKNOWN || type == CommandType.HELP || type == CommandType.BYE) {
+        if (type == CommandType.UNKNOWN) {
+            return "";
+        }
+        if (type == CommandType.HELP && input.startsWith("?")) {
+            return input.substring(1).trim();
+        }
+        if (type == CommandType.HELP && !input.regionMatches(true, 0, type.getCommandText(), 0,
+                type.getCommandText().length())) {
             return "";
         }
         return input.substring(type.getCommandText().length()).trim();

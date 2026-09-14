@@ -57,28 +57,33 @@ public enum CommandType {
     }
 
     /**
-     * Converts raw user input into a command type while preserving Plana's
-     * existing command matching rules.
+     * Converts raw user input into a command type.
      *
      * @param input the complete command entered by the user.
      * @return the matching command type, or {@link #UNKNOWN} if none matches
      */
     public static CommandType parseInput(String input) {
-        if (input.equals("?")) {
+        if (input == null) {
+            return UNKNOWN;
+        }
+
+        String trimmedInput = input.trim();
+        if (trimmedInput.equals("?")) {
             return HELP;
         }
-        if (input.toLowerCase(Locale.ROOT).contains("help")) {
+        if (trimmedInput.equalsIgnoreCase("please help me")) {
             return HELP;
         }
-        if (input.equals(BYE.commandText)) {
-            return BYE;
+        String[] commandAndArguments = trimmedInput.split("\\s+", 2);
+        if (commandAndArguments.length == 0 || commandAndArguments[0].isEmpty()) {
+            return UNKNOWN;
         }
+        String commandText = commandAndArguments[0].toLowerCase(Locale.ROOT);
         for (CommandType commandType : values()) {
-            if (commandType == UNKNOWN || commandType == HELP || commandType == BYE) {
+            if (commandType == UNKNOWN) {
                 continue;
             }
-            if (input.equals(commandType.commandText)
-                    || input.startsWith(commandType.commandText + " ")) {
+            if (commandText.equals(commandType.commandText)) {
                 return commandType;
             }
         }

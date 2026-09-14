@@ -39,8 +39,7 @@ public class ParserTest {
                 parser.parse("todo buy milk"));
         assertEquals(new Parser.ParsedCommand(CommandType.DELETE, "2"),
                 parser.parse("delete 2"));
-        assertEquals(new Parser.ParsedCommand(CommandType.HELP, ""),
-                parser.parse("please help me"));
+        assertEquals(new Parser.ParsedCommand(CommandType.HELP, ""), parser.parse("please help me"));
         assertEquals(new Parser.ParsedCommand(CommandType.UNKNOWN, ""),
                 parser.parse("not a command"));
     }
@@ -131,6 +130,9 @@ public class ParserTest {
                 + " Try: deadline <description> /by <date>.");
         assertParserException("deadline report /by", "Oops, that deadline is missing its due date."
                 + " Try: deadline <description> /by <date>.");
+        assertParserException("deadline report /by 2026-08-31 /by 2026-09-01",
+                "Oops, the /by marker was provided more than once."
+                        + " Try: deadline <description> /by <date>.");
     }
 
     /**
@@ -139,6 +141,8 @@ public class ParserTest {
     @Test
     public void parseCommand_findWithoutKeyword_exceptionReturned() {
         assertParserCommandException("find", "Oops, find needs a keyword. Try: find <keyword>.");
+        assertParserCommandException("list extra", "Oops, list doesn't take any arguments. Try: list.");
+        assertParserCommandException("bye later", "Oops, bye doesn't take any arguments. Try: bye.");
     }
 
     /**
@@ -168,6 +172,12 @@ public class ParserTest {
         assertParserException("event meeting /from invalid /to 2026-09-01",
                 "Oops, that event date isn't valid."
                         + " Use the date format yyyy-MM-dd, like 2019-10-15."
+                        + " Try: event <description> /from <start> /to <end>.");
+        assertParserException("event meeting /from 2026-09-01 /to 2026-09-01",
+                "Oops, an event's start date must be before its end date."
+                        + " Try: event <description> /from <start> /to <end>.");
+        assertParserException("event meeting /from 2026-09-01 /from 2026-09-02 /to 2026-09-03",
+                "Oops, the /from marker was provided more than once."
                         + " Try: event <description> /from <start> /to <end>.");
     }
 

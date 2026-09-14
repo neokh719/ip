@@ -1,5 +1,7 @@
 package plana.command;
 
+import java.util.List;
+
 import plana.exception.PlanaException;
 import plana.storage.Storage;
 import plana.task.Task;
@@ -31,8 +33,13 @@ public class DeleteCommand extends Command {
      */
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) throws PlanaException {
+        List<Task> savedTasks = tasks.copyTasks();
         Task deletedTask = tasks.delete(taskNumber);
-        storage.saveTasks(tasks);
+        if (!storage.saveTasks(tasks)) {
+            tasks.restoreTasks(savedTasks);
+            throw new PlanaException("Oops, I couldn't save that change."
+                    + " Please check that the data folder is writable.");
+        }
         ui.showTaskDeleted(deletedTask, tasks.size());
     }
 }
