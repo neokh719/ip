@@ -274,7 +274,7 @@ public class Parser {
         return reference;
     }
 
-    private ClientFields parseClientFields(String arguments, boolean addCommand) throws PlanaException {
+    private ClientFields parseClientFields(String arguments, boolean isAddCommand) throws PlanaException {
         Set<String> knownFieldNames = Set.of("name", "email", "phone", "address", "preferences", "notes");
         Matcher unknownMarkerMatcher = CLIENT_MARKER_PATTERN.matcher(arguments);
         while (unknownMarkerMatcher.find()) {
@@ -306,10 +306,10 @@ public class Parser {
             String value = arguments.substring(valueStart, valueEnd).trim();
             values.put(field, unquoteEmptyValue(value));
         }
-        if (addCommand && values.containsKey(ClientCommand.Field.NAME)) {
+        if (isAddCommand && values.containsKey(ClientCommand.Field.NAME)) {
             throw new PlanaException("Oops, put the client name before the field markers. " + CLIENT_ADD_USAGE);
         }
-        if (!addCommand && !name.isBlank()) {
+        if (!isAddCommand && !name.isBlank()) {
             throw new PlanaException("Oops, client edit fields must use markers such as /phone or /notes.");
         }
         return new ClientFields(name, values);
@@ -320,7 +320,7 @@ public class Parser {
     }
 
     private void validateClientFields(String name, EnumMap<ClientCommand.Field, String> values,
-                                      boolean editCommand) throws PlanaException {
+                                      boolean isEditCommand) throws PlanaException {
         if (!name.isBlank() && (name.length() > 100 || containsControlCharacter(name))) {
             throw new PlanaException("Oops, that client name isn't valid. Use 100 characters or fewer.");
         }
@@ -340,19 +340,19 @@ public class Parser {
             }
             values.put(ClientCommand.Field.EMAIL, email);
         }
-        validateOptionalField(values, ClientCommand.Field.PHONE, 30, editCommand);
-        validateOptionalField(values, ClientCommand.Field.ADDRESS, 200, editCommand);
-        validateOptionalField(values, ClientCommand.Field.PREFERENCES, 300, editCommand);
-        validateOptionalField(values, ClientCommand.Field.NOTES, 500, editCommand);
+        validateOptionalField(values, ClientCommand.Field.PHONE, 30, isEditCommand);
+        validateOptionalField(values, ClientCommand.Field.ADDRESS, 200, isEditCommand);
+        validateOptionalField(values, ClientCommand.Field.PREFERENCES, 300, isEditCommand);
+        validateOptionalField(values, ClientCommand.Field.NOTES, 500, isEditCommand);
     }
 
     private void validateOptionalField(EnumMap<ClientCommand.Field, String> values, ClientCommand.Field field,
-                                       int maximumLength, boolean editCommand) throws PlanaException {
+                                       int maximumLength, boolean isEditCommand) throws PlanaException {
         if (!values.containsKey(field)) {
             return;
         }
         String value = values.get(field);
-        if (value.isBlank() && !editCommand) {
+        if (value.isBlank() && !isEditCommand) {
             throw new PlanaException("Oops, /" + field.name().toLowerCase()
                     + " needs a value or should be left out.");
         }

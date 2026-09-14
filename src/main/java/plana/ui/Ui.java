@@ -79,7 +79,7 @@ public class Ui implements AutoCloseable {
 
     private final Scanner scanner;
     private final PrintStream output;
-    private final boolean showSeparators;
+    private final boolean shouldShowSeparators;
 
     /**
      * Creates a console user interface backed by standard input.
@@ -99,10 +99,10 @@ public class Ui implements AutoCloseable {
         this(new Scanner(InputStream.nullInputStream()), output, false);
     }
 
-    private Ui(Scanner scanner, PrintStream output, boolean showSeparators) {
+    private Ui(Scanner scanner, PrintStream output, boolean shouldShowSeparators) {
         this.scanner = scanner;
         this.output = Objects.requireNonNull(output);
-        this.showSeparators = showSeparators;
+        this.shouldShowSeparators = shouldShowSeparators;
     }
 
     /**
@@ -374,7 +374,7 @@ public class Ui implements AutoCloseable {
      * Displays the standard separator used between console interactions.
      */
     public void showLine() {
-        if (showSeparators) {
+        if (shouldShowSeparators) {
             output.println(BORDER_LINE);
         }
     }
