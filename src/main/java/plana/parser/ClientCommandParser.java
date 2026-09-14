@@ -43,7 +43,7 @@ class ClientCommandParser {
         return switch (actionText) {
             case "add" -> parseAdd(actionArguments);
             case "list" -> parseList(actionArguments);
-            case "view" -> new ClientCommand(ClientAction.VIEW, parseReference(actionArguments, "view"));
+            case "view" -> new ClientCommand(ClientAction.VIEW, parseViewReference(actionArguments));
             case "find" -> parseFind(actionArguments);
             case "edit" -> parseEdit(actionArguments);
             case "delete" -> new ClientCommand(ClientAction.DELETE, parseReference(actionArguments, "delete"));
@@ -115,6 +115,19 @@ class ClientCommandParser {
                     + " Use a reference like C1.");
         }
         return reference;
+    }
+
+    private String parseViewReference(String reference) throws PlanaException {
+        if (reference.isBlank()) {
+            throw new PlanaException("Oops, client view needs a client position. Try: client view C1.");
+        }
+        if (!reference.matches("[Cc]?[1-9][0-9]*")) {
+            throw new PlanaException("Oops, '" + reference + "' isn't a valid client position."
+                    + " Use a reference like C1.");
+        }
+        String digits = reference.startsWith("C") || reference.startsWith("c")
+                ? reference.substring(1) : reference;
+        return "C" + digits;
     }
 
     private ClientFields parseFields(String arguments, boolean isAddCommand) throws PlanaException {

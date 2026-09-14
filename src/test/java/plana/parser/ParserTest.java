@@ -215,6 +215,8 @@ public class ParserTest {
                 parser.parseCommand("client add Alice Tan /email ALICE@example.com /preferences no nuts"));
         assertInstanceOf(ClientCommand.class,
                 parser.parseCommand("client edit C1 /phone \"\" /notes \"\""));
+        assertInstanceOf(ClientCommand.class, parser.parseCommand("client view c1"));
+        assertInstanceOf(ClientCommand.class, parser.parseCommand("client view 1"));
     }
 
     /**
@@ -229,7 +231,7 @@ public class ParserTest {
         assertParserCommandException("client add Alice /email alice@example.com /nickname baker",
                 "Oops, I don't recognize the client field /nickname."
                         + " Use /phone, /address, /preferences, or /notes.");
-        assertParserCommandException("client view 1", "Oops, '1' isn't a valid client position."
+        assertParserCommandException("client view C0", "Oops, 'C0' isn't a valid client position."
                 + " Use a reference like C1.");
         assertParserCommandException("client edit C1", "Oops, client edit needs at least one field to change."
                 + " Try: client edit <position> /phone <phone>.");
