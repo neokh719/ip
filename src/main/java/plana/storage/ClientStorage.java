@@ -175,14 +175,14 @@ public class ClientStorage {
     private List<String> splitRecord(String line) {
         ArrayList<String> parts = new ArrayList<>();
         StringBuilder currentPart = new StringBuilder();
-        boolean escaped = false;
+        boolean isEscaped = false;
         for (int i = 0; i < line.length(); i++) {
             char character = line.charAt(i);
-            if (escaped) {
+            if (isEscaped) {
                 currentPart.append('\\').append(character);
-                escaped = false;
+                isEscaped = false;
             } else if (character == '\\') {
-                escaped = true;
+                isEscaped = true;
             } else if (character == '|') {
                 String field = unescapeField(currentPart.toString().trim());
                 if (field == null) {
@@ -194,7 +194,7 @@ public class ClientStorage {
                 currentPart.append(character);
             }
         }
-        if (escaped) {
+        if (isEscaped) {
             return null;
         }
         String field = unescapeField(currentPart.toString().trim());
