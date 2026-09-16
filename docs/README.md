@@ -2,7 +2,7 @@
 
 Plana is a friendly desktop application for managing tasks and client records. It is designed for small businesses, such as home bakeries, that want a quick keyboard-driven way to stay organized.
 
-![Plana user interface](Ui.png.png)
+![Plana user interface](Ui.png)
 
 ## Quick start
 
